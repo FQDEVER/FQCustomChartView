@@ -12,6 +12,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FQChartView;
+
 @protocol FQChartViewDelegate <NSObject>
 
 @optional
@@ -70,7 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FQChartView : UIView
 
 /**
- Adhere to and implement the specified delegate method
+ 点击或者滑动chartView时的代理回调.该代码仅仅针对柱状图.折线图时.饼状图无回调
  */
 @property (nonatomic, weak) id<FQChartViewDelegate> delegate;
 
@@ -82,11 +83,18 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)refreshChartViewWithConfiguration:(FQChartConfiguration *)configuration;
 
 /**
- 根据最新的itemdata数据.刷新图表
-
+ 根据最新的itemdata数据.刷新图表 - 针对柱状图以及折线图
+ 
  @param axisItemDataArrs 图表数据数组.
  */
 -(void)refreshChartViewWithDataArr:(NSArray *)axisItemDataArrs;
+
+/**
+ 根据最新的element数据.刷新图表 - 针对圆饼图
+ 
+ @param element 图表数据数组.
+ */
+-(void)refreshPieChartViewWithElement:(FQSeriesElement *)element;
 
 /**
  快捷创建对应的图表

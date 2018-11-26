@@ -119,7 +119,7 @@
     chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.hiddenLeftYAxis = YES;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 400)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
@@ -185,7 +185,7 @@
     
     chartConfiguration.mainContainerBackColor = rgba(250, 250, 250, 1.0f);
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 400)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
@@ -261,7 +261,7 @@
     //------设定刚好把Y轴隔离出背景Layer.
     chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin);
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 400)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
@@ -333,7 +333,7 @@
     chartConfiguration.isSelectPointBorder = NO;
     chartConfiguration.unitDescrType = ChartViewUnitDescrType_Top;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 400)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
@@ -367,7 +367,7 @@
     chartConfiguration.popContentBackColor = [UIColor orangeColor];
     chartConfiguration.xAxisLabelsTitleColor = [UIColor lightGrayColor];
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 200)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 200)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
@@ -408,15 +408,13 @@
     chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.xAxisIsBottom = NO;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 400)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.delegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
-
-#warning  -- 这两个需要操作
 
 /**
  折线翻转 -Y轴翻转 - 针对配速图标.也就是数据越大.
@@ -522,7 +520,26 @@
  */
 -(void)chartViewSpecialChartChartType_RoundCakes{
     
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Pie;
+    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7,@9].mutableCopy;
+    element.pieColors = @[[UIColor redColor],[UIColor blueColor],[UIColor orangeColor],[UIColor cyanColor],[UIColor greenColor],[UIColor lightGrayColor],[UIColor cyanColor]];
+    element.showPieNameDatas = @[@"跑步",@"游泳",@"骑行",@"铁人三项",@"夜跑",@"室内跑",@"室内游泳"];
+    element.pieRadius = 50.0f;
+    element.pieCenterMaskRadius = 60.0f;
+    element.pieCenterDesc = @"8623";
+    element.pieCenterUnit = @"小时";
     
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element];//element
+    chartConfiguration.chartBackLayerColor = rgba(240, 240, 240, 1.0);
+
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.delegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+
 }
 
 
@@ -546,7 +563,17 @@
     }else if (_type == SpecialChartChartType_BrokenLine_YReverse) {
         [self.chartView refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
     }else if (_type == SpecialChartChartType_RoundCakes) {
-        [self chartViewSpecialChartChartType_RoundCakes];
+        
+        FQSeriesElement * element = [[FQSeriesElement alloc]init];
+        element.chartType = FQChartType_Pie;
+        element.orginNumberDatas = @[@10,@20,@10,@30].mutableCopy;
+        element.pieColors = @[[UIColor redColor],[UIColor blueColor],[UIColor orangeColor],[UIColor cyanColor],[UIColor greenColor],[UIColor lightGrayColor],[UIColor cyanColor]];
+        element.showPieNameDatas = @[@"跑步",@"游泳",@"骑行",@"铁人三项"];
+        element.pieRadius = 50.0f;
+        element.pieCenterMaskRadius = 60.0f;
+        element.pieCenterDesc = @"8";
+        element.pieCenterUnit = @"小时";
+        [self.chartView refreshPieChartViewWithElement:element];
     }
 }
 

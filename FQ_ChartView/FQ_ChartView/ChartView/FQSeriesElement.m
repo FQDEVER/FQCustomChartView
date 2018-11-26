@@ -18,9 +18,21 @@
         _fillLayerBackgroundColor = rgba(0, 0, 0, 0.2);
         _barPlaceholderColor = rgba(240, 240, 240, 1.0);
         _averageLineColor = [UIColor clearColor];
+        _pieRadius = 100;
+        _pieCenterMaskRadius = 50;
+        _pieDescFont = [UIFont systemFontOfSize:10];
+        _pieDescColor = [UIColor grayColor];
+        _pieAccountedFont = [UIFont systemFontOfSize:11];
+        _pieAccountedColor = [UIColor blackColor];
+        _pieCenterDescFont = [UIFont systemFontOfSize:15];
+        _pieCenterDescColor = [UIColor blackColor];
+        _pieCenterUnitFont = [UIFont systemFontOfSize:11];
+        _pieCenterUnitColor = [UIColor grayColor];
+
     }
     return self;
 }
+
 
 //如果用户传入的是纯碎的数据也可以
 -(void)setOrginNumberDatas:(NSArray<NSNumber *> *)orginNumberDatas

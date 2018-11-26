@@ -13,8 +13,8 @@
 typedef NS_ENUM(NSInteger,FQChartType) {
     FQChartType_Line = 0 ,        //折线图
     FQChartType_Bar ,      //柱状图
+    FQChartType_Pie,           //圆π图
     FQChartType_Point,        //点图
-    FQChartType_Pie           //圆π图
 };
 
 typedef NS_ENUM(NSInteger,FQChartYAxisAligmentType) {
@@ -34,13 +34,20 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
 
 @interface FQSeriesElement : NSObject
 
-//线的类型 - 柱状图.与折线图.均是居中显示
+
+/**
+ 线的类型 - 柱状图.与折线图.均是居中显示
+ */
 @property (nonatomic, assign) FQChartType chartType;
 
-//圆角样式 - 线条就是润滑 - 柱状图就是有圆角
+/**
+ 圆角样式 - 线条就是润滑 - 柱状图就是有圆角
+ */
 @property (nonatomic, assign) FQModeType modeType;
 
-//提供一个只有数据的接口.x轴转换为0-count-1
+/**
+ 提供一个只有数据的接口.x轴转换为0-count-1
+ */
 @property (nonatomic, strong) NSArray<NSNumber *> *orginNumberDatas;
 
 /**
@@ -82,16 +89,24 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
 
 #pragma mark - 折线图
 
-//绘制曲线宽度，默认2.00f
+/**
+ 绘制曲线宽度，默认2.00f
+ */
 @property (nonatomic, assign) CGFloat lineWidth;
 
-//是否隐藏填充layer，默认NO
+/**
+ 是否隐藏填充layer，默认NO
+ */
 @property (nonatomic, assign) BOOL fillLayerHidden;
 
-//当有渐变时.即gradientColors有值时.如为YES.渲染也有渐变.为NO.则使用背景色.默认为NO
+/**
+ 当有渐变时.即gradientColors有值时.如为YES.渲染也有渐变.为NO.则使用背景色.默认为NO
+ */
 @property (nonatomic, assign) BOOL isGradientFillLayer;
 
-//填充layer的颜色，默认黑色，透明度0.2
+/**
+ 填充layer的颜色，默认黑色，透明度0.2
+ */
 @property (nonatomic, strong) UIColor *fillLayerBackgroundColor;
 
 #pragma mark - 柱状图
@@ -102,10 +117,9 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
 @property (nonatomic, strong) UIColor *barPlaceholderColor;
 
 /**
- 各组颜色 - 针对每种柱状图.圆饼图颜色不一样时
+ 各组颜色 - 针对每种柱状图
  */
 @property (nonatomic, strong) NSMutableArray *barColors;
-
 
 /**
  柱状图的宽度 - 优先级高于柱状图间距
@@ -117,6 +131,76 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, assign) CGFloat barSpacing;
 
+#pragma mark - 圆饼图
+/**
+ 各组颜色 - 针对每种柱状图.圆饼图颜色不一样时
+ */
+@property (nonatomic, strong) NSArray *pieColors;
+
+/**
+ 对应展示的描述数组
+ */
+@property (nonatomic, strong) NSArray<NSString *> *showPieNameDatas;
+
+/**
+ 圆饼中心的描述
+ */
+@property (nonatomic, copy) NSString *pieCenterDesc;
+
+/**
+ 圆饼中心的单位
+ */
+@property (nonatomic, copy) NSString *pieCenterUnit;
+
+/**
+ 圆饼图的半径.默认为100
+ */
+@property (nonatomic, assign) CGFloat pieRadius;
+
+/**
+ 中心圆饼图的半径.默认为50
+ */
+@property (nonatomic, assign) CGFloat pieCenterMaskRadius;
+
+/**
+ 饼状描述字体
+ */
+@property (nonatomic, strong) UIFont *pieDescFont;
+
+/**
+ 饼状描述字体颜色
+ */
+@property (nonatomic, strong) UIColor *pieDescColor;
+
+/**
+ 占比字体颜色
+ */
+@property (nonatomic, strong) UIColor *pieAccountedColor;
+
+/**
+ 占比字体
+ */
+@property (nonatomic, strong) UIFont *pieAccountedFont;
+
+/**
+ 中心圆饼的描述字体
+ */
+@property (nonatomic, strong) UIFont *pieCenterDescFont;
+
+/**
+ 中心圆饼的描述字体颜色
+ */
+@property (nonatomic, strong) UIColor *pieCenterDescColor;
+
+/**
+ 中心圆饼的单位字体
+ */
+@property (nonatomic, strong) UIFont *pieCenterUnitFont;
+
+/**
+ 中心圆饼的单位字体颜色
+ */
+@property (nonatomic, strong) UIColor *pieCenterUnitColor;
 
 
 @end

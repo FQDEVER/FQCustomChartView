@@ -28,7 +28,7 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 
 #pragma mark - X轴
 
-#pragma mark - 优先级最高
+#pragma mark 优先级最高
 /**
  显示出来的X轴的值.只想显示其中的是文字.这种只适用等分 @[20180103,20180203,20180303]
  */
@@ -39,13 +39,13 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
  */
 @property (nonatomic, strong) NSArray<NSString *> *showXAxisStringNumberDatas;
 
-#pragma mark -优先级居中
+#pragma mark 优先级居中
 /**
  显示出来的X轴的值.间隔.默认为0.例如.间隔为2.那么针对1,2,3.....24.取出来为.1.4.7...
  */
 @property (nonatomic, assign) NSInteger showXAxisInterval;
 
-#pragma mark - 优先级最低
+#pragma mark 优先级最低
 //默认为最小到最大全部排列.所以需要自己定义.
 
 /**
@@ -177,9 +177,8 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 @property (nonatomic, strong) NSArray <FQSeriesElement *>*elements;
 
 #pragma mark - 图表设定
-#warning 还待完善------------
 /**
- 是否显示图例
+ 是否显示图例 - #warning 还待完善
  */
 @property (nonatomic, assign) BOOL isShowLegend;
 
@@ -292,46 +291,85 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 
 
 #pragma 动画相关
-//绘制的时候是否需要动画，默认YES
+
+/**
+ 绘制的时候是否需要动画，默认YES - 待完善
+ */
 @property (nonatomic, assign) BOOL drawWithAnimation;
-//绘制动画时间，默认0.0s
+
+/**
+ 绘制动画时间，默认0.0s - 待完善
+ */
 @property (nonatomic, assign) CGFloat drawAnimationDuration;
 
 
 #pragma 网格线相关
-//是否隐藏x轴方向(水平)网格线，默认NO
+
+/**
+ 是否隐藏x轴方向(水平)网格线，默认NO
+ */
 @property (nonatomic, assign) BOOL xAxisGridHidden;
-//是否隐藏y轴方向(竖直)网格线，默认NO
+
+/**
+ 是否隐藏y轴方向(竖直)网格线，默认NO
+ */
 @property (nonatomic, assign) BOOL yAxisGridHidden;
-//网格线宽度，默认1
+
+/**
+ 网格线宽度，默认1
+ */
 @property (nonatomic, assign) CGFloat gridLineWidth;
-//网格线颜色，默认黑色,
+
+/**
+ 网格线颜色，默认黑色,
+ */
 @property (nonatomic, strong) UIColor *gridLineColor;
-//行网格线数量，默认10
+
+/**
+ 行网格线数量，默认10
+ */
 @property (nonatomic, assign) NSUInteger gridRowCount;
-//列网格线数量，默认10
+
+/**
+ 列网格线数量，默认10
+ */
 @property (nonatomic, assign) NSUInteger gridColumnCount;
 
 #pragma columnLabels,列标相关
-//x轴label的颜色, 默认黑色
+
+/**
+ x轴label的颜色, 默认黑色
+ */
 @property (nonatomic, strong) UIColor *xAxisLabelsTitleColor;
-//x轴label的字体，默认12
+
+/**
+ x轴label的字体，默认12
+ */
 @property (nonatomic, strong) UIFont *xAxisLabelsTitleFont;
 
-
 #pragma rowLabels,行标相关
-//y轴label的颜色, 默认黑色
+
+/**
+ y轴label的颜色, 默认黑色
+ */
 @property (nonatomic, strong) UIColor *yAxisLabelsTitleColor;
-//y轴label的字体，默认12
+
+/**
+ y轴label的字体，默认12
+ */
 @property (nonatomic, strong) UIFont *yAxisLabelsTitleFont;
-//y轴的宽度固定.
+/**
+ y轴的宽度固定. - 待完善
+ */
 //@property (nonatomic, assign) CGFloat yAxisLabelsWidth;
 
 #pragma 手势相关
-//是否开启长按手势，开启手势后长按会通过代理将手指所在位置的最近的坐标和对应的值返回，默认开启
+
+/**
+ 是否开启长按手势，开启手势后长按会通过代理将手指所在位置的最近的坐标和对应的值返回，默认开启
+ */
 @property (nonatomic, assign) BOOL gestureEnabel;
-//手势触发最短时间，默认0.5f
-@property (nonatomic, assign) CGFloat minimumPressDuration;
+
 @end
 
 NS_ASSUME_NONNULL_END

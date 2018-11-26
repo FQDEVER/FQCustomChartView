@@ -9,6 +9,11 @@
 #import "FQChartView.h"
 #import "FQPopTipView.h"
 
+#define PieColorLayerW 5
+#define PieColorLayerH 20
+#define PieTextLayerMargin 5
+#define PieTextItemHeight 15
+
 typedef struct {
     unsigned int tapSelectItem  :1;
     unsigned int panBeginItem :1;
@@ -20,110 +25,156 @@ typedef struct {
 @interface FQChartView()
 
 #pragma mark - 数据相关
-//配置文件
+
+/**
+ 配置文件
+ */
 @property (nonatomic, strong) FQChartConfiguration *configuration;
-//代理标识
+
+/**
+ 代理标识
+ */
 @property (nonatomic, assign) flag delegateFlag;
-//弹出提示视图
+
+/**
+ 弹出提示视图
+ */
 @property (nonatomic, strong) FQPopTipView *popTipView;
-//整个背景layer
+
+/**
+ 整个背景layer
+ */
 @property (nonatomic, strong) CALayer *chartViewBackGroundLayer;
 
 #pragma mark - Y轴相关
-//Y轴左侧展示数据.
+
+/**
+ Y轴左侧展示数据.
+ */
 @property (nonatomic, strong) NSArray *yLeftAxisShowArr;
-//Y轴右侧展示数据
+
+/**
+ Y轴右侧展示数据
+ */
 @property (nonatomic, strong) NSArray *yRightAxisShowArr;
 
-//Y轴左侧参考数据.
+/**
+ Y轴左侧参考数据
+ */
 @property (nonatomic, strong) NSArray *yLeftAxisArr;
-//Y轴右侧参考数据
+
+/**
+ Y轴右侧参考数据
+ */
 @property (nonatomic, strong) NSArray *yRightAxisArr;
 
+/**
+ y轴左侧最大值
+ */
 @property (nonatomic, assign) CGFloat yAxisLeftMaxValue;
+
+/**
+ y轴左侧最小值
+ */
 @property (nonatomic, assign) CGFloat yAxisLeftMinValue;
+
+/**
+ y轴右侧最大值
+ */
 @property (nonatomic, assign) CGFloat yAxisRightMaxValue;
+
+/**
+ y轴右侧最小值
+ */
 @property (nonatomic, assign) CGFloat yAxisRightMinValue;
 
 #pragma mark - X轴相关
 
-//X轴展示数据.没有就用空格展示.保证能对应上.不能使用等分
+/**
+ X轴展示数据.没有就用空格展示.保证能对应上.不能使用等分
+ */
 @property (nonatomic, strong) NSArray *xAxisShowArr;
 
-//X轴参考数量.一共有多少个点.就展示多少个x轴点.并且等分
+/**
+ X轴参考数量.一共有多少个点.就展示多少个x轴点.并且等分
+ */
 @property (nonatomic, assign) NSInteger xAxisCount;
 
-//X轴最大值
+/**
+ X轴最大值
+ */
 @property (nonatomic, assign) CGFloat xAxisMaxValue;
 
-//X轴最小
+/**
+ X轴最小
+ */
 @property (nonatomic, assign) CGFloat xAxisMinValue;
 
-//纪录每一种图表的点数组.
+/**
+ 纪录每一种图表的点数组.
+ */
 @property (nonatomic, strong) NSArray *elementPointsArr;
 
 #pragma mark - 图表绘制相关
 
-//背景线相关 - 参考线 - 默认为 y轴5条.x轴有多少就是多少条
+/**
+ 背景线相关 - 参考线 - 默认为 y轴5条.x轴有多少就是多少条
+ */
 @property (nonatomic, weak) CAReplicatorLayer *rowReplicatorLayer;
 @property (nonatomic, weak) CAReplicatorLayer *columnReplicatorLayer;
 @property (nonatomic, weak) CAShapeLayer *rowBackLine;
 @property (nonatomic, weak) CAShapeLayer *columnBackLine;
 
-//内容图表视图
+/**
+ 内容图表视图
+ */
 @property (nonatomic, weak) UIView *mainContainer;
 @property (nonatomic, assign) CGFloat mainContainerW;
 @property (nonatomic, assign) CGFloat mainContainerH;
 
-//Y轴的最大宽度 - 左右均算 - 默认为40
+/**
+ Y轴的最大宽度 - 左右均算 - 默认为40
+ */
 @property (nonatomic, assign) CGFloat yAxisLabelsContainerMarginRight;
 @property (nonatomic, assign) CGFloat yAxisLabelsContainerMarginLeft;
 
 //Y轴的上下边距
-//#define kChartViewMargin 0 //上下默认为20
+
+/**
+ 上下默认为20
+ */
 @property (nonatomic, assign) CGFloat yAxisLabelsContainerMarginTop;
 @property (nonatomic, assign) CGFloat yAxisLabelsContainerMarginBot;
 
-//平均线数组
+/**
+ 平均线数组
+ */
 @property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *averageLineLayerArr;
 
-//当前选中线
+/**
+ 当前选中线
+ */
 @property (nonatomic, weak) CAShapeLayer *currentlineLayer;
 
-//线条的绘制数据数组
+/**
+ 线条的绘制数据数组
+ */
 @property (nonatomic, strong) NSMutableArray<FQSeriesElement *> *lineElements;
-//柱状图绘制数据数组
+
+/**
+ 柱状图绘制数据数组
+ */
 @property (nonatomic, strong) NSMutableArray<FQSeriesElement *> *barElements;
-//点图绘制数据数组
+
+/**
+ 点图绘制数据数组
+ */
 @property (nonatomic, strong) NSMutableArray<FQSeriesElement *> *pointElements;
 
 /**
- 绘制折线
+ 圆饼绘制数据数组
  */
-//每一条线条就是一个Item
-@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *lineLayerArr;
-
-@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *lineBackLayerArr;
-
-@property (nonatomic, strong) NSMutableArray<UIBezierPath *> *linePathArr;
-
-@property (nonatomic, strong) NSMutableArray<UIBezierPath *> *lineBackPathArr;
-
-@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *lineGradientLayerArr;
-
-@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *lineBackGradientLayerArr;
-
-/**
- 绘制柱状.-只允许一组.太多会显示比较杂乱.
- */
-
-//需要有多组.所以也需要有多组柱状图layer.//<每一个柱子是一个Item>
-@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barLayerArr;
-
-@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barBackLayerArr;
-//柱状图渐变.整体渐变
-@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *barGradientLayerArr;
-
+@property (nonatomic, strong) NSMutableArray<FQSeriesElement *> *pieElements;
 
 /**
  选中点数组.全部记录下来.并且隐藏
@@ -135,28 +186,62 @@ typedef struct {
  */
 @property (nonatomic, assign) NSInteger selectIndex;
 
-#pragma mark - 获取.文本的宽与高
+/**
+ 绘制折线
+ */
 
-//y轴Label的高度，默认取根据列标字体自动计算高度
+
+/**
+ 折线数组.一个layer即一条折线.用于多条折线重叠样式
+ */
+@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *lineLayerArr;
+@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *lineBackLayerArr;
+@property (nonatomic, strong) NSMutableArray<UIBezierPath *> *linePathArr;
+@property (nonatomic, strong) NSMutableArray<UIBezierPath *> *lineBackPathArr;
+@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *lineGradientLayerArr;
+@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *lineBackGradientLayerArr;
+
+/**
+ 绘制柱状.-只允许一组.太多会显示比较杂乱.
+ */
+
+/**
+ 柱状图.多个柱状Layer数组
+ */
+@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barLayerArr;
+@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barBackLayerArr;
+@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *barGradientLayerArr;
+
+
+/**
+ 圆饼图 - 只允许一组.
+ */
+
+/**
+ 圆饼图每个分饼layer数组
+ */
+@property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *pieLayerArr;
+@property (nonatomic, strong) NSArray <NSNumber *>*pieItemAccountedArr;//圆饼图各元素占比
+@property (nonatomic, strong) NSArray<NSString *> *showPieNameDatas;//圆饼图描述昵称
+@property (nonatomic, strong) NSArray<NSNumber *> *pieStrokeStartArray;//起点绘制数组
+@property (nonatomic, strong) NSArray<NSNumber *> *pieStrokeEndArray;//终点绘制数组
+@property (nonatomic, strong) CAShapeLayer *pieCenterMaskLayer; //圆饼图PieLayer
+
+#pragma mark - 获取.文本的宽与高 - 后续用到.
+
+/**
+ y轴Label的高度，默认取根据列标字体自动计算高度
+ */
 @property (nonatomic, assign) CGFloat yAxisLabelsHeight;
-//x轴Label的宽度，默认根据行标的文字自动计算
+
+/**
+ x轴Label的宽度，默认根据行标的文字自动计算
+ */
 @property (nonatomic, assign) CGFloat xAxisLabelsWidth;
 
 @end
 
 @implementation FQChartView
-
-/**
- 快捷创建对应的图表
- 
- @param configuration 默认设置
- @return 图表视图
- */
-+ (instancetype)getChartViewWithConfiguration:(FQChartConfiguration *)configuration withFrame:(CGRect)frame
-{
-    FQChartView * chartView = [[FQChartView alloc]initWithFrame:frame withConfiguation:configuration];
-    return chartView;
-}
 
 -(instancetype)initWithFrame:(CGRect)frame withConfiguation:(FQChartConfiguration *)configuration
 {
@@ -165,55 +250,6 @@ typedef struct {
         [self creatUI];
     }
     return self;
-}
-
--(void)setConfiguration:(FQChartConfiguration *)configuration
-{
-    _configuration = configuration;
-    //获取当前的原点.这样好做提前调换.
-    
-    if (configuration.yAxisLeftTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
-        
-        self.yAxisLabelsContainerMarginLeft =  20 + ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
-    }else{
-        self.yAxisLabelsContainerMarginLeft = ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin + configuration.kYAxisLabelMargin : 0);
-    }
-    
-    if (configuration.yAxisRightTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
-        
-        self.yAxisLabelsContainerMarginRight = 20 + ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
-    }else{
-        self.yAxisLabelsContainerMarginRight = ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
-    }
-    
-    
-    if (configuration.xAxisIsBottom) {
-        if (configuration.yAxisLeftTitle.length == 0 && configuration.yAxisRightTitle.length == 0) {
-            self.yAxisLabelsContainerMarginTop =configuration.kChartViewHeightMargin * 0.5;
-        }else{
-            self.yAxisLabelsContainerMarginTop = configuration.unitDescrType == ChartViewUnitDescrType_Top ?configuration.kChartViewHeightMargin :configuration.kChartViewHeightMargin * 0.5;
-        }
-        
-        if (configuration.hiddenXAxis) {
-            self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin * 0.5;
-        }else{
-            self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin;
-        }
-        
-    }else{
-        
-        if (configuration.yAxisLeftTitle.length == 0 && configuration.yAxisRightTitle.length == 0 && configuration.hiddenXAxis) {
-            self.yAxisLabelsContainerMarginTop = configuration.unitDescrType == ChartViewUnitDescrType_Top ?configuration.kChartViewHeightMargin :configuration.kChartViewHeightMargin * 0.5;
-        }else{
-            self.yAxisLabelsContainerMarginTop =configuration.kChartViewHeightMargin;
-        }
-        self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin * 0.5;
-    }
-#warning  - 更改背景图
-    self.yAxisLabelsContainerMarginLeft += self.configuration.chartViewEdgeInsets.left;
-    self.yAxisLabelsContainerMarginRight += self.configuration.chartViewEdgeInsets.right;
-    self.yAxisLabelsContainerMarginTop += self.configuration.chartViewEdgeInsets.top;
-    self.yAxisLabelsContainerMarginBot += self.configuration.chartViewEdgeInsets.bottom;
 }
 
 -(void)creatUI{
@@ -252,20 +288,16 @@ typedef struct {
     for (FQSeriesElement *element in self.configuration.elements) {
         
         if (element.chartType == FQChartType_Line) {
-#pragma mark - 折线
-            //主曲线
             CAShapeLayer *curveLineLayer = [CAShapeLayer new];
             curveLineLayer.fillColor = nil;
             curveLineLayer.lineJoin = kCALineCapRound;
             [mainContainer.layer addSublayer:curveLineLayer];
             [self.lineLayerArr addObject:curveLineLayer];
             
-            //折线渲染背景的layer
             CAShapeLayer * backLayer = [CAShapeLayer new];
             [mainContainer.layer addSublayer:backLayer];
             [self.lineBackLayerArr addObject:backLayer];
             
-            //线条的渐变layer
             if (element.gradientColors.count > 0) {
                 CAGradientLayer *lineGradientLayer = [CAGradientLayer new];
                 lineGradientLayer.startPoint = CGPointMake(1, 1);
@@ -273,7 +305,6 @@ typedef struct {
                 [_mainContainer.layer addSublayer:lineGradientLayer];
                 [self.lineGradientLayerArr addObject:lineGradientLayer];
                 
-                //渲染背景的layer
                 CAGradientLayer *backGradientLayer = [CAGradientLayer new];
                 backGradientLayer.startPoint = CGPointMake(1, 1);
                 backGradientLayer.endPoint = CGPointMake(1, 0);
@@ -283,28 +314,22 @@ typedef struct {
             
             [self.lineElements addObject:element];
             
-        }else if (element.chartType == FQChartType_Bar){ //绘制柱状图
-            //保障只有一个柱状图显示.
+        }else if (element.chartType == FQChartType_Bar){
             if (self.barElements.count > 0) {
                 continue;
             }
-            
-            //给每一个柱状图一个layer显示
             for (int i = 0; i < element.orginDatas.count; ++i) {
                 
-                //柱状图每个柱子的背景色.
                 CAShapeLayer * backLayer = [CAShapeLayer new];
                 backLayer.fillColor = nil;
                 [mainContainer.layer addSublayer:backLayer];
                 [self.barBackLayerArr addObject:backLayer];
                 
-                //柱状图的每个柱子
                 CAShapeLayer *barLayer = [CAShapeLayer new];
                 barLayer.fillColor = nil;
                 [mainContainer.layer addSublayer:barLayer];
                 [self.barLayerArr addObject:barLayer];
                 
-                //柱状的渐变色
                 if (element.gradientColors.count > 0) {
                     CAGradientLayer *barGradientLayer = [CAGradientLayer new];
                     barGradientLayer.startPoint = CGPointMake(1, 1);
@@ -315,6 +340,23 @@ typedef struct {
             }
             [self.barElements addObject:element];
             
+        }else if (element.chartType == FQChartType_Pie){
+
+            if (self.pieElements.count > 0) {
+                continue;
+            }
+            for (int i = 0; i < element.orginNumberDatas.count; ++i) {
+                CAShapeLayer *pieLayer = [CAShapeLayer new];
+                pieLayer.fillColor = nil;
+                [mainContainer.layer addSublayer:pieLayer];
+                [self.pieLayerArr addObject:pieLayer];
+            }
+            CAShapeLayer * pieCenterLayer = [[CAShapeLayer alloc]init];
+            pieCenterLayer.fillColor = nil;
+            [mainContainer.layer addSublayer:pieCenterLayer];
+            self.pieCenterMaskLayer = pieCenterLayer;
+            
+            [self.pieElements addObject:element];
         }else if (element.chartType == FQChartType_Point){
             [self.pointElements addObject:element];
         }
@@ -324,21 +366,14 @@ typedef struct {
         [mainContainer.layer addSublayer:averagelineLayer];
     }
     
-    //添加一个随着手势实时变化的线条
-    CAShapeLayer *currentLineLayer = [CAShapeLayer new];
-    _currentlineLayer = currentLineLayer;
-    [_mainContainer.layer addSublayer:currentLineLayer];
-    
-    if (self.configuration.isShowPopView) {
-        [self.layer addSublayer:self.popTipView.layer];
-        self.popTipView.layer.opacity = 0.0;
-        [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + _configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
+    if (self.pieElements.count == 0) {
+        CAShapeLayer *currentLineLayer = [CAShapeLayer new];
+        _currentlineLayer = currentLineLayer;
+        [_mainContainer.layer addSublayer:currentLineLayer];
     }
 }
 
-
-
-#pragma mark - setter methods
+#pragma mark - 私有方法 - setter methods
 
 - (void)setDelegate:(id<FQChartViewDelegate>)delegate{
     _delegate = delegate;
@@ -349,8 +384,56 @@ typedef struct {
     _delegateFlag.changePopViewPositionWithView = [delegate respondsToSelector:@selector(chartView:changePopViewPositionWithView:itemData:)];
 }
 
+-(void)setConfiguration:(FQChartConfiguration *)configuration
+{
+    _configuration = configuration;
+    
+    if (configuration.yAxisLeftTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
+        
+        self.yAxisLabelsContainerMarginLeft =  20 + ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
+    }else{
+        self.yAxisLabelsContainerMarginLeft = ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin + configuration.kYAxisLabelMargin : 0);
+    }
+    
+    if (configuration.yAxisRightTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
+        
+        self.yAxisLabelsContainerMarginRight = 20 + ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
+    }else{
+        self.yAxisLabelsContainerMarginRight = ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
+    }
+    
+    
+    if (configuration.xAxisIsBottom) {
+        if (configuration.yAxisLeftTitle.length == 0 && configuration.yAxisRightTitle.length == 0) {
+            self.yAxisLabelsContainerMarginTop =configuration.kChartViewHeightMargin * 0.5;
+        }else{
+            self.yAxisLabelsContainerMarginTop = configuration.unitDescrType == ChartViewUnitDescrType_Top ?configuration.kChartViewHeightMargin :configuration.kChartViewHeightMargin * 0.5;
+        }
+        
+        if (configuration.hiddenXAxis) {
+            self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin * 0.5;
+        }else{
+            self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin;
+        }
+        
+    }else{
+        
+        if (configuration.yAxisLeftTitle.length == 0 && configuration.yAxisRightTitle.length == 0 && configuration.hiddenXAxis) {
+            self.yAxisLabelsContainerMarginTop = configuration.unitDescrType == ChartViewUnitDescrType_Top ?configuration.kChartViewHeightMargin :configuration.kChartViewHeightMargin * 0.5;
+        }else{
+            self.yAxisLabelsContainerMarginTop =configuration.kChartViewHeightMargin;
+        }
+        self.yAxisLabelsContainerMarginBot =configuration.kChartViewHeightMargin * 0.5;
+    }
+    
+    self.yAxisLabelsContainerMarginLeft += self.configuration.chartViewEdgeInsets.left;
+    self.yAxisLabelsContainerMarginRight += self.configuration.chartViewEdgeInsets.right;
+    self.yAxisLabelsContainerMarginTop += self.configuration.chartViewEdgeInsets.top;
+    self.yAxisLabelsContainerMarginBot += self.configuration.chartViewEdgeInsets.bottom;
+}
 
-#pragma mark - private methods
+
+#pragma mark - 私有方法 - 绘制X.Y轴
 
 - (void)fq_setXAxisLabelsContainer{
     if (!_xAxisShowArr.count) {
@@ -363,17 +446,13 @@ typedef struct {
         textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
         textlayer.string = columnName;
         textlayer.contentsScale = [UIScreen mainScreen].scale;
-        // 字体名称、大小
         CFStringRef fontName = (__bridge CFStringRef)self.configuration.xAxisLabelsTitleFont.fontName;
         CGFontRef fontRef = CGFontCreateWithFontName(fontName);
         textlayer.font = fontRef;
         textlayer.fontSize = self.configuration.xAxisLabelsTitleFont.pointSize;
         CGFontRelease(fontRef);
-        // 字体对方方式
         textlayer.alignmentMode = kCAAlignmentCenter;
-        // 分行显示
         textlayer.wrapped = NO;
-        // 超长显示时，省略号位置
         textlayer.truncationMode = kCATruncationEnd;
         
         CGSize size = [self fq_sizeWithString:columnName font:self.configuration.xAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
@@ -384,7 +463,6 @@ typedef struct {
     }];
     
 }
-
 
 - (void)fq_setYAxisLeftLabelsContainer{
     
@@ -415,17 +493,13 @@ typedef struct {
     textlayer.foregroundColor = unitColor.CGColor;
     textlayer.string = unitStr;
     textlayer.contentsScale = [UIScreen mainScreen].scale;
-    // 字体名称、大小
     CFStringRef fontName = (__bridge CFStringRef)unitFont.fontName;
     CGFontRef fontRef = CGFontCreateWithFontName(fontName);
     textlayer.font = fontRef;
     textlayer.fontSize = unitFont.pointSize;
     CGFontRelease(fontRef);
-    // 字体对方方式
     textlayer.alignmentMode = isYAxisLeft ? kCAAlignmentLeft : kCAAlignmentRight;
-    // 分行显示
     textlayer.wrapped = NO;
-    // 超长显示时，省略号位置
     textlayer.truncationMode = kCATruncationEnd;
     
     CGSize size = [self fq_sizeWithString:unitStr font:unitFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
@@ -438,13 +512,12 @@ typedef struct {
         }
         textlayer.frame = CGRectMake(isYAxisLeft ? _configuration.kYAxisChartViewMargin : self.frame.size.width - _configuration.kYAxisChartViewMargin - textLayerW , self.yAxisLabelsContainerMarginTop - size.height -_configuration.kYTitleLabelBot, textLayerW , size.height);
     }else{
-        if (isYAxisLeft) { //左侧
+        if (isYAxisLeft) {
             textlayer.frame = CGRectMake(size.height * 0.5 - MAX(size.height, size.width) , _mainContainer.center.y, MAX(size.height, size.width) * 2.0, size.height);
             textlayer.transform = CATransform3DRotate(textlayer.transform, M_PI_2, 0, 0, 1);
-        }else{ //右侧
+        }else{
             textlayer.frame = CGRectMake(self.frame.size.width - MAX(size.height, size.width) - size.height * 0.5 , _mainContainer.center.y ,MAX(size.height, size.width) * 2.0, size.height);
             textlayer.transform = CATransform3DRotate(textlayer.transform, -M_PI_2, 0, 0, 1);
-            
         }
     }
     [self.layer addSublayer:textlayer];
@@ -452,7 +525,6 @@ typedef struct {
 
 -(void)getYAxisDataLabelLayerWithShowArr:(NSArray *)showArr left:(BOOL)isLeft{
     
-    //标题描述.
     [self drawYAxisTitleViewLeft:isLeft];
     
     if (!showArr.count) {
@@ -466,12 +538,9 @@ typedef struct {
     if (rowSpacing <= 0) {
         NSLog(@"y轴labels文字过多或字体过大，布局可能有问题");
     }
-    
     __block CGFloat lastY = - rowSpacing + self.yAxisLabelsContainerMarginTop;
     __block CGFloat maxWidth = 0;
     
-#warning 调试Y轴翻转
-
     NSArray* reversedArray = nil;
     if (self.configuration.xAxisIsBottom) {
         if (self.configuration.yAxisIsReverse == YES) {
@@ -492,24 +561,19 @@ typedef struct {
         textlayer.foregroundColor = self.configuration.yAxisLabelsTitleColor.CGColor;
         textlayer.string = rowName;
         textlayer.contentsScale = [UIScreen mainScreen].scale;
-        
-        // 字体名称、大小
+    
         CFStringRef fontName = (__bridge CFStringRef)self.configuration.yAxisLabelsTitleFont.fontName;
         CGFontRef fontRef = CGFontCreateWithFontName(fontName);
         textlayer.font = fontRef;
         textlayer.fontSize = self.configuration.yAxisLabelsTitleFont.pointSize;
         CGFontRelease(fontRef);
-        // 字体对方方式
         textlayer.alignmentMode = kCAAlignmentCenter;
-        // 分行显示
         textlayer.wrapped = NO;
-        // 超长显示时，省略号位置
         textlayer.truncationMode = kCATruncationEnd;
         
         CGSize size = [self fq_sizeWithString:rowName font:self.configuration.yAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         
         CGFloat textLayerY = lastY + rowSpacing;
-        //如果是self.configuration.showLeftYAxisDatas 针对这种样式绘制.那么就是对应最大与最小.去找到对应的绘制点.
         if (isLeft && (self.configuration.showLeftYAxisDatas.count > 0)) {
             
             CGFloat axisYValue = 0;
@@ -526,8 +590,6 @@ typedef struct {
                     axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
                 }
             }
-#warning y轴翻转
-
             if (self.configuration.yAxisIsReverse) {
 
                 if (self.configuration.xAxisIsBottom) {
@@ -563,7 +625,7 @@ typedef struct {
                     axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
                 }
             }
-#warning y轴翻转
+
             if (self.configuration.yAxisIsReverse) {
 
                 if (self.configuration.xAxisIsBottom) {
@@ -591,15 +653,17 @@ typedef struct {
         
         [self.layer addSublayer:textlayer];
         
-        lastY = CGRectGetMaxY(textlayer.frame); //取最大高度
+        lastY = CGRectGetMaxY(textlayer.frame);
         if (size.width > maxWidth) {
             maxWidth = size.width;
         }
     }];
 }
 
-
-//更新最新的frame
+#pragma mark - 私有方法 - 更新最新的frame
+/**
+ 更新最新的frame
+ */
 - (void)fq_setMainContainer{
     _mainContainer.backgroundColor = self.configuration.mainContainerBackColor;
     _mainContainerW = self.frame.size.width - self.yAxisLabelsContainerMarginLeft - self.yAxisLabelsContainerMarginRight - 2 * _configuration.kYAxisChartViewMargin;
@@ -727,7 +791,7 @@ typedef struct {
     [CATransaction commit];
 }
 
-#pragma mark - 添加手势
+#pragma mark - 私有方法 - 添加手势
 
 - (void)fq_addGesture{
     if (!self.configuration.gestureEnabel) {
@@ -744,7 +808,7 @@ typedef struct {
 
 - (void)fq_tapGesture:(UITapGestureRecognizer *)gesture{
     //暂时设定为.x轴均为一组对应的上.滑动一种手势的.
-    if (!_elementPointsArr.count) { //topView上显示当前图表对应数据所有数据
+    if (!_elementPointsArr.count) {
         return;
     }
     
@@ -779,7 +843,6 @@ typedef struct {
         NSArray * pointLayerArr = self.pointLayerArrs[i];
         
         if (pointLayerArr.count > self.selectIndex) {
-            //显示选中点.
             CAShapeLayer *oldPointLayer = pointLayerArr[self.selectIndex];
             oldPointLayer.opacity = 0.0f;
         }
@@ -794,7 +857,6 @@ typedef struct {
             NSString * xAxisItemStr = [NSString stringWithFormat:@"x:%@,y:%@\n",xAxisItem.dataNumber,xAxisItem.dataValue];
             [muStr appendString:xAxisItemStr];
             
-            //显示选中点.
             CAShapeLayer *selectPointLayer = pointLayerArr[index];
             selectPointLayer.opacity = 1.0f;
         }
@@ -803,7 +865,6 @@ typedef struct {
     self.selectIndex = index;
     _currentlineLayer.opacity = 1.0f;
     self.popTipView.layer.opacity = 1.0;
-    //更新选中线条以及
     CGPoint selectLinePoint = [pointArr[index] CGPointValue];
     _currentlineLayer.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
     self.popTipView.contentTextStr = muStr.copy;
@@ -823,8 +884,7 @@ typedef struct {
 }
 
 - (void)fq_panGesture:(UIPanGestureRecognizer *)gesture{
-    //暂时设定为.x轴均为一组对应的上.滑动一种手势的.
-    if (!_elementPointsArr.count) { //topView上显示当前图表对应数据所有数据
+    if (!_elementPointsArr.count) {
         return;
     }
     
@@ -833,7 +893,7 @@ typedef struct {
         return;
     }
     
-    CGPoint currentPoint = [gesture locationInView:_mainContainer];// [gesture locationOfTouch:0 inView:self];
+    CGPoint currentPoint = [gesture locationInView:_mainContainer];
     NSUInteger index = 0;
     CGFloat distace = MAXFLOAT;
     CGFloat x = 0;
@@ -856,7 +916,7 @@ typedef struct {
         NSArray * pointLayerArr = self.pointLayerArrs[i];
         
         if (pointLayerArr.count > self.selectIndex) {
-            //显示选中点.
+
             CAShapeLayer *oldPointLayer = pointLayerArr[self.selectIndex];
             oldPointLayer.opacity = 0.0f;
         }
@@ -870,8 +930,7 @@ typedef struct {
             [muStr appendString:xAxisItemStr];
             [valueArr addObject:xAxisItem];
             [selectPointArr addObject:pointArr[index]];
-            
-            //显示选中点.
+        
             CAShapeLayer *selectPointLayer = pointLayerArr[index];
             selectPointLayer.opacity = 1.0f;
         }
@@ -894,7 +953,7 @@ typedef struct {
     if (gesture.state == UIGestureRecognizerStateChanged) {
         _currentlineLayer.opacity = 1.0f;
         self.popTipView.layer.opacity = 1.0;
-        //更新选中线条以及
+    
         CGPoint selectLinePoint = [pointArr[index] CGPointValue];
         _currentlineLayer.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
         self.popTipView.contentTextStr = muStr.copy;
@@ -936,69 +995,51 @@ typedef struct {
     }
 }
 
+#pragma mark - 私有方法 - 根据数据转换为点数据.并绘制
 
-
-#pragma mark - Tool
-
-- (CGSize)fq_sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize{
+/**
+ 绘制对应的图标
+ */
+-(void)fq_getChartPointAndPath{
     
-    NSDictionary *attrs = @{NSFontAttributeName : font};
-    return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
-}
-
-- (CGSize)fq_sizeWithString:(NSString *)str attrs:(NSDictionary *)attrs maxSize:(CGSize)maxSize{
-    return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
+    //获取每个点对应的位置.
+    [self getChartViewPointArr];
+    
+    NSInteger lineElementIndex = 0;
+    NSInteger barElementIndex = 0;
+    NSInteger pointElementIndex = 0;
+    //开始绘制折线
+    for (int i = 0; i < self.configuration.elements.count; ++i) {
+        FQSeriesElement * element = self.configuration.elements[i];
+        NSArray * pointArr = self.elementPointsArr[i];
+        
+        //添加选中点页面
+        if (self.configuration.isShowSelectPoint) {
+            NSMutableArray * pointViewArr = [NSMutableArray array];
+            for (NSValue * pointValue in pointArr) {
+                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:10 color:self.configuration.selectPointColor center:[pointValue CGPointValue] borderColor:UIColor.whiteColor borderW:self.configuration.isSelectPointBorder ? 3.0 : 0.0];
+                pointLayer.opacity = 0.0f;
+                [pointViewArr addObject:pointLayer];
+                [_mainContainer.layer addSublayer:pointLayer];
+            }
+            [self.pointLayerArrs addObject:pointViewArr.copy];
+        }
+        
+        if (element.chartType == FQChartType_Line) {
+            [self fq_makeLinePathWithElement:element withArr:pointArr andChartTypeIndex:lineElementIndex];
+            lineElementIndex += 1;
+        }else if (element.chartType == FQChartType_Bar){
+            [self fq_makeBarPathWithElement:element withArr:pointArr andChartTypeIndex:barElementIndex];
+            barElementIndex += 1;
+        }else if (element.chartType == FQChartType_Point){
+            [self fq_makePointPathWithElement:element withArr:pointArr andChartTypeIndex:pointElementIndex];
+            pointElementIndex += 1;
+        }
+    }
 }
 
 /**
- *  通过 CAShapeLayer 方式绘制虚线
- *
- *  param lineView:       需要绘制成虚线的view
- *  param lineLength:     虚线的宽度
- *  param lineSpacing:    虚线的间距
- *  param lineColor:      虚线的颜色
- *  param lineDirection   虚线的方向  YES 为水平方向， NO 为垂直方向
- **/
-- (void)drawLineOfDashByCAShapeLayer:(CAShapeLayer *)shapeLayer lineLength:(int)lineLength lineSpacing:(int)lineSpacing lineColor:(UIColor *)lineColor directionHorizonal:(BOOL)isHorizonal {
-    
-    if (isHorizonal) {
-        
-        [shapeLayer setPosition:CGPointMake(CGRectGetWidth(shapeLayer.frame) / 2, CGRectGetHeight(shapeLayer.frame))];
-        
-    } else{
-        [shapeLayer setPosition:CGPointMake(CGRectGetWidth(shapeLayer.frame) / 2, CGRectGetHeight(shapeLayer.frame)/2)];
-    }
-    
-    [shapeLayer setFillColor:[UIColor clearColor].CGColor];
-    //  设置虚线颜色为blackColor
-    [shapeLayer setStrokeColor:lineColor.CGColor];
-    //  设置虚线宽度
-    if (isHorizonal) {
-        [shapeLayer setLineWidth:CGRectGetHeight(shapeLayer.frame)];
-    } else {
-        [shapeLayer setLineWidth:CGRectGetWidth(shapeLayer.frame)];
-    }
-    [shapeLayer setLineJoin:kCALineJoinRound];
-    //  设置线宽，线间距
-    [shapeLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:lineLength], [NSNumber numberWithInt:lineSpacing], nil]];
-    //  设置路径
-    CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, 0, 0);
-    
-    if (isHorizonal) {
-        CGPathAddLineToPoint(path, NULL,CGRectGetWidth(shapeLayer.frame), 0);
-    } else {
-        CGPathAddLineToPoint(path, NULL, 0, CGRectGetHeight(shapeLayer.frame));
-    }
-    
-    [shapeLayer setPath:path];
-    CGPathRelease(path);
-    //  把绘制好的虚线添加上来
-}
-
-#pragma mark - 根据数据转换为点数据
-/**
- 计算出每个点的位置.左右均为60.上下均保留60.中间使用
+ 计算出每个点的位置
  */
 -(void)getChartViewPointArr{
     
@@ -1031,7 +1072,6 @@ typedef struct {
         CGFloat yAxisValue = dataItem.dataValue.floatValue;
         
         CGFloat x = (xAxisNumber - xminValue)/(xmaxValue - xminValue) * (_mainContainerW - average) + average * 0.5;
-#warning - 调整Y轴上下关系
         
         CGFloat y = 0;
         if (self.configuration.yAxisIsReverse == YES) {
@@ -1077,14 +1117,14 @@ typedef struct {
     self.xAxisMinValue = xAxisMin;
     self.xAxisCount = maxCount;
     
-    //这种样式就是等分展示
+    //等分展示
     if (self.configuration.showXAxisStringDatas && self.configuration.showXAxisStringDatas.count) {
         self.xAxisShowArr = self.configuration.showXAxisStringDatas;
         return;
     }
     
     NSMutableArray * muXAxisIntervalArr = [NSMutableArray array];
-    //这种有争议 - 这种方式虽然是展示这种.不过不是等分.需要根据真实的数据显示.比较
+    
     if (self.configuration.showXAxisStringNumberDatas && self.configuration.showXAxisStringNumberDatas.count) {
         //从里面选出最大的
         for (FQXAxisItem * axAxisItem in maxCountElement.orginDatas) {
@@ -1098,8 +1138,7 @@ typedef struct {
         return;
     }
     
-    
-    //还有一种隔几个显示一个
+    //隔几个显示一个
     if (self.configuration.showXAxisInterval > 0) {
         for (int i = 0; i < maxCount; ++i) {
             if (i%(int)(self.configuration.showXAxisInterval + 1) == 0) {
@@ -1113,13 +1152,66 @@ typedef struct {
         return;
     }
     
-    //最后一种就是有多少展示多少
+    //有多少展示多少
     for (int i = 0; i < maxCount; ++i) {
         FQXAxisItem * item = maxCountElement.orginDatas[i];
         [muXAxisIntervalArr addObject:[item.dataNumber stringValue]];
     }
     self.xAxisShowArr = muXAxisIntervalArr.copy;
 }
+
+/**
+ 获取圆饼图数据
+
+ @param elements 饼状图数据源对象
+ */
+-(void)getPieChartViewDataArrWithElement:(FQSeriesElement *)elements{
+    
+    CGFloat subNum = 0;
+    for (NSNumber * numValue in elements.orginNumberDatas) {
+        subNum += [numValue floatValue];
+    }
+    //占比-
+    NSMutableArray * accounted = [NSMutableArray array];
+    //开始比例
+    NSMutableArray * startAccounted = [NSMutableArray array];
+    //结束比例
+    NSMutableArray * endAccounted = [NSMutableArray array];
+    
+    CGFloat startFloat = 0; //起始点.
+    for (int i = 0; i < elements.orginNumberDatas.count; ++i) {
+        NSNumber *numValue = elements.orginNumberDatas[i];
+        [startAccounted addObject:@(startFloat)];
+        CGFloat itemValue = [numValue floatValue] / subNum;
+        CGFloat piItemValue = itemValue ;
+        [accounted addObject:@(itemValue)];
+        startFloat += piItemValue;
+        if (i == elements.orginNumberDatas.count - 1) {
+            [endAccounted addObject:@(1)];
+        }else{
+            [endAccounted addObject:@(startFloat)];
+        }
+    }
+    
+    self.pieItemAccountedArr = accounted.copy;
+    self.pieStrokeStartArray = startAccounted.copy;
+    self.pieStrokeEndArray = endAccounted.copy;
+    
+    //默认对应的昵称.使用dataName
+    if (elements.showPieNameDatas.count) {
+        self.showPieNameDatas = elements.showPieNameDatas;
+    }else{
+        NSMutableArray * pieNameDatas = [NSMutableArray array];
+        for (NSNumber *numValue  in elements.orginNumberDatas) {
+            [pieNameDatas addObject:numValue.stringValue];
+        }
+        self.showPieNameDatas = pieNameDatas.copy;
+    }
+    
+    //绘制.
+    [self fq_makePiePathWithElement:elements];
+}
+
 
 /**
  获取Y轴相关数据
@@ -1135,7 +1227,7 @@ typedef struct {
         CGFloat rightMinValue = CGFLOAT_MAX;
         
         for (FQSeriesElement *element in self.configuration.elements) {
-            if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) { //如果两组均为左侧.那么就以两组数据中的最大值
+            if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
                 //计算左Y轴的显示Arr
                 for (FQXAxisItem * xAxisItem in element.orginDatas) {
                     if (xAxisItem.dataValue.floatValue > leftMaxValue) {
@@ -1184,7 +1276,6 @@ typedef struct {
             self.yAxisRightMinValue = rightMinValue;
         }
         
-        //如果设置的这种.也需要更新最大值与最小值
         NSArray *yLeftAxisDatas = self.configuration.showLeftYAxisDatas;
         
         if (yLeftAxisDatas.count != 0 && yLeftAxisDatas) {
@@ -1260,7 +1351,7 @@ typedef struct {
     }
 }
 
-#pragma mark - 绘制线条
+#pragma mark 绘制线条图表
 -(void)fq_makeLinePathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
     //针对线条.处理
     UIBezierPath * path = [UIBezierPath bezierPath];
@@ -1331,7 +1422,7 @@ typedef struct {
     }
 }
 
-#pragma mark - 绘制柱状图
+#pragma mark 绘制柱状图
 -(void)fq_makeBarPathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
     
     CGFloat average = _mainContainerW / self.xAxisCount;
@@ -1445,7 +1536,6 @@ typedef struct {
             }
         }
     
-#pragma mark - 柱状图的动画.
         dispatch_async(dispatch_get_main_queue(), ^{
             barBackLayer.path = barBackPath.CGPath;
             barLayer.path = barPath.CGPath;
@@ -1462,125 +1552,206 @@ typedef struct {
     
 }
 
-#pragma mark - 绘制点图
+#pragma mark 绘制圆饼图
+-(void)fq_makePiePathWithElement:(FQSeriesElement *)element{
+    NSInteger descCount = ceilf(element.orginNumberDatas.count * 1.0 / 2.0);
+    //计算字体高度.比较最大值.计算准确的中心点
+    CGSize descSize = [self fq_sizeWithString:@" " font:element.pieDescFont maxSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    CGSize accountSize = [self fq_sizeWithString:@" " font:element.pieAccountedFont maxSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
+    
+    CGFloat itemH = MAX(MAX(descSize.height, accountSize.height), PieColorLayerH);
+    CGFloat itemMrgin = PieTextItemHeight;
+    
+    CGFloat top = self.bounds.size.height * 0.5 - element.pieRadius;
+    
+    //左右各几个.
+    NSInteger leftCount = descCount;
+    CGFloat leftItemsH = leftCount * itemH + (leftCount - 1) * itemMrgin;
+    CGFloat leftTop = (element.pieRadius * 2.0 - leftItemsH) * 0.5 + top;
+    
+    NSInteger rightCount = element.orginNumberDatas.count - leftCount;
+    CGFloat rightItemsH = rightCount * itemH + (rightCount - 1) * itemMrgin;
+    CGFloat rightTop = (element.pieRadius * 2.0 - rightItemsH) * 0.5 + top;
+
+    CGFloat leftY = leftTop;
+    CGFloat rightY = rightTop;
+    for (int i = 0; i < element.orginNumberDatas.count; ++i) {
+        CAShapeLayer *pieLayer = self.pieLayerArr[i];
+        [self newCircleLayer:pieLayer radius:element.pieCenterMaskRadius borderWidth:element.pieRadius fillColor:[UIColor clearColor] borderColor:element.pieColors[i] startPercentage:self.pieStrokeStartArray[i].floatValue endPercentage:self.pieStrokeEndArray[i].floatValue];
+        CGFloat itemY = 0;
+        if (i < leftCount) {
+            itemY = leftY + itemH * 0.5;
+            leftY += (itemH + itemMrgin);
+        }else{
+            itemY = rightY + itemH * 0.5;
+            rightY += (itemH + itemMrgin);
+        }
+        //绘制颜色 描述文本.以及对应的比例
+        [self drawPieWithElement:element textDesc:self.showPieNameDatas[i] color:element.pieColors[i] accounted:self.pieItemAccountedArr[i] centerY:itemY left:i < leftCount];
+        
+    }
+    
+    [self newCircleLayer:self.pieCenterMaskLayer radius:element.pieCenterMaskRadius borderWidth:10 fillColor:[UIColor whiteColor] borderColor:[[UIColor whiteColor]colorWithAlphaComponent:0.5] startPercentage:0 endPercentage:1];
+    
+    //添加描述与单位
+    [self drawPieCenterDescAndUnitWithElement:element];
+}
+
+-(void)drawPieWithElement:(FQSeriesElement *)element textDesc:(NSString *)textDesc color:(UIColor *)color accounted:(NSNumber *)accounted centerY:(CGFloat)centerY left:(BOOL)isLeft
+{
+    NSString * accountedStr = [NSString stringWithFormat:@"%.01f%%",accounted.floatValue * 100.0];
+    
+    //色块
+    CALayer * colorLayer = [[CALayer alloc]init];
+    colorLayer.backgroundColor = color.CGColor;
+    colorLayer.frame = CGRectMake(isLeft ? 0 : self.bounds.size.width - PieColorLayerW, centerY - PieColorLayerH * 0.5, PieColorLayerW, PieColorLayerH);
+    [self.layer addSublayer:colorLayer];
+    
+    //比例
+    CATextLayer * accountLayer = [[CATextLayer alloc]init];
+    accountLayer.foregroundColor = element.pieAccountedColor.CGColor;
+    accountLayer.string = accountedStr;
+    accountLayer.contentsScale = [UIScreen mainScreen].scale;
+    CFStringRef accountFontName = (__bridge CFStringRef)element.pieAccountedFont.fontName;
+    CGFontRef accountFontRef = CGFontCreateWithFontName(accountFontName);
+    accountLayer.font = accountFontRef;
+    accountLayer.fontSize = element.pieAccountedFont.pointSize;
+    CGFontRelease(accountFontRef);
+    accountLayer.alignmentMode = kCAAlignmentLeft;
+    accountLayer.wrapped = NO;
+    accountLayer.truncationMode = kCATruncationEnd;
+
+    CGSize accountLayerSize = [self fq_sizeWithString:accountedStr font:element.pieAccountedFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    
+    CGFloat accountLayerX = isLeft ? (PieColorLayerW + PieTextLayerMargin) : (self.bounds.size.width - accountLayerSize.width - PieTextLayerMargin - PieColorLayerW);
+    CGFloat accountLayerY = centerY - accountLayerSize.height * 0.5;
+
+    accountLayer.frame = CGRectMake(accountLayerX,accountLayerY, accountLayerSize.width, accountLayerSize.height);
+    [self.layer addSublayer:accountLayer];
+    
+    //文本
+    CATextLayer * textlayer = [[CATextLayer alloc]init];
+    textlayer.foregroundColor = element.pieDescColor.CGColor;
+    textlayer.string = textDesc;
+    textlayer.contentsScale = [UIScreen mainScreen].scale;
+    CFStringRef fontName = (__bridge CFStringRef)element.pieDescFont.fontName;
+    CGFontRef fontRef = CGFontCreateWithFontName(fontName);
+    textlayer.font = fontRef;
+    textlayer.fontSize = element.pieDescFont.pointSize;
+    CGFontRelease(fontRef);
+    textlayer.alignmentMode = kCAAlignmentLeft;
+    textlayer.wrapped = NO;
+    textlayer.truncationMode = kCATruncationEnd;
+    
+    CGSize size = [self fq_sizeWithString:textDesc font:element.pieDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    
+    CGFloat textLayerX = isLeft ? (CGRectGetMaxX(accountLayer.frame) + PieTextLayerMargin) : (accountLayerX - size.width - PieTextLayerMargin);
+    CGFloat textLayerY = centerY - size.height * 0.5;
+    textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
+    [self.layer addSublayer:textlayer];
+    
+}
+
+/**
+ 添加中心圈的描述与单位
+
+ @param element 图表数据
+ */
+-(void)drawPieCenterDescAndUnitWithElement:(FQSeriesElement *)element{
+    //描述
+    CATextLayer * centerDescLayer = [[CATextLayer alloc]init];
+    centerDescLayer.foregroundColor = element.pieCenterDescColor.CGColor;
+    centerDescLayer.string = element.pieCenterDesc;
+    centerDescLayer.contentsScale = [UIScreen mainScreen].scale;
+    CFStringRef centerDescFontName = (__bridge CFStringRef)element.pieCenterDescFont.fontName;
+    CGFontRef centerDescFontRef = CGFontCreateWithFontName(centerDescFontName);
+    centerDescLayer.font = centerDescFontRef;
+    centerDescLayer.fontSize = element.pieCenterDescFont.pointSize;
+    CGFontRelease(centerDescFontRef);
+    centerDescLayer.alignmentMode = kCAAlignmentCenter;
+    centerDescLayer.wrapped = NO;
+    centerDescLayer.truncationMode = kCATruncationEnd;
+
+    //单位
+    CATextLayer * centerUnitlayer = [[CATextLayer alloc]init];
+    centerUnitlayer.foregroundColor = element.pieCenterUnitColor.CGColor;
+    centerUnitlayer.string = element.pieCenterUnit;
+    centerUnitlayer.contentsScale = [UIScreen mainScreen].scale;
+    CFStringRef fontName = (__bridge CFStringRef)element.pieCenterUnitFont.fontName;
+    CGFontRef fontRef = CGFontCreateWithFontName(fontName);
+    centerUnitlayer.font = fontRef;
+    centerUnitlayer.fontSize = element.pieCenterUnitFont.pointSize;
+    CGFontRelease(fontRef);
+    centerUnitlayer.alignmentMode = kCAAlignmentCenter;
+    centerUnitlayer.wrapped = NO;
+    centerUnitlayer.truncationMode = kCATruncationEnd;
+    
+    
+    CGSize centerDescLayerSize = [self fq_sizeWithString:element.pieCenterDesc font:element.pieCenterDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    
+    CGSize centerUnitlayerSize = [self fq_sizeWithString:element.pieCenterUnit font:element.pieCenterUnitFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+    
+    CGFloat centerDescLayerY = (self.bounds.size.height - (centerUnitlayerSize.height + centerDescLayerSize.height + PieTextLayerMargin)) * 0.5;
+    CGFloat centerDescLyaerX = self.frame.size.width * 0.5 - centerDescLayerSize.width * 0.5;
+    centerDescLayer.frame = CGRectMake(centerDescLyaerX,centerDescLayerY, centerDescLayerSize.width + 5, centerDescLayerSize.height);
+
+    CGFloat centerUnitX = self.frame.size.width * 0.5 - centerUnitlayerSize.width * 0.5;
+    CGFloat centerUnitY = CGRectGetMaxY(centerDescLayer.frame) + PieTextLayerMargin;
+    centerUnitlayer.frame = CGRectMake(centerUnitX,centerUnitY, centerUnitlayerSize.width, centerUnitlayerSize.height);
+    [self.layer addSublayer:centerDescLayer];
+    [self.layer addSublayer:centerUnitlayer];
+}
+
+#pragma mark 绘制点图
 -(void)fq_makePointPathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
     
 }
 
-//这种是纯色
-- (CAShapeLayer*)pointLayerWithDiameter:(CGFloat)diameter
-                                  color:(UIColor*)color
-                                 center:(CGPoint)center
-                                  borderColor:(UIColor*)borderColor
-                                 borderW:(CGFloat)borderW{
-    CAShapeLayer* pointLayer = [CAShapeLayer layer];
-    UIBezierPath* path = [UIBezierPath
-                          bezierPathWithRoundedRect:CGRectMake(center.x - diameter / 2,
-                                                               center.y - diameter / 2, diameter,
-                                                               diameter)
-                          cornerRadius:diameter / 2];
-    pointLayer.path = path.CGPath;
-    pointLayer.fillColor = color.CGColor;
-    pointLayer.lineWidth = borderW;
-    pointLayer.strokeColor = borderColor.CGColor;
-    return pointLayer;
+
+#pragma mark - 公共方法 
+
+/**
+ 快捷创建对应的图表
+ 
+ @param configuration 默认设置
+ @return 图表视图
+ */
++ (instancetype)getChartViewWithConfiguration:(FQChartConfiguration *)configuration withFrame:(CGRect)frame
+{
+    FQChartView * chartView = [[FQChartView alloc]initWithFrame:frame withConfiguation:configuration];
+    return chartView;
 }
 
-//这种是有白间距
-- (CAShapeLayer*)annularPointLayerWithDiameter:(CGFloat)diameter
-                                         color:(UIColor*)color
-                                        center:(CGPoint)center {
-    CAShapeLayer* pointLayer = [CAShapeLayer layer];
-    UIBezierPath* path = [UIBezierPath
-                          bezierPathWithRoundedRect:CGRectMake(center.x - diameter / 2,
-                                                               center.y - diameter / 2, diameter,
-                                                               diameter)
-                          cornerRadius:diameter / 2];
-    
-    pointLayer.path = path.CGPath;
-    pointLayer.fillColor = color.CGColor;
-    pointLayer.strokeColor = [UIColor whiteColor].CGColor;
-    pointLayer.lineWidth = 3;
-    return pointLayer;
-}
-
-
-//这边等会看看是否需要处理一下
-- (CGPoint)controlPointWithP1:(CGPoint)p1 p2:(CGPoint)p2 {
-    CGPoint point = [self centerWithP1:p1 p2:p2];
-    CGFloat differY = fabs(p1.y - point.y);
-    if (p1.y > p2.y) {
-        point.y -= differY;
-    } else {
-        point.y += differY;
-    }
-    return point;
-}
-
-- (CGPoint)centerWithP1:(CGPoint)p1 p2:(CGPoint)p2 {
-    return CGPointMake((p1.x + p2.x) / 2.0f, (p1.y + p2.y) / 2.0f);
-}
-
-//根据传入的数据一一展示X轴
--(void)fq_getChartPointAndPath{
-    
-    //获取每个点对应的位置.
-    [self getChartViewPointArr];
-    
-    NSInteger lineElementIndex = 0;
-    NSInteger barElementIndex = 0;
-    NSInteger pointElementIndex = 0;
-    //开始绘制折线
-    for (int i = 0; i < self.configuration.elements.count; ++i) {
-        FQSeriesElement * element = self.configuration.elements[i];
-        NSArray * pointArr = self.elementPointsArr[i];
-        
-        //添加选中点页面
-        if (self.configuration.isShowSelectPoint) {
-            NSMutableArray * pointViewArr = [NSMutableArray array];
-            for (NSValue * pointValue in pointArr) {
-                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:10 color:self.configuration.selectPointColor center:[pointValue CGPointValue] borderColor:UIColor.whiteColor borderW:self.configuration.isSelectPointBorder ? 3.0 : 0.0];
-                pointLayer.opacity = 0.0f;
-                [pointViewArr addObject:pointLayer];
-                [_mainContainer.layer addSublayer:pointLayer];
-            }
-            [self.pointLayerArrs addObject:pointViewArr.copy];
-        }
-        
-        if (element.chartType == FQChartType_Line) {
-            [self fq_makeLinePathWithElement:element withArr:pointArr andChartTypeIndex:lineElementIndex];
-            lineElementIndex += 1;
-        }else if (element.chartType == FQChartType_Bar){
-            [self fq_makeBarPathWithElement:element withArr:pointArr andChartTypeIndex:barElementIndex];
-            barElementIndex += 1;
-        }else if (element.chartType == FQChartType_Point){
-            [self fq_makePointPathWithElement:element withArr:pointArr andChartTypeIndex:pointElementIndex];
-            pointElementIndex += 1;
-        }
-    }
-}
-
-
-#pragma mark - pubilic methods
-
-//开始绘制
+/**
+ 开始绘制
+ */
 - (void)fq_drawCurveView{
     [self layoutIfNeeded];
-    //获取X.Y轴相关数据.包含.最大值.最小值.展示值数组.参考值数组
-    [self getChartViewYAxisDataArr];
-    [self getChartViewXAxisDataArr];
-    //初始化图表相关属性
-    [self fq_setMainContainer];
-    //获取图表的点与路径
-    [self fq_getChartPointAndPath];
-    //X.Y轴的描述
-    [self fq_setXAxisLabelsContainer];
-    [self fq_setYAxisLeftLabelsContainer];
-    [self fq_setYAxisRightLabelsContainer];
-    //添加手势
-    [self fq_addGesture];
+    //计算圆饼图对应的比例.判断有没有圆饼图
+    if (self.pieElements.count > 0) {
+        [self getPieChartViewDataArrWithElement:self.pieElements.firstObject];
+    }else{
+        //获取X.Y轴相关数据.包含.最大值.最小值.展示值数组.参考值数组
+        [self getChartViewYAxisDataArr];
+        [self getChartViewXAxisDataArr];
+        //初始化图表相关属性
+        [self fq_setMainContainer];
+        //获取图表的点与路径.并绘制
+        [self fq_getChartPointAndPath];
+        //X.Y轴的描述
+        [self fq_setXAxisLabelsContainer];
+        [self fq_setYAxisLeftLabelsContainer];
+        [self fq_setYAxisRightLabelsContainer];
+        //添加手势
+        [self fq_addGesture];
+        //添加提示视图
+        if (self.configuration.isShowPopView) {
+            [self.layer addSublayer:self.popTipView.layer];
+            self.popTipView.layer.opacity = 0.0;
+            [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + _configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
+        }
+    }
 }
-
 
 /**
  根据新配置文件.重新刷新图表
@@ -1600,7 +1771,7 @@ typedef struct {
 }
 
 /**
- 根据最新的itemdata数据.刷新图表
+ 根据最新的itemdata数据.刷新图表 - 针对柱状图以及折线图
  
  @param axisItemDataArrs 图表数据数组.
  */
@@ -1625,6 +1796,23 @@ typedef struct {
 }
 
 /**
+ 根据最新的element数据.刷新图表 - 针对圆饼图
+ 
+ @param element 图表数据数组.
+ */
+-(void)refreshPieChartViewWithElement:(FQSeriesElement *)element
+{
+    //清空图表
+    [self clearChartView];
+    
+    self.configuration.elements = @[element];
+    
+    [self creatUI];
+    
+    [self fq_drawCurveView];
+}
+
+/**
  清空图表位置.
  */
 -(void)clearChartView{
@@ -1633,6 +1821,7 @@ typedef struct {
     [_barElements removeAllObjects];
     [_lineElements removeAllObjects];
     [_pointElements removeAllObjects];
+    [_pieElements removeAllObjects];
     [_linePathArr removeAllObjects];
     [_lineLayerArr removeAllObjects];
     [_lineBackPathArr removeAllObjects];
@@ -1641,6 +1830,7 @@ typedef struct {
     [_barBackLayerArr removeAllObjects];
     [_barGradientLayerArr removeAllObjects];
     [_lineBackGradientLayerArr removeAllObjects];
+    [_pieLayerArr removeAllObjects];
     
     NSInteger count = self.layer.sublayers.count;
     for (int i = 0; i < count; ++i) {
@@ -1649,10 +1839,173 @@ typedef struct {
     }
 }
 
+
+#pragma mark - Tool
+
+- (CGSize)fq_sizeWithString:(NSString *)str font:(UIFont *)font maxSize:(CGSize)maxSize{
+    
+    NSDictionary *attrs = @{NSFontAttributeName : font};
+    return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
+}
+
+- (CGSize)fq_sizeWithString:(NSString *)str attrs:(NSDictionary *)attrs maxSize:(CGSize)maxSize{
+    return [str boundingRectWithSize:maxSize options:NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading attributes:attrs context:nil].size;
+}
+
+/**
+ *  通过 CAShapeLayer 方式绘制虚线
+ *
+ *  param lineView:       需要绘制成虚线的view
+ *  param lineLength:     虚线的宽度
+ *  param lineSpacing:    虚线的间距
+ *  param lineColor:      虚线的颜色
+ *  param lineDirection   虚线的方向  YES 为水平方向， NO 为垂直方向
+ **/
+- (void)drawLineOfDashByCAShapeLayer:(CAShapeLayer *)shapeLayer lineLength:(int)lineLength lineSpacing:(int)lineSpacing lineColor:(UIColor *)lineColor directionHorizonal:(BOOL)isHorizonal {
+    
+    if (isHorizonal) {
+        
+        [shapeLayer setPosition:CGPointMake(CGRectGetWidth(shapeLayer.frame) / 2, CGRectGetHeight(shapeLayer.frame))];
+        
+    } else{
+        [shapeLayer setPosition:CGPointMake(CGRectGetWidth(shapeLayer.frame) / 2, CGRectGetHeight(shapeLayer.frame)/2)];
+    }
+    
+    [shapeLayer setFillColor:[UIColor clearColor].CGColor];
+    [shapeLayer setStrokeColor:lineColor.CGColor];
+    //设置虚线宽度
+    if (isHorizonal) {
+        [shapeLayer setLineWidth:CGRectGetHeight(shapeLayer.frame)];
+    } else {
+        [shapeLayer setLineWidth:CGRectGetWidth(shapeLayer.frame)];
+    }
+    [shapeLayer setLineJoin:kCALineJoinRound];
+    //  设置线宽，线间距
+    [shapeLayer setLineDashPattern:[NSArray arrayWithObjects:[NSNumber numberWithInt:lineLength], [NSNumber numberWithInt:lineSpacing], nil]];
+    //  设置路径
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, 0, 0);
+    
+    if (isHorizonal) {
+        CGPathAddLineToPoint(path, NULL,CGRectGetWidth(shapeLayer.frame), 0);
+    } else {
+        CGPathAddLineToPoint(path, NULL, 0, CGRectGetHeight(shapeLayer.frame));
+    }
+    
+    [shapeLayer setPath:path];
+    CGPathRelease(path);
+}
+
+- (void)newCircleLayer:(CAShapeLayer*)circle
+                radius:(CGFloat)radius
+           borderWidth:(CGFloat)borderWidth
+             fillColor:(UIColor*)fillColor
+           borderColor:(UIColor*)borderColor
+       startPercentage:(CGFloat)startPercentage
+         endPercentage:(CGFloat)endPercentage {
+    
+    CGPoint center =
+    CGPointMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds));
+    
+    UIBezierPath* path = [UIBezierPath bezierPathWithArcCenter:center
+                                                        radius:radius
+                                                    startAngle:-M_PI_2
+                                                      endAngle:M_PI_2 * 3
+                                                     clockwise:YES];
+    
+    circle.fillColor = fillColor.CGColor;
+    circle.strokeColor = borderColor.CGColor;
+    circle.strokeStart = startPercentage;
+    circle.strokeEnd = endPercentage;
+    circle.lineWidth = borderWidth;
+    circle.path = path.CGPath;
+}
+
+/**
+ 获取指定颜色的选中点
+ 
+ @param diameter 直径值
+ @param color 主要颜色
+ @param center 中心点
+ @param borderColor 边框色
+ @param borderW 边框宽度
+ @return 纯色选中点
+ */
+- (CAShapeLayer*)pointLayerWithDiameter:(CGFloat)diameter
+                                  color:(UIColor*)color
+                                 center:(CGPoint)center
+                            borderColor:(UIColor*)borderColor
+                                borderW:(CGFloat)borderW{
+    CAShapeLayer* pointLayer = [CAShapeLayer layer];
+    UIBezierPath* path = [UIBezierPath
+                          bezierPathWithRoundedRect:CGRectMake(center.x - diameter / 2,
+                                                               center.y - diameter / 2, diameter,
+                                                               diameter)
+                          cornerRadius:diameter / 2];
+    pointLayer.path = path.CGPath;
+    pointLayer.fillColor = color.CGColor;
+    pointLayer.lineWidth = borderW;
+    pointLayer.strokeColor = borderColor.CGColor;
+    return pointLayer;
+}
+
+/**
+ 获取纯色的选中点带白边框
+ 
+ @param diameter 直径
+ @param color 主要颜色
+ @param center 中心点
+ @return 选中点
+ */
+- (CAShapeLayer*)annularPointLayerWithDiameter:(CGFloat)diameter
+                                         color:(UIColor*)color
+                                        center:(CGPoint)center {
+    CAShapeLayer* pointLayer = [CAShapeLayer layer];
+    UIBezierPath* path = [UIBezierPath
+                          bezierPathWithRoundedRect:CGRectMake(center.x - diameter / 2,
+                                                               center.y - diameter / 2, diameter,
+                                                               diameter)
+                          cornerRadius:diameter / 2];
+    
+    pointLayer.path = path.CGPath;
+    pointLayer.fillColor = color.CGColor;
+    pointLayer.strokeColor = [UIColor whiteColor].CGColor;
+    pointLayer.lineWidth = 3;
+    return pointLayer;
+}
+
+/**
+ 获取两个点之间的桥接点
+ 
+ @param p1 点1
+ @param p2 点2
+ @return 桥节点
+ */
+- (CGPoint)controlPointWithP1:(CGPoint)p1 p2:(CGPoint)p2 {
+    CGPoint point = [self centerWithP1:p1 p2:p2];
+    CGFloat differY = fabs(p1.y - point.y);
+    if (p1.y > p2.y) {
+        point.y -= differY;
+    } else {
+        point.y += differY;
+    }
+    return point;
+}
+
+/**
+ 获取两个点之间的中心点
+ 
+ @param p1 点1
+ @param p2 点2
+ @return 中心点
+ */
+- (CGPoint)centerWithP1:(CGPoint)p1 p2:(CGPoint)p2 {
+    return CGPointMake((p1.x + p2.x) / 2.0f, (p1.y + p2.y) / 2.0f);
+}
+
+
 #pragma mark - 懒加载
 
-
-#pragma mark - 折线图
 -(NSMutableArray<CAShapeLayer *> *)lineLayerArr
 {
     if (!_lineLayerArr) {
@@ -1701,7 +2054,6 @@ typedef struct {
     return _lineBackGradientLayerArr;
 }
 
-#pragma mark - 柱状图
 -(NSMutableArray<CAShapeLayer *> *)barLayerArr
 {
     if (!_barLayerArr) {
@@ -1726,7 +2078,6 @@ typedef struct {
     return _barGradientLayerArr;
 }
 
-#pragma mark - 各种样式总线条数组
 //线条的绘制数据数组
 -(NSMutableArray<FQSeriesElement *> *)lineElements
 {
@@ -1750,6 +2101,14 @@ typedef struct {
         _pointElements = [NSMutableArray array];
     }
     return _pointElements;
+}
+
+-(NSMutableArray<FQSeriesElement *> *)pieElements
+{
+    if (!_pieElements) {
+        _pieElements = [NSMutableArray array];
+    }
+    return _pieElements;
 }
 
 
@@ -1783,6 +2142,14 @@ typedef struct {
         _averageLineLayerArr = [NSMutableArray array];
     }
     return _averageLineLayerArr;
+}
+
+-(NSMutableArray<CAShapeLayer *> *)pieLayerArr
+{
+    if (!_pieLayerArr) {
+        _pieLayerArr = [NSMutableArray array];
+    }
+    return _pieLayerArr;
 }
 
 @end

@@ -41,7 +41,7 @@
     _selectPointColor = [UIColor redColor];
     _isSelectPointBorder = YES;
     _chartBackLayerEdgeInsets = UIEdgeInsetsZero;
-    _chartBackLayerColor = [UIColor whiteColor];
+    _chartBackLayerColor = [UIColor clearColor];
     _kDefaultYAxisNames = 5;
     _kXAxisLabelTop = 5.0;
     _kYAxisLabelMargin = 5.0;
