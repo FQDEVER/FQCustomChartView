@@ -76,6 +76,48 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id<FQChartViewDelegate> chartDelegate;
 
 /**
+ tap手势点击时block方式回调.
+ @param chartView 图表视图
+ @param dataItemArr 数据数组
+ @param pointArr 位置点数组
+ @param index 索引
+ */
+@property (nonatomic, copy) void(^tapSelectItemBlock)(FQChartView *chartView,NSArray <FQXAxisItem *> *dataItemArr,NSArray<NSValue *> *pointArr,NSInteger index);
+
+/**
+ pan手势开始时block方式回调.
+ @param chartView 图表视图
+ @param dataItemArr 数据数组
+ @param pointArr 位置点数组
+ @param index 索引
+ */
+@property (nonatomic, copy) void(^panBeginItemBlock)(FQChartView *chartView,NSArray <FQXAxisItem *> *dataItemArr,NSArray<NSValue *> *pointArr,NSInteger index);
+
+/**
+ pan手势滑动时block方式回调.
+ @param chartView 图表视图
+ @param dataItemArr 数据数组
+ @param pointArr 位置点数组
+ @param index 索引
+ */
+@property (nonatomic, copy) void(^panChangeItemBlock)(FQChartView *chartView,NSArray <FQXAxisItem *> *dataItemArr,NSArray<NSValue *> *pointArr,NSInteger index);
+
+/**
+ pan手势结束时block方式回调
+ @param chartView chartView
+ */
+@property (nonatomic, copy) void(^panGestureEndBlock)(FQChartView *chartView);
+
+/**
+ 当popView位置发生变化时block方式回调
+ 
+ @param chartView chartView-图标视图
+ @param popView 冒泡视图-可以直接设定其.如果未自定义.可配置dataItemArr的数据转换为字符串.给其contentTextStr赋值.如自定义.则给自定义的视图赋值相关dataItemArr数据
+ @param dataItemArr 图表展示数据.包含x.y显示数据.
+ */
+@property (nonatomic, copy) void(^changePopViewPositionBlock)(FQChartView *chartView,FQPopTipView *popTipView,NSArray <FQXAxisItem *> *dataItemArr);
+
+/**
  根据新配置文件.重新刷新图表
 
  @param configuration 配置文件

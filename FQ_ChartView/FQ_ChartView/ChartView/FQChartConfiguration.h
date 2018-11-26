@@ -9,14 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "FQSeriesElement.h"
 #import "FQPopTipView.h"
-
-NS_ASSUME_NONNULL_BEGIN
-
-typedef NS_ENUM(NSInteger,XAxisOhterPointChartType) {
-    XAxisPointChartType_Hidden = 0, //隐藏
-    XAxisPointChartType_Dot ,       //点
-    XAxisPointChartType_Show       //显示
-};
+#define kXAxisShowNameWithBigDot @"kXAxisShowNameWithBigDot"
+#define kXAxisShowNameWithSmoDot @"kXAxisShowNameWithSmoDot"
 
 typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
     ChartViewUnitDescrType_Top = 0, //上边
@@ -47,11 +41,6 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 
 #pragma mark 优先级最低
 //默认为最小到最大全部排列.所以需要自己定义.
-
-/**
- 针对未显示出来的X轴点.可以将其隐藏或者变为黑点 - 待定
- */
-@property (nonatomic, assign) XAxisOhterPointChartType xAxisOhterType;
 
 /**
  x轴是否在底部.默认为YES.设定为NO就在顶部 - 这个是底部.
@@ -372,4 +361,3 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 
 @end
 
-NS_ASSUME_NONNULL_END

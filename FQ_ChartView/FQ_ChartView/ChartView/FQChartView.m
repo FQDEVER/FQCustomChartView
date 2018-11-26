@@ -442,24 +442,50 @@ typedef struct {
     CGFloat average = _mainContainerW / self.xAxisCount;
     __block CGFloat lastX = self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin;
     [_xAxisShowArr enumerateObjectsUsingBlock:^(NSString *columnName, NSUInteger idx, BOOL *stop) {
-        CATextLayer * textlayer = [[CATextLayer alloc]init];
-        textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
-        textlayer.string = columnName;
-        textlayer.contentsScale = [UIScreen mainScreen].scale;
-        CFStringRef fontName = (__bridge CFStringRef)self.configuration.xAxisLabelsTitleFont.fontName;
-        CGFontRef fontRef = CGFontCreateWithFontName(fontName);
-        textlayer.font = fontRef;
-        textlayer.fontSize = self.configuration.xAxisLabelsTitleFont.pointSize;
-        CGFontRelease(fontRef);
-        textlayer.alignmentMode = kCAAlignmentCenter;
-        textlayer.wrapped = NO;
-        textlayer.truncationMode = kCATruncationEnd;
         
-        CGSize size = [self fq_sizeWithString:columnName font:self.configuration.xAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
-        CGFloat textLayerX = lastX + (idx + 1) * average - average * 0.5 - size.width * 0.5;
-        CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
-        textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
-        [self.layer addSublayer:textlayer];
+        //分出两种.一个是大圆点.一个是小圆点
+        if ([columnName isEqualToString:kXAxisShowNameWithSmoDot]) {
+            CALayer * smoDot = [[CALayer alloc]init];
+            smoDot.backgroundColor = rgba(216, 216, 216, 1.0).CGColor;
+            smoDot.cornerRadius = 2.0f;
+            smoDot.masksToBounds = YES;
+            
+            CGSize size = CGSizeMake(4.0, 4.0);
+            CGFloat smoDotX = lastX + (idx + 1) * average - average * 0.5 - size.width * 0.5;
+            CGFloat smoDotY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
+            smoDot.frame = CGRectMake(smoDotX, smoDotY, size.width, size.height);
+            [self.layer addSublayer:smoDot];
+        }else if([columnName isEqualToString:kXAxisShowNameWithBigDot]){
+            CALayer * bigDot = [[CALayer alloc]init];
+            bigDot.backgroundColor = rgba(102, 102, 102, 1).CGColor;
+            bigDot.cornerRadius = 3.0f;
+            bigDot.masksToBounds = YES;
+            
+            CGSize size = CGSizeMake(6.0, 6.0);
+            CGFloat bigDotX = lastX + (idx + 1) * average - average * 0.5 - size.width * 0.5;
+            CGFloat bigDotY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
+            bigDot.frame = CGRectMake(bigDotX, bigDotY, size.width, size.height);
+            [self.layer addSublayer:bigDot];
+        }else{
+            CATextLayer * textlayer = [[CATextLayer alloc]init];
+            textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
+            textlayer.string = columnName;
+            textlayer.contentsScale = [UIScreen mainScreen].scale;
+            CFStringRef fontName = (__bridge CFStringRef)self.configuration.xAxisLabelsTitleFont.fontName;
+            CGFontRef fontRef = CGFontCreateWithFontName(fontName);
+            textlayer.font = fontRef;
+            textlayer.fontSize = self.configuration.xAxisLabelsTitleFont.pointSize;
+            CGFontRelease(fontRef);
+            textlayer.alignmentMode = kCAAlignmentCenter;
+            textlayer.wrapped = NO;
+            textlayer.truncationMode = kCATruncationEnd;
+            
+            CGSize size = [self fq_sizeWithString:columnName font:self.configuration.xAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+            CGFloat textLayerX = lastX + (idx + 1) * average - average * 0.5 - size.width * 0.5;
+            CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
+            textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
+            [self.layer addSublayer:textlayer];
+        }
     }];
     
 }
@@ -854,7 +880,7 @@ typedef struct {
             }
             [valueArr addObject:xAxisItem];
             [selectPointArr addObject:pointArr[index]];
-            NSString * xAxisItemStr = [NSString stringWithFormat:@"x:%@,y:%@\n",xAxisItem.dataNumber,xAxisItem.dataValue];
+            NSString * xAxisItemStr = xAxisItem.dataValue.stringValue;
             [muStr appendString:xAxisItemStr];
             
             CAShapeLayer *selectPointLayer = pointLayerArr[index];
@@ -872,9 +898,15 @@ typedef struct {
     if (_delegateFlag.tapSelectItem) {
         [_chartDelegate chartView:self tapSelectItem:valueArr.copy location:selectPointArr index:index];
     }
+    if (_tapSelectItemBlock) {
+        _tapSelectItemBlock(self,valueArr.copy,selectPointArr,index);
+    }
     
     if (_delegateFlag.changePopViewPositionWithView) {
         [_chartDelegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
+    }
+    if (_changePopViewPositionBlock) {
+        _changePopViewPositionBlock(self,_popTipView,valueArr.copy);
     }
     
     [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
@@ -926,7 +958,9 @@ typedef struct {
             if (muStr.length != 0) {
                 [muStr appendString:@"\n"];
             }
-            NSString * xAxisItemStr = [NSString stringWithFormat:@"x:%@,y:%@",xAxisItem.dataNumber,xAxisItem.dataValue];
+//            NSString * xAxisItemStr = [NSString stringWithFormat:@"x:%@,y:%@",xAxisItem.dataNumber,xAxisItem.dataValue];
+            //默认为dataValue
+            NSString * xAxisItemStr = xAxisItem.dataValue.stringValue;
             [muStr appendString:xAxisItemStr];
             [valueArr addObject:xAxisItem];
             [selectPointArr addObject:pointArr[index]];
@@ -961,9 +995,15 @@ typedef struct {
         if (_delegateFlag.panChangeItem) {
             [_chartDelegate chartView:self panChangeItem:valueArr.copy location:selectPointArr index:index];
         }
+        if (_panChangeItemBlock) {
+            _panChangeItemBlock(self,valueArr.copy,selectPointArr,index);
+        }
         
         if (_delegateFlag.changePopViewPositionWithView) {
             [_chartDelegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
+        }
+        if (_changePopViewPositionBlock) {
+            _changePopViewPositionBlock(self,_popTipView,valueArr.copy);
         }
         
         [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
@@ -972,6 +1012,9 @@ typedef struct {
     if (gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateFailed) {
         if (_delegateFlag.chartViewPanGestureEnd) {
             [_chartDelegate chartViewPanGestureEnd:self];
+        }
+        if (_panGestureEndBlock) {
+            _panGestureEndBlock(self);
         }
         //3s消失
         [self performSelector:@selector(fq_endChangCurveView) withObject:nil afterDelay:3.0f];

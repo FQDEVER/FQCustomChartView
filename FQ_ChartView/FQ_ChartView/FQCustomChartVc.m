@@ -46,14 +46,6 @@
     }
 }
 
-//SpecialChartChartType_Histogram = 0, //柱状图
-//SpecialChartChartType_BrokenLine ,   //折线图
-//SpecialChartChartType_Histogram_BrokenLine ,   //柱状-折线图
-//SpecialChartChartType_Histogram_BrokenLine_Point,         //柱状-折线-平均点图
-//SpecialChartChartType_Histogram_Reverse, //柱状翻转
-//SpecialChartChartType_BrokenLine_Reverse, //折线翻转
-//SpecialChartChartType_RoundCakes,     //圆饼图
-
 -(void)setType:(SpecialChartChartType)type
 {
     _type = type;
@@ -100,12 +92,10 @@
     element.chartType = FQChartType_Bar;
     element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
     element.orginNumberDatas = @[@8,@30,@60,@17].mutableCopy;
-//    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.barPlaceholderColor = [UIColor clearColor];
     element.barColors = @[UIColor.redColor,UIColor.blueColor,UIColor.cyanColor,UIColor.orangeColor].mutableCopy;
     element.fillLayerHidden = NO;
     element.barSpacing = 0;
-//    element.barWidth = 20.0;
     
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element];
@@ -122,7 +112,20 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.chartDelegate = self;
+//    curveView.chartDelegate = self;
+    curveView.changePopViewPositionBlock = ^(FQChartView * _Nonnull chartView, FQPopTipView * _Nonnull popTipView, NSArray<FQXAxisItem *> * _Nonnull dataItemArr) {
+        NSLog(@"-------------xxxxx->popView%@--%@",dataItemArr,popTipView);
+        NSMutableString * muStr = [NSMutableString string];
+        for (int i = 0; i < dataItemArr.count; ++i) {
+            if (i != 0) {
+                [muStr appendString:@"\n"];
+            }
+            FQXAxisItem * xaxisItem = dataItemArr[i];
+            [muStr appendString:[NSString stringWithFormat:@"AAAA:%@",xaxisItem.dataValue]];
+        }
+        
+        popTipView.contentTextStr = muStr.copy;
+    };
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -140,31 +143,10 @@
     element.fillLayerHidden = NO;
     element.modeType = FQModeType_RoundedCorners;
     
-    //    FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
-    //    element1.chartType = FQChartType_Line;
-    //    element1.yAxisAligmentType = FQChartYAxisAligmentType_Right;
-    //    element1.orginNumberDatas = @[@20,@10,@30,@60,@7].mutableCopy;
-    //    element1.chartType = FQChartType_Line;
-    //    element1.gradientColors = @[(id)[UIColor redColor].CGColor,(id)[UIColor blueColor].CGColor];
-    //    element1.fillLayerHidden = YES;
-    
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
-    chartConfiguration.elements = @[element];//element
-    //    chartConfiguration.gridColumnCount = element.orginNumberDatas.count * 2.0 - 1;
-    //    chartConfiguration.gridRowCount = 5 * 2 - 1;
+    chartConfiguration.elements = @[element];
     chartConfiguration.hiddenLeftYAxis = NO;
-    //    chartConfiguration.showXAxisInterval = 1; //即012345.变为024
-    //从小到大
-    //    chartConfiguration.showXAxisStringDatas = @[@"OC",@"C++",@"C",@"JAVA"].mutableCopy;
-    //    chartConfiguration.showXAxisStringNumberDatas = @[@"1",@"2",@"5"].mutableCopy;
-    //从小到大
-    //    chartConfiguration.showLeftYAxisNames = @[@"低",@"中",@"高"].mutableCopy;
-    //    chartConfiguration.showLeftYAxisDatas = @[@10,@30].mutableCopy;
-    
-    //从小到大
-    //        chartConfiguration.showRightYAxisNames = @[@"低",@"中",@"高"].mutableCopy;
     chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@60].mutableCopy;
-    //    chartConfiguration.showLeftYAxisDatas = @[@0,@20,@30,@40,@50,@60].mutableCopy;
     //设定最大值范围
     chartConfiguration.yLeftAxisMaxNumber = @60;
     chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
@@ -188,7 +170,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.chartDelegate = self;
+//    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -305,16 +287,6 @@
     
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element,element1];
-    //    chartConfiguration.gridColumnCount = element.orginNumberDatas.count * 2.0 - 1;
-    //    chartConfiguration.gridRowCount = 5 * 2 - 1;
-    
-    //        chartConfiguration.showXAxisInterval = 1; //即012345.变为024
-    //从小到大
-    //        chartConfiguration.showXAxisStringDatas = @[@"OC",@"C++",@"C",@"JAVA",@"C",@"AS"].mutableCopy;
-    //        chartConfiguration.showXAxisStringNumberDatas = @[@"1",@"2",@"5"].mutableCopy;
-    //从小到大
-    //    chartConfiguration.showLeftYAxisNames = @[@"低",@"中",@"高"].mutableCopy;
-    //        chartConfiguration.showLeftYAxisDatas = @[@10,@20,@30,@40,@50,@60].mutableCopy;
     //设定最大值范围
     chartConfiguration.yLeftAxisMaxNumber = @70;
     chartConfiguration.yLeftAxisMinNumber = @7;
@@ -359,13 +331,14 @@
     chartConfiguration.elements = @[element];
     chartConfiguration.xAxisGridHidden = YES;
     chartConfiguration.yAxisGridHidden = YES;
-    chartConfiguration.showXAxisStringDatas = @[@"·",@"·",@"·",@"·",@"·",@"06",@"·",@"·",@"·",@"·",@"·",@"12",@"·",@"·",@"·",@"·",@"·",@"18",@"·",@"·",@"·",@"·",@"·",@"24"].mutableCopy;
+    chartConfiguration.showXAxisStringDatas = @[kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithBigDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,@"06",kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithBigDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,@"12",kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithBigDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,@"18",kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithBigDot,kXAxisShowNameWithSmoDot,kXAxisShowNameWithSmoDot,@"24"].mutableCopy;
     chartConfiguration.xAxisIsBottom = NO;
     chartConfiguration.isShowPopView = YES;
     chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
     chartConfiguration.popArrowDirection = FQArrowDirectionUP;
     chartConfiguration.popContentBackColor = [UIColor orangeColor];
-    chartConfiguration.xAxisLabelsTitleColor = [UIColor lightGrayColor];
+    chartConfiguration.xAxisLabelsTitleColor = rgba(102, 102, 102, 1);
+    chartConfiguration.xAxisLabelsTitleFont = [UIFont systemFontOfSize:9];
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 200)];
     curveView.backgroundColor = [UIColor whiteColor];
@@ -491,7 +464,7 @@
     chartConfiguration1.xAxisIsBottom = NO;
     chartConfiguration1.yAxisIsReverse = NO;
 
-    //自定义
+    //自定义提示框
 //    _popTipView = [FQPopTipView initWithPopViewWithDirection:FQArrowDirectionDOWN maxX:self.view.bounds.size.width minX:0 edge:UIEdgeInsetsMake(5, 5, 5, 5) contentText:@"x:y:" textColor:UIColor.whiteColor textFont:[UIFont systemFontOfSize:15]];
 //    _popTipView.marginSpcingW = 20;
 //    _popTipView.marginSpcingH = 10;
@@ -673,9 +646,9 @@
             [muStr appendString:@"\n"];
         }
         FQXAxisItem * xaxisItem = dataItemArr[i];
-        [muStr appendString:[NSString stringWithFormat:@"AAAA:%@",xaxisItem.dataValue]];
+        [muStr appendString:[NSString stringWithFormat:@"x:%@,y:%@",xaxisItem.dataNumber,xaxisItem.dataValue]];
     }
-    
+
     popView.contentTextStr = muStr.copy;
 }
 

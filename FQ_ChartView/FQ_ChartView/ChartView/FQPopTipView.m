@@ -246,15 +246,15 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
     if (_direction == FQArrowDirectionUP) //箭头在上
     {
         CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH);
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY+ self.marginSpcingH);
+        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius);
+        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY+ self.marginSpcingH + self.cornerRadius);
         
     }else if (_direction == FQArrowDirectionDOWN) //箭头在下
     {
         startY = self.frame.size.height;
         CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH);
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY- self.marginSpcingH);
+        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius);
+        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY- self.marginSpcingH - self.cornerRadius);
         
     }
     
