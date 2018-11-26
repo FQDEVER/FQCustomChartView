@@ -1874,6 +1874,7 @@ typedef struct {
     [_barGradientLayerArr removeAllObjects];
     [_lineBackGradientLayerArr removeAllObjects];
     [_pieLayerArr removeAllObjects];
+    [_pointLayerArrs removeAllObjects];
     
     NSInteger count = self.layer.sublayers.count;
     for (int i = 0; i < count; ++i) {
