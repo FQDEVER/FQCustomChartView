@@ -247,12 +247,12 @@ typedef struct {
 {
     if (self = [super initWithFrame:frame]) {
         self.configuration = configuration;
-        [self creatUI];
+        [self fq_creatUI];
     }
     return self;
 }
 
--(void)creatUI{
+-(void)fq_creatUI{
     
     _chartViewBackGroundLayer = [[CALayer alloc]init];
     _chartViewBackGroundLayer.cornerRadius = 5.0f;
@@ -375,13 +375,13 @@ typedef struct {
 
 #pragma mark - 私有方法 - setter methods
 
-- (void)setDelegate:(id<FQChartViewDelegate>)delegate{
-    _delegate = delegate;
-    _delegateFlag.tapSelectItem = [delegate respondsToSelector:@selector(chartView:tapSelectItem:location:index:)];
-    _delegateFlag.panBeginItem = [delegate respondsToSelector:@selector(chartView:panBeginItem:location:index:)];
-    _delegateFlag.panChangeItem = [delegate respondsToSelector:@selector(chartView:panChangeItem:location:index:)];
-    _delegateFlag.chartViewPanGestureEnd = [delegate respondsToSelector:@selector(chartViewPanGestureEnd:)];
-    _delegateFlag.changePopViewPositionWithView = [delegate respondsToSelector:@selector(chartView:changePopViewPositionWithView:itemData:)];
+-(void)setChartDelegate:(id<FQChartViewDelegate>)chartDelegate{
+    _chartDelegate = chartDelegate;
+    _delegateFlag.tapSelectItem = [chartDelegate respondsToSelector:@selector(chartView:tapSelectItem:location:index:)];
+    _delegateFlag.panBeginItem = [chartDelegate respondsToSelector:@selector(chartView:panBeginItem:location:index:)];
+    _delegateFlag.panChangeItem = [chartDelegate respondsToSelector:@selector(chartView:panChangeItem:location:index:)];
+    _delegateFlag.chartViewPanGestureEnd = [chartDelegate respondsToSelector:@selector(chartViewPanGestureEnd:)];
+    _delegateFlag.changePopViewPositionWithView = [chartDelegate respondsToSelector:@selector(chartView:changePopViewPositionWithView:itemData:)];
 }
 
 -(void)setConfiguration:(FQChartConfiguration *)configuration
@@ -470,7 +470,7 @@ typedef struct {
         if (!_yLeftAxisShowArr.count && _yRightAxisShowArr.count > 0) {
             _yLeftAxisShowArr = _yRightAxisShowArr;
         }
-        [self getYAxisDataLabelLayerWithShowArr:_yLeftAxisShowArr left:YES];
+        [self fq_getYAxisDataLabelLayerWithShowArr:_yLeftAxisShowArr left:YES];
     }
 }
 
@@ -480,11 +480,11 @@ typedef struct {
         if (!_yRightAxisShowArr.count && _yLeftAxisShowArr.count > 0) {
             _yRightAxisShowArr = _yLeftAxisShowArr;
         }
-        [self getYAxisDataLabelLayerWithShowArr:_yRightAxisShowArr left:NO];
+        [self fq_getYAxisDataLabelLayerWithShowArr:_yRightAxisShowArr left:NO];
     }
 }
 
--(void)drawYAxisTitleViewLeft:(BOOL)isYAxisLeft{
+-(void)fq_drawYAxisTitleViewLeft:(BOOL)isYAxisLeft{
     
     NSString * unitStr = isYAxisLeft ? self.configuration.yAxisLeftTitle : self.configuration.yAxisRightTitle;
     UIColor * unitColor = isYAxisLeft ? self.configuration.yAxisLeftTitleColor : self.configuration.yAxisRightTitleColor;
@@ -523,9 +523,9 @@ typedef struct {
     [self.layer addSublayer:textlayer];
 }
 
--(void)getYAxisDataLabelLayerWithShowArr:(NSArray *)showArr left:(BOOL)isLeft{
+-(void)fq_getYAxisDataLabelLayerWithShowArr:(NSArray *)showArr left:(BOOL)isLeft{
     
-    [self drawYAxisTitleViewLeft:isLeft];
+    [self fq_drawYAxisTitleViewLeft:isLeft];
     
     if (!showArr.count) {
         return;
@@ -818,7 +818,7 @@ typedef struct {
     }
     
     //取消隐藏方法
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(endChangCurveView) object:nil];
+    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(fq_endChangCurveView) object:nil];
     
     CGPoint currentPoint = [gesture locationInView:_mainContainer];
     NSUInteger index = 0;
@@ -870,17 +870,17 @@ typedef struct {
     self.popTipView.contentTextStr = muStr.copy;
     
     if (_delegateFlag.tapSelectItem) {
-        [_delegate chartView:self tapSelectItem:valueArr.copy location:selectPointArr index:index];
+        [_chartDelegate chartView:self tapSelectItem:valueArr.copy location:selectPointArr index:index];
     }
     
     if (_delegateFlag.changePopViewPositionWithView) {
-        [_delegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
+        [_chartDelegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
     }
     
     [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
     
     //3s消失
-    [self performSelector:@selector(endChangCurveView) withObject:nil afterDelay:3.0f];
+    [self performSelector:@selector(fq_endChangCurveView) withObject:nil afterDelay:3.0f];
 }
 
 - (void)fq_panGesture:(UIPanGestureRecognizer *)gesture{
@@ -939,15 +939,15 @@ typedef struct {
     self.selectIndex = index;
     if (gesture.state == UIGestureRecognizerStateBegan) {
         if (_delegateFlag.panBeginItem) {
-            [_delegate chartView:self panBeginItem:valueArr.copy location:selectPointArr.copy index:index];
+            [_chartDelegate chartView:self panBeginItem:valueArr.copy location:selectPointArr.copy index:index];
         }
         
         if (_delegateFlag.changePopViewPositionWithView) {
-            [_delegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
+            [_chartDelegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
         }
         
         //取消隐藏方法
-        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(endChangCurveView) object:nil];
+        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(fq_endChangCurveView) object:nil];
     }
     
     if (gesture.state == UIGestureRecognizerStateChanged) {
@@ -959,11 +959,11 @@ typedef struct {
         self.popTipView.contentTextStr = muStr.copy;
         
         if (_delegateFlag.panChangeItem) {
-            [_delegate chartView:self panChangeItem:valueArr.copy location:selectPointArr index:index];
+            [_chartDelegate chartView:self panChangeItem:valueArr.copy location:selectPointArr index:index];
         }
         
         if (_delegateFlag.changePopViewPositionWithView) {
-            [_delegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
+            [_chartDelegate chartView:self changePopViewPositionWithView:_popTipView itemData:valueArr.copy];
         }
         
         [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
@@ -971,16 +971,16 @@ typedef struct {
     
     if (gesture.state == UIGestureRecognizerStateCancelled || gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateFailed) {
         if (_delegateFlag.chartViewPanGestureEnd) {
-            [_delegate chartViewPanGestureEnd:self];
+            [_chartDelegate chartViewPanGestureEnd:self];
         }
         //3s消失
-        [self performSelector:@selector(endChangCurveView) withObject:nil afterDelay:3.0f];
+        [self performSelector:@selector(fq_endChangCurveView) withObject:nil afterDelay:3.0f];
     }
 }
 
 
 //3s消失
--(void)endChangCurveView{
+-(void)fq_endChangCurveView{
     
     self.currentlineLayer.opacity = 0.0f;
     self.popTipView.layer.opacity = 0.0f;
@@ -1003,7 +1003,7 @@ typedef struct {
 -(void)fq_getChartPointAndPath{
     
     //获取每个点对应的位置.
-    [self getChartViewPointArr];
+    [self fq_getChartViewPointArr];
     
     NSInteger lineElementIndex = 0;
     NSInteger barElementIndex = 0;
@@ -1041,7 +1041,7 @@ typedef struct {
 /**
  计算出每个点的位置
  */
--(void)getChartViewPointArr{
+-(void)fq_getChartViewPointArr{
     
     NSMutableArray *muArr  = [NSMutableArray array];
     for (FQSeriesElement *element in self.configuration.elements) {
@@ -1091,7 +1091,7 @@ typedef struct {
 /**
  获取X轴相关数据
  */
--(void)getChartViewXAxisDataArr{
+-(void)fq_getChartViewXAxisDataArr{
     
     CGFloat xAxisMax = 0;
     CGFloat xAxisMin = CGFLOAT_MAX;
@@ -1165,7 +1165,7 @@ typedef struct {
 
  @param elements 饼状图数据源对象
  */
--(void)getPieChartViewDataArrWithElement:(FQSeriesElement *)elements{
+-(void)fq_getPieChartViewDataArrWithElement:(FQSeriesElement *)elements{
     
     CGFloat subNum = 0;
     for (NSNumber * numValue in elements.orginNumberDatas) {
@@ -1216,7 +1216,7 @@ typedef struct {
 /**
  获取Y轴相关数据
  */
--(void)getChartViewYAxisDataArr{
+-(void)fq_getChartViewYAxisDataArr{
     
     //根据x轴的值.给出源数据值
     if (self.configuration.elements.count != 0 && self.configuration.elements) {
@@ -1587,17 +1587,17 @@ typedef struct {
             rightY += (itemH + itemMrgin);
         }
         //绘制颜色 描述文本.以及对应的比例
-        [self drawPieWithElement:element textDesc:self.showPieNameDatas[i] color:element.pieColors[i] accounted:self.pieItemAccountedArr[i] centerY:itemY left:i < leftCount];
+        [self fq_drawPieWithElement:element textDesc:self.showPieNameDatas[i] color:element.pieColors[i] accounted:self.pieItemAccountedArr[i] centerY:itemY left:i < leftCount];
         
     }
     
     [self newCircleLayer:self.pieCenterMaskLayer radius:element.pieCenterMaskRadius borderWidth:10 fillColor:[UIColor whiteColor] borderColor:[[UIColor whiteColor]colorWithAlphaComponent:0.5] startPercentage:0 endPercentage:1];
     
     //添加描述与单位
-    [self drawPieCenterDescAndUnitWithElement:element];
+    [self fq_drawPieCenterDescAndUnitWithElement:element];
 }
 
--(void)drawPieWithElement:(FQSeriesElement *)element textDesc:(NSString *)textDesc color:(UIColor *)color accounted:(NSNumber *)accounted centerY:(CGFloat)centerY left:(BOOL)isLeft
+-(void)fq_drawPieWithElement:(FQSeriesElement *)element textDesc:(NSString *)textDesc color:(UIColor *)color accounted:(NSNumber *)accounted centerY:(CGFloat)centerY left:(BOOL)isLeft
 {
     NSString * accountedStr = [NSString stringWithFormat:@"%.01f%%",accounted.floatValue * 100.0];
     
@@ -1657,7 +1657,7 @@ typedef struct {
 
  @param element 图表数据
  */
--(void)drawPieCenterDescAndUnitWithElement:(FQSeriesElement *)element{
+-(void)fq_drawPieCenterDescAndUnitWithElement:(FQSeriesElement *)element{
     //描述
     CATextLayer * centerDescLayer = [[CATextLayer alloc]init];
     centerDescLayer.foregroundColor = element.pieCenterDescColor.CGColor;
@@ -1729,11 +1729,11 @@ typedef struct {
     [self layoutIfNeeded];
     //计算圆饼图对应的比例.判断有没有圆饼图
     if (self.pieElements.count > 0) {
-        [self getPieChartViewDataArrWithElement:self.pieElements.firstObject];
+        [self fq_getPieChartViewDataArrWithElement:self.pieElements.firstObject];
     }else{
         //获取X.Y轴相关数据.包含.最大值.最小值.展示值数组.参考值数组
-        [self getChartViewYAxisDataArr];
-        [self getChartViewXAxisDataArr];
+        [self fq_getChartViewYAxisDataArr];
+        [self fq_getChartViewXAxisDataArr];
         //初始化图表相关属性
         [self fq_setMainContainer];
         //获取图表的点与路径.并绘制
@@ -1758,14 +1758,14 @@ typedef struct {
  
  @param configuration 配置文件
  */
--(void)refreshChartViewWithConfiguration:(FQChartConfiguration *)configuration
+-(void)fq_refreshChartViewWithConfiguration:(FQChartConfiguration *)configuration
 {
     self.configuration = configuration;
     
     //清空图表
-    [self clearChartView];
+    [self fq_clearChartView];
     
-    [self creatUI];
+    [self fq_creatUI];
     
     [self fq_drawCurveView];
 }
@@ -1775,10 +1775,10 @@ typedef struct {
  
  @param axisItemDataArrs 图表数据数组.
  */
--(void)refreshChartViewWithDataArr:(NSArray *)axisItemDataArrs
+-(void)fq_refreshChartViewWithDataArr:(NSArray *)axisItemDataArrs
 {
     //清空图表
-    [self clearChartView];
+    [self fq_clearChartView];
     
     for (int i = 0; i < self.configuration.elements.count; ++i) {
         if (axisItemDataArrs.count > i) { //防止原本两个图表.只传入一个数据.
@@ -1790,7 +1790,7 @@ typedef struct {
         }
     }
     
-    [self creatUI];
+    [self fq_creatUI];
     
     [self fq_drawCurveView];
 }
@@ -1800,14 +1800,14 @@ typedef struct {
  
  @param element 图表数据数组.
  */
--(void)refreshPieChartViewWithElement:(FQSeriesElement *)element
+-(void)fq_refreshPieChartViewWithElement:(FQSeriesElement *)element
 {
     //清空图表
-    [self clearChartView];
+    [self fq_clearChartView];
     
     self.configuration.elements = @[element];
     
-    [self creatUI];
+    [self fq_creatUI];
     
     [self fq_drawCurveView];
 }
@@ -1815,7 +1815,7 @@ typedef struct {
 /**
  清空图表位置.
  */
--(void)clearChartView{
+-(void)fq_clearChartView{
     
     [_mainContainer removeFromSuperview];
     [_barElements removeAllObjects];

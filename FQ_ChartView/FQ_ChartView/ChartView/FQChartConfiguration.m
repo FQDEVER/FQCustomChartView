@@ -28,7 +28,6 @@
     _gridRowCount = 10;
     _gridColumnCount = 10;
     _gestureEnabel = YES;
-    _minimumPressDuration = 0.5f;
     _drawAnimationDuration = 0.0f;
     _hiddenLeftYAxis = YES;
     _hiddenRightYAxis = YES;

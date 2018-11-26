@@ -122,7 +122,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -188,7 +188,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -264,7 +264,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -336,7 +336,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -370,7 +370,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 200)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -411,7 +411,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
@@ -454,7 +454,7 @@
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 64, self.view.bounds.size.width, 300)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
     
@@ -510,7 +510,7 @@
     
     FQChartView *curveView1 = [FQChartView getChartViewWithConfiguration:chartConfiguration1 withFrame:CGRectMake(0, 364, self.view.bounds.size.width, 300)];
     curveView1.backgroundColor = [UIColor whiteColor];
-    curveView1.delegate = self;
+    curveView1.chartDelegate = self;
     [self.view addSubview:curveView1];
     [curveView1 fq_drawCurveView];
 }
@@ -536,7 +536,7 @@
 
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
     _chartView = curveView;
-    curveView.delegate = self;
+    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 
@@ -549,19 +549,19 @@
     
     if (_type == SpecialChartChartType_Histogram)
     {
-        [self.chartView refreshChartViewWithDataArr:@[@[@10,@20,@40,@10]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@10,@20,@40,@10]]];
     }else if (_type == SpecialChartChartType_BrokenLine) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
     }else if (_type == SpecialChartChartType_Histogram_BrokenLine) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@20,@10,@30,@60,@6],@[@8,@7,@10,@30,@60,@17]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@20,@10,@30,@60,@6],@[@8,@7,@10,@30,@60,@17]]];
     }else if (_type == SpecialChartChartType_BrokenLine_BrokenLineFill) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@20,@10,@30,@60,@6,@8,@7,@10,@30,@60,@17],@[@8,@7,@10,@30,@60,@17,@20,@10,@30,@60,@6]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@20,@10,@30,@60,@6,@8,@7,@10,@30,@60,@17],@[@8,@7,@10,@30,@60,@17,@20,@10,@30,@60,@6]]];
     }else if (_type == SpecialChartChartType_Histogram_Reverse) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@30,@60,@17,@30,@60,@17,@8,@7,@10,@8,@7,@10,@8,@7,@10,@30,@60,@17,@8,@7,@10,@30,@60,@17]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@30,@60,@17,@30,@60,@17,@8,@7,@10,@8,@7,@10,@8,@7,@10,@30,@60,@17,@8,@7,@10,@30,@60,@17]]];
     }else if (_type == SpecialChartChartType_BrokenLine_XReverse) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
     }else if (_type == SpecialChartChartType_BrokenLine_YReverse) {
-        [self.chartView refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
+        [self.chartView fq_refreshChartViewWithDataArr:@[@[@13,@2,@19,@60,@20,@17]]];
     }else if (_type == SpecialChartChartType_RoundCakes) {
         
         FQSeriesElement * element = [[FQSeriesElement alloc]init];
@@ -573,7 +573,7 @@
         element.pieCenterMaskRadius = 60.0f;
         element.pieCenterDesc = @"8";
         element.pieCenterUnit = @"小时";
-        [self.chartView refreshPieChartViewWithElement:element];
+        [self.chartView fq_refreshPieChartViewWithElement:element];
     }
 }
 
@@ -602,12 +602,12 @@
     chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.hiddenLeftYAxis = YES;
     
-    [self.chartView refreshChartViewWithConfiguration:chartConfiguration];
+    [self.chartView fq_refreshChartViewWithConfiguration:chartConfiguration];
 }
 
 
 
-#pragma mark - chartViewDelegate
+#pragma mark - chartViewchartDelegate
 /**
  tap手势点击时.
  
