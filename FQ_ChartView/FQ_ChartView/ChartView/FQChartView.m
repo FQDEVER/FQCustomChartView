@@ -210,8 +210,8 @@ typedef struct {
  */
 @property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barLayerArr;
 @property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barBackLayerArr;
-@property (nonatomic, strong) NSMutableArray<CAGradientLayer *> *barGradientLayerArr;
-
+@property (nonatomic, strong) CAGradientLayer *barGradientLayer;
+@property (nonatomic, strong) CALayer *barContainerLayer;//添加一个柱状图所有容器.方便做渐变
 
 /**
  圆饼图 - 只允许一组.
@@ -319,16 +319,21 @@ typedef struct {
             if (self.barElements.count > 0) {
                 continue;
             }
+            
+            self.barContainerLayer  = [[CALayer alloc]init];
+            self.barContainerLayer.frame = self.mainContainer.bounds;
+            [self.mainContainer.layer addSublayer:self.barContainerLayer];
+            
             for (int i = 0; i < element.orginDatas.count; ++i) {
                 
                 CAShapeLayer * backLayer = [CAShapeLayer new];
                 backLayer.fillColor = nil;
-                [mainContainer.layer addSublayer:backLayer];
+                [self.mainContainer.layer addSublayer:backLayer];
                 [self.barBackLayerArr addObject:backLayer];
                 
                 CAShapeLayer *barLayer = [CAShapeLayer new];
                 barLayer.fillColor = nil;
-                [mainContainer.layer addSublayer:barLayer];
+                [self.barContainerLayer addSublayer:barLayer];
                 [self.barLayerArr addObject:barLayer];
                 
                 if (element.gradientColors.count > 0) {
@@ -336,7 +341,7 @@ typedef struct {
                     barGradientLayer.startPoint = CGPointMake(1, 1);
                     barGradientLayer.endPoint = CGPointMake(1, 0);
                     [mainContainer.layer addSublayer:barGradientLayer];
-                    [self.barGradientLayerArr addObject: barGradientLayer];
+                    self.barGradientLayer = barGradientLayer;
                 }
             }
             [self.barElements addObject:element];
@@ -833,10 +838,10 @@ typedef struct {
         barLayer.drawsAsynchronously = YES;
         
         if (barElement.gradientColors.count > 0) {
-            CAGradientLayer * barGradientLayer = _barGradientLayerArr[i];
+            CAGradientLayer * barGradientLayer = self.barGradientLayer;
             barGradientLayer.frame = _mainContainer.bounds;
             barGradientLayer.colors = barElement.gradientColors;
-            barGradientLayer.mask = barLayer;
+            barGradientLayer.mask = self.barContainerLayer;
         }
     }
     
@@ -2028,7 +2033,6 @@ typedef struct {
     [_lineGradientLayerArr removeAllObjects];
     [_barLayerArr removeAllObjects];
     [_barBackLayerArr removeAllObjects];
-    [_barGradientLayerArr removeAllObjects];
     [_lineBackGradientLayerArr removeAllObjects];
     [_pieLayerArr removeAllObjects];
     [_pointLayerArrs removeAllObjects];
@@ -2269,14 +2273,6 @@ typedef struct {
         _barBackLayerArr = [NSMutableArray array];
     }
     return _barBackLayerArr;
-}
-
--(NSMutableArray<CAGradientLayer *> *)barGradientLayerArr
-{
-    if (!_barGradientLayerArr) {
-        _barGradientLayerArr = [NSMutableArray array];
-    }
-    return _barGradientLayerArr;
 }
 
 //线条的绘制数据数组
