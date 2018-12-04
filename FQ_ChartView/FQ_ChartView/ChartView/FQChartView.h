@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  tap手势点击时.
-
+ 
  @param chartView 图表视图
  @param dataItemArr 数据数组
  @param pointArr 位置点数组
@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  pan手势滑动时.
-
+ 
  @param chartView 图表视图
  @param dataItemArr 数据数组
  @param pointArr 位置点数组
@@ -51,7 +51,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  pan手势结束时
-
+ 
  @param chartView chartView
  */
 - (void)chartViewPanGestureEnd:(FQChartView *)chartView;
@@ -119,7 +119,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  根据新配置文件.重新刷新图表
-
+ 
  @param configuration 配置文件
  */
 -(void)fq_refreshChartViewWithConfiguration:(FQChartConfiguration *)configuration;
@@ -151,6 +151,15 @@ NS_ASSUME_NONNULL_BEGIN
  @return 图表视图
  */
 + (instancetype)getChartViewWithConfiguration:(FQChartConfiguration *)configuration withFrame:(CGRect)frame;
+
+/**
+ 获取默认柱状图样式
+ 
+ @param xAxisStrArr x展示视图
+ @param frame 布局尺寸
+ @return chartView
+ */
++(instancetype)getDefaultHistogramChartViewWithArr:(NSArray *)xAxisStrArr withFrame:(CGRect)frame;
 
 @end
 

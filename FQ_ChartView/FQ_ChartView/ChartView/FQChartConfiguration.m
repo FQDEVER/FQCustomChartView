@@ -39,6 +39,8 @@
     _isShowSelectPoint = YES;
     _selectPointColor = [UIColor redColor];
     _isSelectPointBorder = YES;
+    _popTextFont = [UIFont fontWithName:@"PingFangSC-Light" size:11];
+    _popTextColor = [UIColor whiteColor];
     _chartBackLayerEdgeInsets = UIEdgeInsetsZero;
     _chartBackLayerColor = [UIColor clearColor];
     _kDefaultYAxisNames = 5;
@@ -46,8 +48,9 @@
     _kYAxisLabelMargin = 5.0;
     _kYAxisChartViewMargin = 10.0;
     _kYTitleLabelBot = 10.0;
-    _kChartViewWidthMargin = 40.0;
-    _kChartViewHeightMargin = 40.0;
+    _kChartViewWidthMargin = 30.0;
+    _kChartViewHeightMargin = 25.0;
+    _isShadow = YES;
     
 }
 

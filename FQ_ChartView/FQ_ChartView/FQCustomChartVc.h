@@ -17,6 +17,9 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_BrokenLine_XReverse, //折线图-X翻转
     SpecialChartChartType_BrokenLine_YReverse, //折线图-Y轴翻转
     SpecialChartChartType_RoundCakes,     //圆饼图
+    SpecialChartChartType_NoneDataBar,     //无数据的柱状图展示
+    SpecialChartChartType_NoneDataPie,     //无数据的饼状图展示
+    
 };
 
 

@@ -24,7 +24,7 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 
 #pragma mark 优先级最高
 /**
- 显示出来的X轴的值.只想显示其中的是文字.这种只适用等分 @[20180103,20180203,20180303]
+ 显示出来的X轴的值.只想显示其中的是文字.这种只适用等分 @[20180103,20180203,20180303].
  */
 @property (nonatomic, strong) NSArray<NSString *> *showXAxisStringDatas;
 
@@ -146,6 +146,15 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
  */
 @property (nonatomic, assign) BOOL hiddenRightYAxis;
 
+/**
+ 是否隐藏左边Y轴上的文本.默认为NO
+ */
+@property (nonatomic, assign) BOOL hiddenLeftYAxisText;
+
+/**
+ 是否隐藏右边Y轴的文本.默认为NO
+ */
+@property (nonatomic, assign) BOOL hiddenRightYAxisText;
 
 #pragma mark - 其他数据
 
@@ -218,12 +227,12 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 @property (nonatomic, assign) CGFloat kYTitleLabelBot;
 
 /**
- y轴描述的宽度.默认为40.0
+ y轴描述的宽度.默认为30.0
  */
 @property (nonatomic, assign) CGFloat kChartViewWidthMargin;
 
 /**
- x轴描述的高度.默认为40.0
+ x轴描述的高度.默认为25.0
  */
 @property (nonatomic, assign) CGFloat kChartViewHeightMargin;
 
@@ -243,6 +252,21 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
  contentView的背景色
  */
 @property (nonatomic, strong) UIColor *popContentBackColor;
+
+/**
+ popView默认样式文字的字体
+ */
+@property (nonatomic, strong) UIFont *popTextFont;
+
+/**
+ popview默认样式文字颜色
+ */
+@property (nonatomic, strong) UIColor *popTextColor;
+
+/**
+ 是否添加阴影
+ */
+@property (nonatomic, assign) BOOL isShadow;
 
 /**
  想自定义popTipView.直接传入该对象.不传则默认是用String样式.

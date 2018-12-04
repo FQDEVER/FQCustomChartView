@@ -66,6 +66,10 @@
         [self chartViewSpecialChartChartType_BrokenLine_YReverse];
     }else if (type == SpecialChartChartType_RoundCakes) {
         [self chartViewSpecialChartChartType_RoundCakes];
+    }else if (type == SpecialChartChartType_NoneDataBar){
+        [self chartViewSpecialChartChartType_NoneDataBar];
+    }else if (type == SpecialChartChartType_NoneDataPie){
+        [self chartViewSpecialChartChartType_NoneDataPie];
     }
     
     //添加一个按钮.用来更新数据.
@@ -137,7 +141,7 @@
     FQSeriesElement * element = [[FQSeriesElement alloc]init];
     element.chartType = FQChartType_Line;
     element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
-    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7].mutableCopy;
+    element.orginNumberDatas = @[@0,@0,@0,@30,@0,@0,@0].mutableCopy;
     element.fillLayerBackgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.3];
     element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.fillLayerHidden = NO;
@@ -288,15 +292,23 @@
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element,element1];
     //设定最大值范围
-    chartConfiguration.yLeftAxisMaxNumber = @70;
-    chartConfiguration.yLeftAxisMinNumber = @7;
+    chartConfiguration.yLeftAxisMaxNumber = @80;
+    chartConfiguration.yLeftAxisMinNumber = @0;
+    chartConfiguration.yRightAxisMaxNumber = @80;
+    chartConfiguration.yRightAxisMinNumber = @0;
     
-    chartConfiguration.yAxisLeftTitle = @"步频(次/分钟)";
-    chartConfiguration.yAxisRightTitle = @"海拔高度(米)";
+    chartConfiguration.yAxisLeftTitle = @"min";//@"步频(次/分钟)";
+    chartConfiguration.yAxisRightTitle = @"m/s";//@"海拔高度(米)";
     chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
     chartConfiguration.yAxisRightTitleColor = [UIColor blueColor];
     chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.yAxisGridHidden = NO;
+    chartConfiguration.xAxisGridHidden = NO;
+    chartConfiguration.gridRowCount = 5;
+    chartConfiguration.gridColumnCount = 2;
+    
     chartConfiguration.hiddenLeftYAxis = NO;
     chartConfiguration.hiddenRightYAxis = NO;
     chartConfiguration.isShowPopView = YES;
@@ -513,6 +525,47 @@
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 
+}
+
+/**
+ 无数据柱状图
+ */
+-(void)chartViewSpecialChartChartType_NoneDataBar{
+    
+    
+    NSArray * xAxisStrArr = @[@"20",@"21",@"22",@"23",@"24",@"25",@"26"];
+    FQChartView *curveView = [FQChartView getDefaultHistogramChartViewWithArr:xAxisStrArr withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+    
+}
+
+/**
+ 无数据的饼状图
+ */
+-(void)chartViewSpecialChartChartType_NoneDataPie{
+
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Pie;
+    element.pieRadius = 50.0f;
+    element.pieCenterMaskRadius = 60.0f;
+    element.pieCenterDesc = @"0000";
+    element.pieCenterUnit = @"0000";
+    element.pieCenterDescColor = UIColor.redColor;
+    element.pieCenterDescFont = [UIFont systemFontOfSize:40];
+    element.pieCenterUnitColor = UIColor.redColor;
+    element.pieCenterUnitFont = [UIFont systemFontOfSize:40];
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
 }
 
 

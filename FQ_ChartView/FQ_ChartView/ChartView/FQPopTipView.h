@@ -43,6 +43,11 @@ typedef NS_ENUM(NSUInteger,FQArrowDirection){
  */
 @property (nonatomic, copy) NSString *contentTextStr;
 
+/**
+ 是否添加阴影
+ */
+@property (nonatomic, assign) BOOL isShadow;
+
 
 /**
  如果只有文本展示.则使用该方法

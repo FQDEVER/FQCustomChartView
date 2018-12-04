@@ -60,6 +60,11 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
  */
 @property (nonatomic, assign) CGPoint origin;
 
+/**
+ 箭头layer
+ */
+@property (nonatomic, strong) CAShapeLayer *triangleLayer;
+
 @end
 
 @implementation FQPopTipView
@@ -142,6 +147,8 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
         self.contentView.backgroundColor=[UIColor colorWithWhite:0.2 alpha:1];
         [self addSubview:self.contentView];
         
+        self.triangleLayer = [[CAShapeLayer alloc]init];
+        [self.layer addSublayer:self.triangleLayer];
     }
     
     return self;
@@ -163,13 +170,53 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
         popViewX = _maxX - self.frame.size.width;
         self.positionType = FQPopViewPositionType_Right;
     }
+    
+    CGFloat startX = 0;
+    CGFloat startY = 0;
+    if (self.positionType == FQPopViewPositionType_Center) {
+        startX = self.frame.size.width * 0.5;
+    }else if (self.positionType == FQPopViewPositionType_Left){
+        startX = self.origin.x - _minX;
+    }else{
+        startX = self.origin.x - self.frame.origin.x;
+    }
+    UIBezierPath *path = [[UIBezierPath alloc]init];
     if (_direction == FQArrowDirectionUP) {//箭头在上
         self.frame = CGRectMake(popViewX, origin.y, self.frame.size.width, self.frame.size.height);
         self.contentView.frame = CGRectMake(0,self.marginSpcingH, self.frame.size.width, self.frame.size.height - self.marginSpcingH);
+        [path moveToPoint:CGPointMake(startX, startY)];
+        [path addLineToPoint:CGPointMake(self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius)];
+        [path addLineToPoint:CGPointMake(self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius)];
+        
+        
+        self.triangleLayer.path = path.CGPath;
+        self.triangleLayer.fillColor = self.contentView.backgroundColor.CGColor;
+        
     }else{
         self.frame = CGRectMake(popViewX, origin.y - self.frame.size.height, self.frame.size.width, self.frame.size.height);
         self.contentView.frame = CGRectMake(0,0, self.frame.size.width, self.frame.size.height - self.marginSpcingH);
+        
+        startY = self.frame.size.height;
+        [path moveToPoint:CGPointMake(startX, startY)];
+        [path addLineToPoint:CGPointMake(self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius)];
+        [path addLineToPoint:CGPointMake(self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius)];
+        
+        self.triangleLayer.path = path.CGPath;
+        self.triangleLayer.fillColor = self.contentView.backgroundColor.CGColor;
     }
+    
+    if (self.isShadow) {
+        [self setLayerShadow:[[UIColor blackColor] colorWithAlphaComponent:0.3] offset:CGSizeMake(0, 3) radius:5.0];
+    }
+}
+
+- (void)setLayerShadow:(UIColor*)color offset:(CGSize)offset radius:(CGFloat)radius {
+    self.layer.shadowColor = color.CGColor;
+    self.layer.shadowOffset = offset;
+    self.layer.shadowRadius = radius;
+    self.layer.shadowOpacity = 1;
+    self.layer.shouldRasterize = YES;
+    self.layer.rasterizationScale = [UIScreen mainScreen].scale;
 }
 
 -(void)setMarginSpcingH:(CGFloat)marginSpcingH
@@ -226,44 +273,44 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
 {
     self.origin = origin;
     //更新位置.
-    [self setNeedsDisplay];
+//    [self setNeedsDisplay];
 }
-
--(void)drawRect:(CGRect)rect
-{
-    CGContextRef context=UIGraphicsGetCurrentContext();
-    
-    CGFloat startX = 0;
-    CGFloat startY = 0;
-    if (self.positionType == FQPopViewPositionType_Center) {
-        startX = self.frame.size.width * 0.5;
-    }else if (self.positionType == FQPopViewPositionType_Left){
-        startX = self.origin.x - _minX;
-    }else{
-        startX = self.origin.x - self.frame.origin.x;
-    }
-    
-    if (_direction == FQArrowDirectionUP) //箭头在上
-    {
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius);
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY+ self.marginSpcingH + self.cornerRadius);
-        
-    }else if (_direction == FQArrowDirectionDOWN) //箭头在下
-    {
-        startY = self.frame.size.height;
-        CGContextMoveToPoint(context, startX, startY);//设置起点
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius);
-        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY- self.marginSpcingH - self.cornerRadius);
-        
-    }
-    
-    CGContextClosePath(context);
-    [self.contentView.backgroundColor setFill];
-    [self.backgroundColor setStroke];
-    CGContextDrawPath(context, kCGPathFillStroke);
-    
-}
+//
+//-(void)drawRect:(CGRect)rect
+//{
+//    CGContextRef context=UIGraphicsGetCurrentContext();
+//    
+//    CGFloat startX = 0;
+//    CGFloat startY = 0;
+//    if (self.positionType == FQPopViewPositionType_Center) {
+//        startX = self.frame.size.width * 0.5;
+//    }else if (self.positionType == FQPopViewPositionType_Left){
+//        startX = self.origin.x - _minX;
+//    }else{
+//        startX = self.origin.x - self.frame.origin.x;
+//    }
+//    
+//    if (_direction == FQArrowDirectionUP) //箭头在上
+//    {
+//        CGContextMoveToPoint(context, startX, startY);//设置起点
+//        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius);
+//        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY+ self.marginSpcingH + self.cornerRadius);
+//        
+//    }else if (_direction == FQArrowDirectionDOWN) //箭头在下
+//    {
+//        startY = self.frame.size.height;
+//        CGContextMoveToPoint(context, startX, startY);//设置起点
+//        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius);
+//        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY- self.marginSpcingH - self.cornerRadius);
+//        
+//    }
+//    
+//    CGContextClosePath(context);
+//    [self.contentView.backgroundColor setFill];
+//    [self.backgroundColor setStroke];
+//    CGContextDrawPath(context, kCGPathFillStroke);
+//    
+//}
 
 -(UILabel *)contentTextLab
 {
