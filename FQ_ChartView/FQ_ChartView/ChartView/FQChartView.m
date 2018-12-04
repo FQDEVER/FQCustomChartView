@@ -335,15 +335,17 @@ typedef struct {
                 barLayer.fillColor = nil;
                 [self.barContainerLayer addSublayer:barLayer];
                 [self.barLayerArr addObject:barLayer];
-                
-                if (element.gradientColors.count > 0) {
-                    CAGradientLayer *barGradientLayer = [CAGradientLayer new];
-                    barGradientLayer.startPoint = CGPointMake(1, 1);
-                    barGradientLayer.endPoint = CGPointMake(1, 0);
-                    [mainContainer.layer addSublayer:barGradientLayer];
-                    self.barGradientLayer = barGradientLayer;
-                }
+        
             }
+            
+            if (element.gradientColors.count > 0) {
+                CAGradientLayer *barGradientLayer = [CAGradientLayer new];
+                barGradientLayer.startPoint = CGPointMake(1, 1);
+                barGradientLayer.endPoint = CGPointMake(1, 0);
+                [mainContainer.layer addSublayer:barGradientLayer];
+                self.barGradientLayer = barGradientLayer;
+            }
+            
             [self.barElements addObject:element];
             
         }else if (element.chartType == FQChartType_Pie){
