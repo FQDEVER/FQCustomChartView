@@ -44,6 +44,7 @@
                      @{@"自定义4":@"icon_calc"},
                      @{@"自定义5":@"icon_calc"},
                      @{@"自定义6":@"icon_calc"},
+                     @{@"自定义7":@"icon_calc"},
                      ];
     }
     return _dataArr;

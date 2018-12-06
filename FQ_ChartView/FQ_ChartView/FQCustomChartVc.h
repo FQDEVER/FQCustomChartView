@@ -19,9 +19,13 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_RoundCakes,     //圆饼图
     SpecialChartChartType_NoneDataBar,     //无数据的柱状图展示
     SpecialChartChartType_NoneDataPie,     //无数据的饼状图展示
+    SpecialChartChartType_MeterCircle,     //计圈样式
+    SpecialChartChartType_HeartRate,       //心率样式
+    SpecialChartChartType_CustomCenter,       //自定义居中
+    SpecialChartChartType_CustomLeftRight,       //自定义左右对齐
+    SpecialChartChartType_CustomCorresponding,       //自定义对应每条数据
     
 };
-
 
 @interface FQCustomChartVc : UIViewController
 

@@ -70,6 +70,16 @@
         [self chartViewSpecialChartChartType_NoneDataBar];
     }else if (type == SpecialChartChartType_NoneDataPie){
         [self chartViewSpecialChartChartType_NoneDataPie];
+    }else if(type == SpecialChartChartType_MeterCircle){
+        [self  chartviewSpecialChartChartType_MeterCircle];
+    }else if (type == SpecialChartChartType_HeartRate){
+        [self  chartviewSpecialChartChartType_HeartRate];
+    }else if (type == SpecialChartChartType_CustomCenter){
+        [self  chartviewSpecialChartChartType_CustomCenter];
+    }else if (type == SpecialChartChartType_CustomLeftRight){
+         [self  chartviewSpecialChartChartType_CustomLeftRight];
+    }else if (type == SpecialChartChartType_CustomCorresponding){
+        [self  chartviewSpecialChartChartType_CustomCorresponding];
     }
     
     //添加一个按钮.用来更新数据.
@@ -247,6 +257,7 @@
     //------设定刚好把Y轴隔离出背景Layer.
     chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin);
     
+    chartConfiguration.yAxisIsReverse = YES;
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
@@ -316,6 +327,7 @@
     chartConfiguration.mainContainerBackColor = rgba(250.0, 250.0, 250.0, 1.0f);
     chartConfiguration.isSelectPointBorder = NO;
     chartConfiguration.unitDescrType = ChartViewUnitDescrType_Top;
+    chartConfiguration.yAxisIsReverse = YES;
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
@@ -568,6 +580,226 @@
     [curveView fq_drawCurveView];
 }
 
+
+
+/**
+ 计圈样式
+ */
+-(void)chartviewSpecialChartChartType_MeterCircle{
+    
+    FQHorizontalBarItem * barItem = [[FQHorizontalBarItem alloc]init];
+    barItem.xLeftAxisStr = @"1";
+    barItem.contentStr = @"5’56”";
+    barItem.barTopStr = @"+293";
+    barItem.xRightAxisStr = @"6:30";
+    barItem.valueData = @10;
+    barItem.isSelect = YES;
+    
+    FQHorizontalBarItem * barItem1 = [[FQHorizontalBarItem alloc]init];
+    barItem1.xLeftAxisStr = @"1";
+    barItem1.contentStr = @"5’56”";
+    barItem1.barTopStr = @"+293";
+    barItem1.xRightAxisStr = @"6:30";
+    barItem1.valueData = @5;
+    
+    FQHorizontalBarItem * barItem2 = [[FQHorizontalBarItem alloc]init];
+    barItem2.xLeftAxisStr = @"1";
+    barItem2.contentStr = @"5/’56/”";
+    barItem2.barTopStr = @"+293";
+    barItem2.xRightAxisStr = @"6:30";
+    barItem2.valueData = @3;
+    
+    FQHorizontalBarElement * element = [[FQHorizontalBarElement alloc]init];
+    element.horizontalBarItemArr = @[barItem,barItem1,barItem2];
+    element.horizontalBarContentType = ChartHorizontalBarContentType_Inside;
+    element.isShowXLeftAxisStr = YES;
+    element.isShowXRightAxisStr = YES;
+    element.contentTitle = @"配速";
+    element.xRightTitle = @"累计耗时";
+    element.horBarBotDesc = @"最后一圈0.89公里,用时8:30";
+    element.horBarBotRightDesc = @"22:40:28";
+    element.horBarBotLeftDesc = @"其他";
+    
+    element.titleColor = rgba(102, 102, 102, 1.0f);
+    element.titleFont = [UIFont fontWithName:@"PingFangSC-Semibold"size:12];
+    element.xLeftAxisLabColor = rgba(102, 102, 102, 1.0f);
+    element.xLeftAxisLabFont = [UIFont fontWithName:@"PingFangSC-Regular"size:12];
+    element.contentLabColor = rgba(255, 255, 255, 1);
+    element.contentLabFont = [UIFont fontWithName:@"PingFangSC-Semibold"size:14];
+    element.chartTopLabColor = rgba(153, 153, 153, 1.0f);
+    element.chartTopLabFont = [UIFont fontWithName:@"PingFangSC-Regular"size:10];
+    element.xRightAxisLabColor = rgba(102, 102, 102, 1.0f);
+    element.xRightAxisLabFont = [UIFont fontWithName:@"PingFangSC-Semibold"size:12];
+    element.gradientColors = @[(id)rgba(0, 227, 255, 1).CGColor,(id)rgba(0, 122, 255, 1).CGColor];
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.horBarElement = element;
+    chartConfiguration.kHorizontalBarBotMargin = 20;
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+/**
+ 心率样式
+ */
+-(void)chartviewSpecialChartChartType_HeartRate{
+    FQHorizontalBarItem * barItem = [[FQHorizontalBarItem alloc]init];
+    barItem.xLeftAxisStr = @"38%";
+    barItem.contentStr = @"热身(95-114)";
+    barItem.barTopStr = @"3:58:36";
+    barItem.valueData = @38;//时间长度
+    FQHorizontalBarItem * barItem1 = [[FQHorizontalBarItem alloc]init];
+    barItem1.xLeftAxisStr = @"18%";
+    barItem1.contentStr = @"燃脂(115-133)";
+    barItem1.barTopStr = @"58:36";
+    barItem1.valueData = @18;
+    
+    FQHorizontalBarItem * barItem2 = [[FQHorizontalBarItem alloc]init];
+    barItem2.xLeftAxisStr = @"28%";
+    barItem2.contentStr = @"有氧耐力(134-152)";
+    barItem2.barTopStr = @"2:28:36";
+    barItem2.valueData = @28;
+    
+    FQHorizontalBarItem * barItem3 = [[FQHorizontalBarItem alloc]init];
+    barItem3.xLeftAxisStr = @"68%";
+    barItem3.contentStr = @"无氧耐力(153-171)";
+    barItem3.barTopStr = @"6:58:36";
+    barItem3.valueData = @68;
+    
+    FQHorizontalBarItem * barItem4 = [[FQHorizontalBarItem alloc]init];
+    barItem4.xLeftAxisStr = @"8%";
+    barItem4.contentStr = @"极限(172)";
+    barItem4.barTopStr = @"28:36";
+    barItem4.valueData = @8;
+    
+    
+    FQHorizontalBarElement * element = [[FQHorizontalBarElement alloc]init];
+    element.horizontalBarItemArr = @[barItem,barItem1,barItem2,barItem3,barItem4];
+    element.horizontalBarContentType = ChartHorizontalBarContentType_Top;
+    element.isShowXLeftAxisStr = YES;
+    element.xLeftAxisLabColor = rgba(51, 51, 51, 1.0f);
+    element.xLeftAxisLabFont = [UIFont fontWithName:@"PingFangSC-Regular"size:12];
+    element.contentLabColor = rgba(102, 102, 102, 1.0f);
+    element.contentLabFont = [UIFont fontWithName:@"PingFangSC-Semibold"size:12];
+    element.chartTopLabColor = rgba(153, 153, 153, 1.0f);
+    element.chartTopLabFont = [UIFont fontWithName:@"PingFangSC-Regular"size:12];
+    element.colors = @[rgba(71, 204, 255, 1),rgba(65, 212, 0, 1),rgba(183, 238, 2, 1),rgba(251,222, 6, 1),rgba(238, 58, 28, 1)];
+    element.horBarHeight = 12;
+    element.horBarMargin = 2;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.horBarElement = element;
+    chartConfiguration.kHorizontalBarTopMargin = 0;
+    chartConfiguration.kHorizontalBarXAxisRightLabW = 0;
+
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+-(void)chartviewSpecialChartChartType_CustomCenter{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7].mutableCopy;
+    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_Center;
+    
+    chartConfiguration.elements = @[element];
+    chartConfiguration.hiddenLeftYAxis = NO;
+    //设定最大值范围
+    chartConfiguration.yLeftAxisMaxNumber = @70;
+    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+    
+    chartConfiguration.yAxisLeftTitle = @"min";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.showLeftYAxisNames = @[@"aaa",@"bbb",@"ccc",@"dddd"];
+    chartConfiguration.showXAxisStringDatas = @[@"aaa",@"bbb"];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+-(void)chartviewSpecialChartChartType_CustomLeftRight{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7].mutableCopy;
+    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
+    
+    chartConfiguration.elements = @[element];
+    chartConfiguration.hiddenLeftYAxis = NO;
+    //设定最大值范围
+    chartConfiguration.yLeftAxisMaxNumber = @70;
+    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+    
+    chartConfiguration.yAxisLeftTitle = @"min";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.showLeftYAxisNames = @[@"aaa",@"bbb",@"ccc",@"dddd"];
+    chartConfiguration.showXAxisStringDatas = @[@"aaa",@"bbb"];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+-(void)chartviewSpecialChartChartType_CustomCorresponding{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7].mutableCopy;
+    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_Corresponding;
+    
+    chartConfiguration.elements = @[element];
+    chartConfiguration.hiddenLeftYAxis = NO;
+    //设定最大值范围
+    chartConfiguration.yLeftAxisMaxNumber = @70;
+    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+    
+    chartConfiguration.yAxisLeftTitle = @"min";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.showLeftYAxisNames = @[@"aaa",@"bbb",@"ccc",@"dddd"];
+    chartConfiguration.showXAxisStringDatas = @[@"aaa",@"bbb"];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
 
 #pragma mark - 更新数据
 

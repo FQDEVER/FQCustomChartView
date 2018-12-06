@@ -21,6 +21,12 @@
 		B9BD554121A7D6280071AD3E /* FQXAxisItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553C21A7D6280071AD3E /* FQXAxisItem.m */; };
 		B9BD554421A7D63A0071AD3E /* FQCustomChartVc.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD554221A7D63A0071AD3E /* FQCustomChartVc.m */; };
 		B9BD554621A7D7810071AD3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9BD554521A7D7800071AD3E /* Assets.xcassets */; };
+		B9D325DA21B7A67D00566FE7 /* FQSportDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325D921B7A67C00566FE7 /* FQSportDetailCell.m */; };
+		B9D325DD21B7A7D000566FE7 /* FQSportDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325DC21B7A7D000566FE7 /* FQSportDetailModel.m */; };
+		B9D325E021B7ACAF00566FE7 /* FQSportDetailDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325DF21B7ACAF00566FE7 /* FQSportDetailDataModel.m */; };
+		B9E3AEF421B61E0D00A4D22E /* FQTableViewC.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF321B61E0D00A4D22E /* FQTableViewC.m */; };
+		B9E3AEF721B626AF00A4D22E /* FQHorizontalBarElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */; };
+		B9E3AEFA21B626EA00A4D22E /* FQHorizontalBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +75,18 @@
 		B9BD554221A7D63A0071AD3E /* FQCustomChartVc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQCustomChartVc.m; sourceTree = "<group>"; };
 		B9BD554321A7D63A0071AD3E /* FQCustomChartVc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQCustomChartVc.h; sourceTree = "<group>"; };
 		B9BD554521A7D7800071AD3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B9D325D821B7A67C00566FE7 /* FQSportDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQSportDetailCell.h; sourceTree = "<group>"; };
+		B9D325D921B7A67C00566FE7 /* FQSportDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQSportDetailCell.m; sourceTree = "<group>"; };
+		B9D325DB21B7A7D000566FE7 /* FQSportDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQSportDetailModel.h; sourceTree = "<group>"; };
+		B9D325DC21B7A7D000566FE7 /* FQSportDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQSportDetailModel.m; sourceTree = "<group>"; };
+		B9D325DE21B7ACAF00566FE7 /* FQSportDetailDataModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQSportDetailDataModel.h; sourceTree = "<group>"; };
+		B9D325DF21B7ACAF00566FE7 /* FQSportDetailDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQSportDetailDataModel.m; sourceTree = "<group>"; };
+		B9E3AEF221B61E0D00A4D22E /* FQTableViewC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQTableViewC.h; sourceTree = "<group>"; };
+		B9E3AEF321B61E0D00A4D22E /* FQTableViewC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQTableViewC.m; sourceTree = "<group>"; };
+		B9E3AEF521B626AF00A4D22E /* FQHorizontalBarElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarElement.h; sourceTree = "<group>"; };
+		B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarElement.m; sourceTree = "<group>"; };
+		B9E3AEF821B626EA00A4D22E /* FQHorizontalBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarItem.h; sourceTree = "<group>"; };
+		B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +149,14 @@
 				B9BD550B21A7D5CE0071AD3E /* LaunchScreen.storyboard */,
 				B9BD550E21A7D5CE0071AD3E /* Info.plist */,
 				B9BD550F21A7D5CE0071AD3E /* main.m */,
+				B9E3AEF221B61E0D00A4D22E /* FQTableViewC.h */,
+				B9E3AEF321B61E0D00A4D22E /* FQTableViewC.m */,
+				B9D325D821B7A67C00566FE7 /* FQSportDetailCell.h */,
+				B9D325D921B7A67C00566FE7 /* FQSportDetailCell.m */,
+				B9D325DB21B7A7D000566FE7 /* FQSportDetailModel.h */,
+				B9D325DC21B7A7D000566FE7 /* FQSportDetailModel.m */,
+				B9D325DE21B7ACAF00566FE7 /* FQSportDetailDataModel.h */,
+				B9D325DF21B7ACAF00566FE7 /* FQSportDetailDataModel.m */,
 			);
 			path = FQ_ChartView;
 			sourceTree = "<group>";
@@ -166,6 +192,10 @@
 				B9BD553A21A7D6280071AD3E /* FQSeriesElement.m */,
 				B9BD553B21A7D6280071AD3E /* FQXAxisItem.h */,
 				B9BD553C21A7D6280071AD3E /* FQXAxisItem.m */,
+				B9E3AEF521B626AF00A4D22E /* FQHorizontalBarElement.h */,
+				B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */,
+				B9E3AEF821B626EA00A4D22E /* FQHorizontalBarItem.h */,
+				B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */,
 			);
 			path = ChartView;
 			sourceTree = "<group>";
@@ -300,14 +330,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B9D325DD21B7A7D000566FE7 /* FQSportDetailModel.m in Sources */,
+				B9E3AEF721B626AF00A4D22E /* FQHorizontalBarElement.m in Sources */,
 				B9BD550521A7D5BF0071AD3E /* ViewController.m in Sources */,
 				B9BD553F21A7D6280071AD3E /* FQPopTipView.m in Sources */,
 				B9BD554421A7D63A0071AD3E /* FQCustomChartVc.m in Sources */,
 				B9BD553E21A7D6280071AD3E /* FQChartView.m in Sources */,
 				B9BD554121A7D6280071AD3E /* FQXAxisItem.m in Sources */,
+				B9D325DA21B7A67D00566FE7 /* FQSportDetailCell.m in Sources */,
+				B9D325E021B7ACAF00566FE7 /* FQSportDetailDataModel.m in Sources */,
 				B9BD551021A7D5CE0071AD3E /* main.m in Sources */,
 				B9BD553D21A7D6280071AD3E /* FQChartConfiguration.m in Sources */,
 				B9BD550221A7D5BF0071AD3E /* AppDelegate.m in Sources */,
+				B9E3AEFA21B626EA00A4D22E /* FQHorizontalBarItem.m in Sources */,
+				B9E3AEF421B61E0D00A4D22E /* FQTableViewC.m in Sources */,
 				B9BD554021A7D6280071AD3E /* FQSeriesElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

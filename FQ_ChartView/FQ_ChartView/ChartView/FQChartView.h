@@ -144,6 +144,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fq_drawCurveView;
 
 /**
+ 获取当前水平柱状图的高度
+ 
+ @return  获取当前水平柱状的高度
+ */
+-(CGFloat)getCurrentHorizontalBarHeight;
+
+/**
  快捷创建对应的图表
  
  @param configuration 默认设置

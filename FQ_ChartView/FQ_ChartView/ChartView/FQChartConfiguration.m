@@ -52,6 +52,15 @@
     _kChartViewHeightMargin = 25.0;
     _isShadow = YES;
     
+    _kHorizontalBarTitleMargin = 4;
+    _kHorizontalBarXAxisLeftLabW = 20;
+    _kHorizontalBarXAxisRightLabW = 55;
+    _kHorizontalBarLeftMargin = 16;
+    _kHorizontalBarRightMargin = 16;
+    _kHorizontalBarTopMargin = 26;
+    _kHorizontalBarBotMargin = 10;
+    _kHorizontalBarItemMargin = 8;
+    
 }
 
 @end

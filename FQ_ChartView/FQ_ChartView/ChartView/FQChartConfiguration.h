@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FQSeriesElement.h"
 #import "FQPopTipView.h"
+#import "FQHorizontalBarElement.h"
 #define kXAxisShowNameWithBigDot @"kXAxisShowNameWithBigDot"
 #define kXAxisShowNameWithSmoDot @"kXAxisShowNameWithSmoDot"
 
@@ -17,8 +18,20 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
     ChartViewUnitDescrType_LeftRight ,//左侧Y轴在左侧.右边Y轴在右侧.
 };
 
+typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局样式
+    ChartViewXYAxisCustomStrType_LeftRight = 0 ,//从左到右撑满
+    ChartViewXYAxisCustomStrType_Center, //居中布局
+    ChartViewXYAxisCustomStrType_Corresponding ,//能与实际数据对应上.如果是Y轴.就和LeftRight效果一致
+};
+
 
 @interface FQChartConfiguration : NSObject
+
+
+/**
+ 如果指定显示的数组为showXAxisStringDatas或者showLeftYAxisNames.showRightYAxisNames时.参考该参数布局
+ */
+@property (nonatomic, assign) ChartViewXYAxisCustomStrType xyAxisCustomStrType;
 
 #pragma mark - X轴
 
@@ -122,16 +135,16 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
 #pragma mark - 优先级第二
 
 //设定最大值
-@property (nonatomic, assign) NSNumber * yLeftAxisMaxNumber;
+@property (nonatomic, strong) NSNumber * yLeftAxisMaxNumber;
 
 //设定最小值
-@property (nonatomic, assign) NSNumber * yLeftAxisMinNumber;
+@property (nonatomic, strong) NSNumber * yLeftAxisMinNumber;
 
 //设定最大值
-@property (nonatomic, assign) NSNumber * yRightAxisMaxNumber;
+@property (nonatomic, strong) NSNumber * yRightAxisMaxNumber;
 
 //设定最小值
-@property (nonatomic, assign) NSNumber * yRightAxisMinNumber;
+@property (nonatomic, strong) NSNumber * yRightAxisMinNumber;
 
 #pragma mark - 优先级最小 - 默认.
 //如果没有就从0到最大.等分5次排列.
@@ -155,19 +168,6 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
  是否隐藏右边Y轴的文本.默认为NO
  */
 @property (nonatomic, assign) BOOL hiddenRightYAxisText;
-
-#pragma mark - 其他数据
-
-/**
- 平均值.每个区间的一个平均值,有则显示.没有则不显示
- */
-@property (nonatomic, strong) NSMutableArray *averageDatas;
-
-/**
- 平均值.如果有平均值.则显示平均线.否则不显示平均线
- */
-@property (nonatomic, strong) NSNumber *averageData;
-
 
 #pragma mark - 图表数据
 
@@ -382,6 +382,55 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
  是否开启长按手势，开启手势后长按会通过代理将手指所在位置的最近的坐标和对应的值返回，默认开启
  */
 @property (nonatomic, assign) BOOL gestureEnabel;
+
+
+#pragma mark - 添加水平柱状图数据
+
+/**
+ 水平柱状图样式
+ */
+@property (nonatomic, strong) FQHorizontalBarElement *horBarElement;
+
+/**
+ 标题与图表的间距.默认为4
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarTitleMargin;
+
+/**
+ 水平柱状X轴左侧文本的宽.默认为20
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarXAxisLeftLabW;
+
+/**
+ 水平柱状X轴右侧文本的宽.默认为55
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarXAxisRightLabW;
+
+/**
+ 水平柱状图与左侧的间距.默认16
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarLeftMargin;
+
+/**
+ 水平柱状图与右侧的间距.默认为16
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarRightMargin;
+
+/**
+ 水平柱状图与顶部的间距.默认为26
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarTopMargin;
+
+/**
+ 水平柱状图与底部的间距默认为10
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarBotMargin;
+
+/**
+ 水平柱状图每个item的间距.默认为4.
+ */
+@property (nonatomic, assign) CGFloat kHorizontalBarItemMargin;
+
 
 @end
 
