@@ -184,6 +184,7 @@
     chartConfiguration.kYAxisLabelMargin = 10;
     chartConfiguration.kYAxisChartViewMargin = 0;
     chartConfiguration.startPointType = ChartViewStartPointType_Left;
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
     
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(20, 164, self.view.bounds.size.width - 40, 400)];

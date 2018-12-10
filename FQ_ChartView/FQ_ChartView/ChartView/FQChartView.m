@@ -469,11 +469,15 @@ typedef struct {
     //如果是左右
     if (xyAxisCustomStrTypeLeftRight) { //如果有指定的数据.则使用指定布局
         //实际布局宽度
-        CGFloat currentW = _mainContainerW * (self.xAxisCount - 1 ) /self.xAxisCount;
-        
+        CGFloat currentW = _mainContainerW ;
+        if (self.configuration.startPointType == ChartViewStartPointType_Center) {
+            currentW = _mainContainerW * (self.xAxisCount - 1 ) /self.xAxisCount;
+        }
         average =  currentW / (self.configuration.showXAxisStringDatas.count - 1);
-        
-        lastX = self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin + _mainContainerW / self.xAxisCount * 0.5;
+        lastX = self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin;
+        if (self.configuration.startPointType == ChartViewStartPointType_Center) {
+            lastX = self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin + (_mainContainerW - currentW) * 0.5;
+        }
     }
     
     //如果是对应上.则没有变化
