@@ -667,6 +667,7 @@ typedef struct {
     [reversedArray enumerateObjectsUsingBlock:^(NSString *rowName, NSUInteger idx, BOOL *stop) {
         CATextLayer * textlayer = [[CATextLayer alloc]init];
         textlayer.foregroundColor = self.configuration.yAxisLabelsTitleColor.CGColor;
+        textlayer.backgroundColor = UIColor.redColor.CGColor;
         textlayer.string = rowName;
         textlayer.contentsScale = [UIScreen mainScreen].scale;
         
@@ -1234,17 +1235,20 @@ typedef struct {
         //获取最大值.
         CGFloat xAxisNumber = dataItem.dataNumber.floatValue;
         CGFloat yAxisValue = dataItem.dataValue.floatValue;
-        
-        CGFloat x = (xAxisNumber - xminValue)/(xmaxValue - xminValue) * (_mainContainerW - average) + average * 0.5;
-        
+        CGFloat x = 0;
+        if (xmaxValue != xminValue) {
+            x = (xAxisNumber - xminValue)/(xmaxValue - xminValue) * (_mainContainerW - (self.configuration.startPointType == ChartViewStartPointType_Center ? average : 0)) + (self.configuration.startPointType == ChartViewStartPointType_Center ?  average * 0.5 : 0);
+        }else{
+            x = _mainContainerW * 0.5;
+        }
         CGFloat y = 0;
         if (self.configuration.yAxisIsReverse == YES) {
             y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
         }else{
             y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
         }
-        
         [pointArr addObject: [NSValue valueWithCGPoint:CGPointMake(x, y)]];
+        
     }
     
     return pointArr.copy;
@@ -1257,7 +1261,7 @@ typedef struct {
  */
 -(void)fq_getChartViewXAxisDataArr{
     
-    CGFloat xAxisMax = 0;
+    CGFloat xAxisMax = -1;
     CGFloat xAxisMin = CGFLOAT_MAX;
     NSInteger maxCount = 0;
     FQSeriesElement *maxCountElement;
@@ -1408,20 +1412,21 @@ typedef struct {
     CGFloat horBarItemH = element.horizontalBarContentType == ChartHorizontalBarContentType_Top ? element.horBarHeight + contentLabelH + self.configuration.kHorizontalBarItemMargin + element.horBarMargin : element.horBarHeight + self.configuration.kHorizontalBarItemMargin;
     
     CGFloat insideOffY = (horBarItemH - element.horBarHeight) * 0.5;
+    CGFloat changMaxW = _mainContainerW  - element.narrowestW;
     for (int i = 0; i < horBarItemArr.count; ++i) {
         FQHorizontalBarItem *barItem = horBarItemArr[i];
         
         CGFloat itemAccount = barItem.valueData.floatValue / maxBarItem;
         itemAccount = (floorf(itemAccount*100 + 0.5))/100;
-
+        
         if (element.horizontalBarContentType == ChartHorizontalBarContentType_Top) {
-            CGFloat pointX = itemAccount * _mainContainerW;
+            CGFloat pointX = element.narrowestW + itemAccount * changMaxW;
             CGFloat pointY = i * horBarItemH + contentLabelH + element.horBarMargin + element.horBarHeight * 0.5;
             CGPoint point = CGPointMake(pointX,pointY);
             NSValue * value = [NSValue valueWithCGPoint:point];
             [horBarPointArr addObject:value];
         }else{
-            CGFloat pointX = itemAccount * _mainContainerW;
+            CGFloat pointX = element.narrowestW + itemAccount * changMaxW;
             CGFloat pointY = i * horBarItemH + insideOffY + element.horBarHeight * 0.5;
             CGPoint point = CGPointMake(pointX,pointY);
             NSValue * value = [NSValue valueWithCGPoint:point];
@@ -1604,6 +1609,21 @@ typedef struct {
 
 #pragma mark 绘制线条图表
 -(void)fq_makeLinePathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
+    //将最大与最小值均处理一下.
+    NSMutableArray * pointMuArr = [NSMutableArray array];
+    for (NSValue * pointValue in pointArray) {
+        CGPoint point = [pointValue CGPointValue];
+        //处理线条越界的问题.
+        if (point.y == _mainContainerH) {
+            point.y -= 1;
+        }
+        if (point.y == 0) {
+            point.y += 1;
+        }
+        [pointMuArr addObject:[NSValue valueWithCGPoint:point]];
+    }
+    pointArray = pointMuArr.copy;
+    
     //针对线条.处理
     UIBezierPath * path = [UIBezierPath bezierPath];
     UIBezierPath *backPath = [UIBezierPath bezierPath];
@@ -2021,7 +2041,7 @@ typedef struct {
         UIBezierPath *barPath = [UIBezierPath bezierPath];
         UIBezierPath *barBackPath = [UIBezierPath bezierPath];
         
-        if (point.x < barW && point.x > 0) {
+        if (point.x < barW * 0.5 && point.x > 0) {
         
             CGFloat startAngle = 2 * M_PI - M_PI_2;
             CGFloat endAngle = M_PI_2;
@@ -2468,7 +2488,7 @@ typedef struct {
                 if (self.configuration.isShowPopView) {
                     [self.layer addSublayer:self.popTipView.layer];
                     self.popTipView.layer.opacity = 0.0;
-                    [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + self->_configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
+                    [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + self.configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
                 }
             });
         });

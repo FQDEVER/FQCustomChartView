@@ -190,5 +190,10 @@ typedef NS_ENUM(NSInteger,ChartHorizontalBarContentType){ //水平柱状图.描�
 @property (nonatomic, strong) UIColor *horBarBotLeftDescColor;
 @property (nonatomic, strong) UIFont *horBarBotLeftDescFont;
 
+/**
+ 水平柱状的最窄值.默认为horBarHeight的一半.
+ */
+@property (nonatomic, assign) CGFloat narrowestW;
+
 @end
 

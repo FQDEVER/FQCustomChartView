@@ -40,6 +40,7 @@
         _horBarBotLeftDescFont = [UIFont systemFontOfSize:12];
         _xLeftAxisSelectLabFont = [UIFont systemFontOfSize:12];
         _xLeftAxisSelectLabColor = [UIColor colorWithRed:0 green:122.0/255.0 blue:1.0 alpha:1.0];
+        _narrowestW = _horBarHeight * 0.5;
         
     }
     return self;

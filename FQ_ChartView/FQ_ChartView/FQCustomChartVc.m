@@ -151,7 +151,7 @@
     FQSeriesElement * element = [[FQSeriesElement alloc]init];
     element.chartType = FQChartType_Line;
     element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
-    element.orginNumberDatas = @[@0,@0,@0,@30,@0,@0,@0].mutableCopy;
+    element.orginNumberDatas = @[@5,@10,@60,@30].mutableCopy;
     element.fillLayerBackgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.3];
     element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.fillLayerHidden = NO;
@@ -160,13 +160,14 @@
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element];
     chartConfiguration.hiddenLeftYAxis = NO;
-    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@60].mutableCopy;
+//    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@60].mutableCopy;
+    chartConfiguration.showXAxisStringDatas = @[@"22:99",@"10:20",@"30:10",@"19:20",@"18:00"];
     //设定最大值范围
-    chartConfiguration.yLeftAxisMaxNumber = @60;
-    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
-    
-    chartConfiguration.yRightAxisMaxNumber = @60;
-    chartConfiguration.yRightAxisMinNumber = @0;
+//    chartConfiguration.yLeftAxisMaxNumber = @60;
+//    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+//    
+//    chartConfiguration.yRightAxisMaxNumber = @60;
+//    chartConfiguration.yRightAxisMinNumber = @0;
     
     chartConfiguration.yAxisLeftTitle = @"min";
     chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
@@ -180,8 +181,12 @@
     chartConfiguration.yAxisGridHidden = YES;
     
     chartConfiguration.mainContainerBackColor = rgba(250, 250, 250, 1.0f);
+    chartConfiguration.kYAxisLabelMargin = 10;
+    chartConfiguration.kYAxisChartViewMargin = 0;
+    chartConfiguration.startPointType = ChartViewStartPointType_Left;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(20, 164, self.view.bounds.size.width - 40, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
 //    curveView.chartDelegate = self;
@@ -197,7 +202,7 @@
     FQSeriesElement * element = [[FQSeriesElement alloc]init];
     element.chartType = FQChartType_Bar;
     element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
-    element.orginNumberDatas = @[@8,@7,@10,@30,@60,@17].mutableCopy;
+    element.orginNumberDatas = @[@20,@7,@10,@30,@60,@17].mutableCopy;
     element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.fillLayerHidden = NO;
     element.barSpacing = 5.0f;
@@ -211,7 +216,7 @@
     FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
     element1.chartType = FQChartType_Line;
     element1.yAxisAligmentType = FQChartYAxisAligmentType_Left;
-    element1.orginNumberDatas = @[@20,@10,@30,@60,@6].mutableCopy;
+    element1.orginNumberDatas = @[@8,@0,@0,@60,@10].mutableCopy;
     element1.chartType = FQChartType_Line;
     element1.gradientColors = @[(id)[UIColor redColor].CGColor,(id)[UIColor blueColor].CGColor];
     element1.fillLayerHidden = YES;
@@ -233,8 +238,8 @@
     //    chartConfiguration.showLeftYAxisNames = @[@"低",@"中",@"高"].mutableCopy;
 //        chartConfiguration.showLeftYAxisDatas = @[@10,@20,@30,@40,@50,@60].mutableCopy;
     //设定最大值范围
-    chartConfiguration.yLeftAxisMaxNumber = @70;
-    chartConfiguration.yLeftAxisMinNumber = @7;
+//    chartConfiguration.yLeftAxisMaxNumber = @70;
+//    chartConfiguration.yLeftAxisMinNumber = @7;
     
     chartConfiguration.yAxisLeftTitle = @"步频(次/分钟)";
     chartConfiguration.yAxisRightTitle = @"海拔高度(米)";
@@ -257,7 +262,7 @@
     //------设定刚好把Y轴隔离出背景Layer.
     chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin);
     
-    chartConfiguration.yAxisIsReverse = YES;
+    chartConfiguration.yAxisIsReverse = NO;//YES;
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
@@ -592,7 +597,7 @@
     barItem.contentStr = @"5’56”";
     barItem.barTopStr = @"+293";
     barItem.xRightAxisStr = @"6:30";
-    barItem.valueData = @10;
+    barItem.valueData = @100;
     barItem.isSelect = YES;
     
     FQHorizontalBarItem * barItem1 = [[FQHorizontalBarItem alloc]init];
@@ -600,20 +605,23 @@
     barItem1.contentStr = @"5’56”";
     barItem1.barTopStr = @"+293";
     barItem1.xRightAxisStr = @"6:30";
-    barItem1.valueData = @5;
+    barItem1.valueData = @50;
     
     FQHorizontalBarItem * barItem2 = [[FQHorizontalBarItem alloc]init];
     barItem2.xLeftAxisStr = @"1";
     barItem2.contentStr = @"5/’56/”";
     barItem2.barTopStr = @"+293";
     barItem2.xRightAxisStr = @"6:30";
-    barItem2.valueData = @3;
+    barItem2.valueData = @0;
     
     FQHorizontalBarElement * element = [[FQHorizontalBarElement alloc]init];
     element.horizontalBarItemArr = @[barItem,barItem1,barItem2];
     element.horizontalBarContentType = ChartHorizontalBarContentType_Inside;
     element.isShowXLeftAxisStr = YES;
     element.isShowXRightAxisStr = YES;
+    //设定他展示的最小值
+    element.narrowestW = 66;
+    
     element.contentTitle = @"配速";
     element.xRightTitle = @"累计耗时";
     element.horBarBotDesc = @"最后一圈0.89公里,用时8:30";
@@ -650,18 +658,18 @@
     barItem.xLeftAxisStr = @"38%";
     barItem.contentStr = @"热身(95-114)";
     barItem.barTopStr = @"3:58:36";
-    barItem.valueData = @38;//时间长度
+    barItem.valueData = @0;//时间长度
     FQHorizontalBarItem * barItem1 = [[FQHorizontalBarItem alloc]init];
     barItem1.xLeftAxisStr = @"18%";
     barItem1.contentStr = @"燃脂(115-133)";
     barItem1.barTopStr = @"58:36";
-    barItem1.valueData = @18;
+    barItem1.valueData = @2;
     
     FQHorizontalBarItem * barItem2 = [[FQHorizontalBarItem alloc]init];
     barItem2.xLeftAxisStr = @"28%";
     barItem2.contentStr = @"有氧耐力(134-152)";
     barItem2.barTopStr = @"2:28:36";
-    barItem2.valueData = @28;
+    barItem2.valueData = @4;
     
     FQHorizontalBarItem * barItem3 = [[FQHorizontalBarItem alloc]init];
     barItem3.xLeftAxisStr = @"68%";

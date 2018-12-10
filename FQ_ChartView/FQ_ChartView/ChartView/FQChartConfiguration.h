@@ -18,6 +18,11 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
     ChartViewUnitDescrType_LeftRight ,//左侧Y轴在左侧.右边Y轴在右侧.
 };
 
+typedef NS_ENUM(NSInteger,ChartViewStartPointType) {
+    ChartViewStartPointType_Center = 0, //中心点
+    ChartViewStartPointType_Left ,//起点.结束点.
+};
+
 typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局样式
     ChartViewXYAxisCustomStrType_LeftRight = 0 ,//从左到右撑满
     ChartViewXYAxisCustomStrType_Center, //居中布局
@@ -431,6 +436,13 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) CGFloat kHorizontalBarItemMargin;
 
+
+#pragma mark - 其他.
+
+/**
+ 图表开始绘制的起点. --- 一般有柱状的时候是取中心.如果只有折线时取左右.两者叠加时.使用中心样式.
+ */
+@property (nonatomic, assign) ChartViewStartPointType startPointType;
 
 @end
 
