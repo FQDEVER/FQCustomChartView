@@ -1574,7 +1574,17 @@ typedef struct {
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration. kDefaultYAxisNames; ++i) {
                     
-                    [muarr addObject:[NSString stringWithFormat:@"%.1f",self.yAxisLeftMinValue + average * i]];
+                    if (self.configuration.leftDecimalCount == 0) {
+                        [muarr addObject:[NSString stringWithFormat:@"%d",(int)ceil(self.yAxisLeftMinValue + average * i)]];
+                    }else if(self.configuration.leftDecimalCount == 1){
+                        [muarr addObject:[NSString stringWithFormat:@"%.1f",self.yAxisLeftMinValue + average * i]];
+                    }else if(self.configuration.leftDecimalCount == 2){
+                        [muarr addObject:[NSString stringWithFormat:@"%.2f",self.yAxisLeftMinValue + average * i]];
+                    }else if (self.configuration.leftDecimalCount == 3){
+                        [muarr addObject:[NSString stringWithFormat:@"%.3f",self.yAxisLeftMinValue + average * i]];
+                    }else{
+                        [muarr addObject:[NSString stringWithFormat:@"%d",(int)ceil(self.yAxisLeftMinValue + average * i)]];
+                    }
                 }
                 self.yLeftAxisShowArr = muarr;
             }
@@ -1588,7 +1598,17 @@ typedef struct {
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration.kDefaultYAxisNames; ++i) {
                     
-                    [muarr addObject:[NSString stringWithFormat:@"%.1f",self.yAxisRightMinValue + average * i]];
+                    if (self.configuration.rightDecimalCount == 0) {
+                        [muarr addObject:[NSString stringWithFormat:@"%d",(int)ceil(self.yAxisRightMinValue + average * i)]];
+                    }else if(self.configuration.rightDecimalCount == 1){
+                        [muarr addObject:[NSString stringWithFormat:@"%.1f",self.yAxisRightMinValue + average * i]];
+                    }else if(self.configuration.rightDecimalCount == 2){
+                        [muarr addObject:[NSString stringWithFormat:@"%.2f",self.yAxisRightMinValue + average * i]];
+                    }else if (self.configuration.rightDecimalCount == 3){
+                        [muarr addObject:[NSString stringWithFormat:@"%.3f",self.yAxisRightMinValue + average * i]];
+                    }else{
+                        [muarr addObject:[NSString stringWithFormat:@"%d",(int)ceil(self.yAxisRightMinValue + average * i)]];
+                    }
                 }
                 self.yRightAxisShowArr = muarr;
             }

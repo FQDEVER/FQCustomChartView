@@ -61,6 +61,10 @@
     _kHorizontalBarBotMargin = 10;
     _kHorizontalBarItemMargin = 8;
     
+    _leftDecimalCount = 0;
+    
+    _rightDecimalCount = 0;
+    
 }
 
 @end

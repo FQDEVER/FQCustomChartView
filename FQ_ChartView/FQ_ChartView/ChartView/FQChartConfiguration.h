@@ -444,5 +444,15 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) ChartViewStartPointType startPointType;
 
+/**
+ 左侧YAxis文本保留几位小数.默认为0.最大为3位
+ */
+@property (nonatomic, assign) NSInteger leftDecimalCount;
+
+/**
+ 右侧YAxis文本保留几位小数.默认为0.最大为3位
+ */
+@property (nonatomic, assign) NSInteger rightDecimalCount;
+
 @end
 
