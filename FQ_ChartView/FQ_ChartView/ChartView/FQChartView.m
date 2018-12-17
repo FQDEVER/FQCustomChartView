@@ -652,16 +652,17 @@ typedef struct {
     }
     
     __block CGFloat maxWidth = 0;
+    BOOL yAxisIsReverse = isLeft ? self.configuration.yLeftAxisIsReverse : self.configuration.yRightAxisIsReverse;
     
     NSArray* reversedArray = nil;
     if (self.configuration.xAxisIsBottom) {
-        if (self.configuration.yAxisIsReverse == YES) {
+        if (yAxisIsReverse == YES) {
             reversedArray = showArr;
         }else{
             reversedArray = [[showArr reverseObjectEnumerator] allObjects];
         }
     }else{
-        if (self.configuration.yAxisIsReverse == YES) {
+        if (yAxisIsReverse == YES) {
             reversedArray = [[showArr reverseObjectEnumerator] allObjects];
         }else{
             reversedArray = showArr;
@@ -691,19 +692,19 @@ typedef struct {
             
             CGFloat axisYValue = 0;
             if (self.configuration.xAxisIsBottom) {
-                if (self.configuration.yAxisIsReverse) {
+                if (yAxisIsReverse) {
                     axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
                 }else{
                     axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
                 }
             }else{
-                if (self.configuration.yAxisIsReverse) {
+                if (yAxisIsReverse) {
                     axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
                 }else{
                     axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
                 }
             }
-            if (self.configuration.yAxisIsReverse) {
+            if (yAxisIsReverse) {
                 
                 if (self.configuration.xAxisIsBottom) {
                     textLayerY = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH  + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
@@ -726,20 +727,20 @@ typedef struct {
             
             CGFloat axisYValue = 0;
             if (self.configuration.xAxisIsBottom) {
-                if (self.configuration.yAxisIsReverse) {
+                if (yAxisIsReverse) {
                     axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
                 }else{
                     axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
                 }
             }else{
-                if (self.configuration.yAxisIsReverse) {
+                if (yAxisIsReverse) {
                     axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
                 }else{
                     axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
                 }
             }
             
-            if (self.configuration.yAxisIsReverse) {
+            if (yAxisIsReverse) {
                 
                 if (self.configuration.xAxisIsBottom) {
                     textLayerY = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
@@ -834,7 +835,7 @@ typedef struct {
         CGFloat axisYValue = element.averageNum.floatValue;
         if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
             
-            if (self.configuration.yAxisIsReverse) {
+            if (self.configuration.yLeftAxisIsReverse) {
                 if (self.configuration.xAxisIsBottom) {
                      averageLineValue = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH;
                 }else{
@@ -848,7 +849,7 @@ typedef struct {
                 }
             }
         }else{
-            if (self.configuration.yAxisIsReverse) {
+            if (self.configuration.yRightAxisIsReverse) {
                 if (self.configuration.xAxisIsBottom) {
                     averageLineValue = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH;
                 }else{
@@ -1246,11 +1247,20 @@ typedef struct {
             x = _mainContainerW * 0.5;
         }
         CGFloat y = 0;
-        if (self.configuration.yAxisIsReverse == YES) {
-            y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
+        if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
+            if (self.configuration.yLeftAxisIsReverse == YES) {
+                y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
+            }else{
+                y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
+            }
         }else{
-            y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
+            if (self.configuration.yRightAxisIsReverse == YES) {
+                y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
+            }else{
+                y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
+            }
         }
+    
         [pointArr addObject: [NSValue valueWithCGPoint:CGPointMake(x, y)]];
         
     }
@@ -1651,17 +1661,18 @@ typedef struct {
     //针对线条.处理
     UIBezierPath * path = [UIBezierPath bezierPath];
     UIBezierPath *backPath = [UIBezierPath bezierPath];
+    //起始点
     CGPoint firstPoint = [pointArray[0] CGPointValue];
+    //结束点
     CGPoint lastPoint = [pointArray[pointArray.count - 1] CGPointValue];
+    
     [path moveToPoint:firstPoint];
     [backPath moveToPoint:CGPointMake(firstPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+    [backPath addLineToPoint:firstPoint];
     for (int i = 0; i < pointArray.count - 1; ++i) {
         if (element.modeType == FQModeType_RoundedCorners) {
             CGPoint point1 = [pointArray[i] CGPointValue];
             CGPoint point2 = [pointArray[i + 1] CGPointValue];
-            if (i == 0) {
-                [backPath addLineToPoint:point1];
-            }
             
             CGPoint midPoint = [self centerWithP1:point1 p2:point2];
             [backPath addQuadCurveToPoint:midPoint
@@ -1675,12 +1686,9 @@ typedef struct {
                          controlPoint:[self controlPointWithP1:midPoint p2:point2]];
             
         }else{
+            
             NSValue * pointValue = pointArray[i + 1];
             CGPoint point = [pointValue CGPointValue];
-            if (pointValue == pointArray[0]) {
-                [backPath addLineToPoint:point];
-                continue;
-            }
             [backPath addLineToPoint:point];
             [path addLineToPoint:point];
         }

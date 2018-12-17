@@ -78,9 +78,15 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 #pragma mark - y轴
 
 /**
- y轴数据显示是否倒序.默认为NO.
+ 左侧y轴数据显示是否倒序.默认为NO.
  */
-@property (nonatomic, assign) BOOL yAxisIsReverse;
+@property (nonatomic, assign) BOOL yLeftAxisIsReverse;
+
+/**
+ 右侧y轴数据显示是否倒序.默认为NO.
+ */
+@property (nonatomic, assign) BOOL yRightAxisIsReverse;
+
 /**
  描述位置.
  */

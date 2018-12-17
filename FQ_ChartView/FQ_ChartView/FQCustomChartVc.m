@@ -263,7 +263,7 @@
     //------设定刚好把Y轴隔离出背景Layer.
     chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin);
     
-    chartConfiguration.yAxisIsReverse = NO;//YES;
+    chartConfiguration.yLeftAxisIsReverse = NO;//YES;
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
@@ -283,13 +283,9 @@
     element.orginNumberDatas = @[@8,@7,@10,@30,@60,@17].mutableCopy;
     element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.fillLayerHidden = NO;
-    
+//    element.modeType = FQModeType_RoundedCorners;
     element.isGradientFillLayer = YES;
     element.fillLayerBackgroundColor = [[UIColor orangeColor]colorWithAlphaComponent:1.0];
-    
-    element.barSpacing = 5.0f;
-    element.barWidth = 20.0;
-    element.modeType = FQModeType_RoundedCorners;
     element.averageNum = @30;
     element.averageLineColor = [UIColor redColor];
     element.averageLineType = ChartSelectLineType_DottedLine;
@@ -297,10 +293,10 @@
     FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
     element1.chartType = FQChartType_Line;
     element1.yAxisAligmentType = FQChartYAxisAligmentType_Right;
-    element1.orginNumberDatas = @[@20,@10,@30,@60,@6].mutableCopy;
+    element1.orginNumberDatas = @[@8,@7,@10,@30,@60,@17].mutableCopy;
     element1.chartType = FQChartType_Line;
     element1.gradientColors = @[(id)[UIColor redColor].CGColor,(id)[UIColor blueColor].CGColor];
-    element1.fillLayerHidden = YES;
+    element1.fillLayerHidden = NO;
     element1.modeType = FQModeType_RoundedCorners;
     element1.averageNum = @20;
     element1.averageLineColor = [UIColor blueColor];
@@ -333,7 +329,8 @@
     chartConfiguration.mainContainerBackColor = rgba(250.0, 250.0, 250.0, 1.0f);
     chartConfiguration.isSelectPointBorder = NO;
     chartConfiguration.unitDescrType = ChartViewUnitDescrType_Top;
-    chartConfiguration.yAxisIsReverse = YES;
+    chartConfiguration.yLeftAxisIsReverse = YES;
+    chartConfiguration.yRightAxisIsReverse = NO;
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
@@ -452,7 +449,7 @@
     chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.unitDescrType = ChartViewUnitDescrType_LeftRight;
     chartConfiguration.xAxisIsBottom = YES;
-    chartConfiguration.yAxisIsReverse = YES;
+    chartConfiguration.yRightAxisIsReverse = YES;
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 64, self.view.bounds.size.width, 300)];
     curveView.backgroundColor = [UIColor whiteColor];
@@ -492,7 +489,7 @@
     chartConfiguration1.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration1.unitDescrType = ChartViewUnitDescrType_LeftRight;
     chartConfiguration1.xAxisIsBottom = NO;
-    chartConfiguration1.yAxisIsReverse = NO;
+    chartConfiguration1.yLeftAxisIsReverse = NO;
 
     //自定义提示框
 //    _popTipView = [FQPopTipView initWithPopViewWithDirection:FQArrowDirectionDOWN maxX:self.view.bounds.size.width minX:0 edge:UIEdgeInsetsMake(5, 5, 5, 5) contentText:@"x:y:" textColor:UIColor.whiteColor textFont:[UIFont systemFontOfSize:15]];
