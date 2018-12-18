@@ -28,6 +28,7 @@
         _pieCenterDescColor = [UIColor blackColor];
         _pieCenterUnitFont = [UIFont systemFontOfSize:11];
         _pieCenterUnitColor = [UIColor grayColor];
+        _selectPointColor = [UIColor redColor];
 
     }
     return self;

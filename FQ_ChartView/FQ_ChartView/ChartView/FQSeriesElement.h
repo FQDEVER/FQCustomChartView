@@ -87,6 +87,12 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, strong) NSNumber *averageNum;
 
+// ---- 选中点相关
+/**
+ 选中点颜色.默认为红色
+ */
+@property (nonatomic, strong) UIColor *selectPointColor;
+
 #pragma mark - 折线图
 
 /**

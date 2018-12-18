@@ -304,11 +304,6 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, assign) BOOL isShowSelectPoint;
 
 /**
- 选中点颜色.默认为红色
- */
-@property (nonatomic, strong) UIColor *selectPointColor;
-
-/**
  选中点是否需要白色边框.默认为YES
  */
 @property (nonatomic, assign) BOOL isSelectPointBorder;

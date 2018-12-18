@@ -600,10 +600,10 @@ typedef struct {
         
     }else{
         if (isYAxisLeft) {
-            textlayer.frame = CGRectMake(size.height * 0.5 - MAX(size.height, size.width) , _mainContainer.center.y, MAX(size.height, size.width) * 2.0, size.height);
+            textlayer.frame = CGRectMake(size.height * 0.5 - MAX(size.height, size.width) , _mainContainer.center.y - MAX(size.height, size.width) * 0.5, MAX(size.height, size.width) * 2.0, size.height);
             textlayer.transform = CATransform3DRotate(textlayer.transform, M_PI_2, 0, 0, 1);
         }else{
-            textlayer.frame = CGRectMake(self.frame.size.width - MAX(size.height, size.width) - size.height * 0.5 , _mainContainer.center.y ,MAX(size.height, size.width) * 2.0, size.height);
+            textlayer.frame = CGRectMake(self.frame.size.width - MAX(size.height, size.width) - size.height * 0.5 , _mainContainer.center.y - MAX(size.height, size.width) * 0.5 ,MAX(size.height, size.width) * 2.0, size.height);
             textlayer.transform = CATransform3DRotate(textlayer.transform, -M_PI_2, 0, 0, 1);
         }
     }
@@ -1186,7 +1186,7 @@ typedef struct {
         if (self.configuration.isShowSelectPoint) {
             NSMutableArray * pointViewArr = [NSMutableArray array];
             for (NSValue * pointValue in pointArr) {
-                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:10 color:self.configuration.selectPointColor center:[pointValue CGPointValue] borderColor:UIColor.whiteColor borderW:self.configuration.isSelectPointBorder ? 3.0 : 0.0];
+                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:10 color:element.selectPointColor center:[pointValue CGPointValue] borderColor:UIColor.whiteColor borderW:self.configuration.isSelectPointBorder ? 3.0 : 0.0];
                 pointLayer.opacity = 0.0f;
                 [pointViewArr addObject:pointLayer];
                 [_mainContainer.layer addSublayer:pointLayer];

@@ -37,7 +37,6 @@
     _mainContainerBackColor = [UIColor clearColor];
     _isShowPopView = YES;
     _isShowSelectPoint = YES;
-    _selectPointColor = [UIColor redColor];
     _isSelectPointBorder = YES;
     _popTextFont = [UIFont fontWithName:@"PingFangSC-Light" size:11];
     _popTextColor = [UIColor whiteColor];

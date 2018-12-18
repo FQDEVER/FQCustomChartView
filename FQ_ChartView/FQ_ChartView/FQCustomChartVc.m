@@ -283,12 +283,13 @@
     element.orginNumberDatas = @[@8,@7,@10,@30,@60,@17].mutableCopy;
     element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
     element.fillLayerHidden = NO;
-//    element.modeType = FQModeType_RoundedCorners;
+    element.modeType = FQModeType_RoundedCorners;
     element.isGradientFillLayer = YES;
     element.fillLayerBackgroundColor = [[UIColor orangeColor]colorWithAlphaComponent:1.0];
     element.averageNum = @30;
     element.averageLineColor = [UIColor redColor];
     element.averageLineType = ChartSelectLineType_DottedLine;
+    element.selectPointColor = UIColor.redColor;
     
     FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
     element1.chartType = FQChartType_Line;
@@ -296,11 +297,12 @@
     element1.orginNumberDatas = @[@8,@7,@10,@30,@60,@17].mutableCopy;
     element1.chartType = FQChartType_Line;
     element1.gradientColors = @[(id)[UIColor redColor].CGColor,(id)[UIColor blueColor].CGColor];
-    element1.fillLayerHidden = NO;
+    element1.fillLayerHidden = YES;
     element1.modeType = FQModeType_RoundedCorners;
     element1.averageNum = @20;
     element1.averageLineColor = [UIColor blueColor];
     element1.averageLineType = ChartSelectLineType_SolidLine;
+    element1.selectPointColor = UIColor.blueColor;
     
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element,element1];
@@ -328,7 +330,7 @@
     chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
     chartConfiguration.mainContainerBackColor = rgba(250.0, 250.0, 250.0, 1.0f);
     chartConfiguration.isSelectPointBorder = NO;
-    chartConfiguration.unitDescrType = ChartViewUnitDescrType_Top;
+    chartConfiguration.unitDescrType = ChartViewUnitDescrType_LeftRight;
     chartConfiguration.yLeftAxisIsReverse = YES;
     chartConfiguration.yRightAxisIsReverse = NO;
     
