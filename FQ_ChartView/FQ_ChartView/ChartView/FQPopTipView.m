@@ -273,13 +273,13 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
 {
     self.origin = origin;
     //更新位置.
-//    [self setNeedsDisplay];
+    //    [self setNeedsDisplay];
 }
 //
 //-(void)drawRect:(CGRect)rect
 //{
 //    CGContextRef context=UIGraphicsGetCurrentContext();
-//    
+//
 //    CGFloat startX = 0;
 //    CGFloat startY = 0;
 //    if (self.positionType == FQPopViewPositionType_Center) {
@@ -289,27 +289,27 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
 //    }else{
 //        startX = self.origin.x - self.frame.origin.x;
 //    }
-//    
+//
 //    if (_direction == FQArrowDirectionUP) //箭头在上
 //    {
 //        CGContextMoveToPoint(context, startX, startY);//设置起点
 //        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY + self.marginSpcingH + self.cornerRadius);
 //        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY+ self.marginSpcingH + self.cornerRadius);
-//        
+//
 //    }else if (_direction == FQArrowDirectionDOWN) //箭头在下
 //    {
 //        startY = self.frame.size.height;
 //        CGContextMoveToPoint(context, startX, startY);//设置起点
 //        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 - self.marginSpcingW * 0.5, startY - self.marginSpcingH - self.cornerRadius);
 //        CGContextAddLineToPoint(context, self.frame.size.width * 0.5 + self.marginSpcingW * 0.5, startY- self.marginSpcingH - self.cornerRadius);
-//        
+//
 //    }
-//    
+//
 //    CGContextClosePath(context);
 //    [self.contentView.backgroundColor setFill];
 //    [self.backgroundColor setStroke];
 //    CGContextDrawPath(context, kCGPathFillStroke);
-//    
+//
 //}
 
 -(UILabel *)contentTextLab

@@ -151,6 +151,11 @@ NS_ASSUME_NONNULL_BEGIN
 -(CGFloat)getCurrentHorizontalBarHeight;
 
 /**
+ 隐藏popView
+ */
+-(void)fq_hiddenCurveView;
+
+/**
  快捷创建对应的图表
  
  @param configuration 默认设置

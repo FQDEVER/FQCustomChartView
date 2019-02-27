@@ -12,7 +12,7 @@
 
 typedef NS_ENUM(NSInteger,FQChartType) {
     FQChartType_Line = 0 ,        //折线图
-    FQChartType_Bar ,      //垂直柱状图
+    FQChartType_Bar ,      //柱状图
     FQChartType_Pie,           //圆π图
     FQChartType_Point,        //点图
 };
@@ -87,7 +87,8 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, strong) NSNumber *averageNum;
 
-// ---- 选中点相关
+// ---- 选中点
+
 /**
  选中点颜色.默认为红色
  */
@@ -115,7 +116,7 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, strong) UIColor *fillLayerBackgroundColor;
 
-#pragma mark - 垂直柱状图
+#pragma mark - 柱状图
 
 /**
  占位色

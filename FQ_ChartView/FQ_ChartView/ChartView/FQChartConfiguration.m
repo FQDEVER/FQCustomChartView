@@ -38,32 +38,30 @@
     _isShowPopView = YES;
     _isShowSelectPoint = YES;
     _isSelectPointBorder = YES;
-    _popTextFont = [UIFont fontWithName:@"PingFangSC-Light" size:11];
+    _popTextFont = [UIFont systemFontOfSize:11];
     _popTextColor = [UIColor whiteColor];
     _chartBackLayerEdgeInsets = UIEdgeInsetsZero;
     _chartBackLayerColor = [UIColor clearColor];
-    _kDefaultYAxisNames = 5;
+    _kDefaultYAxisNames = 4;
     _kXAxisLabelTop = 5.0;
     _kYAxisLabelMargin = 5.0;
     _kYAxisChartViewMargin = 10.0;
     _kYTitleLabelBot = 10.0;
     _kChartViewWidthMargin = 30.0;
     _kChartViewHeightMargin = 25.0;
-    _isShadow = YES;
+    _isPopViewAddShadow = YES;
     
     _kHorizontalBarTitleMargin = 4;
     _kHorizontalBarXAxisLeftLabW = 20;
     _kHorizontalBarXAxisRightLabW = 55;
     _kHorizontalBarLeftMargin = 16;
     _kHorizontalBarRightMargin = 16;
-    _kHorizontalBarTopMargin = 26;
+    _kHorizontalBarTopMargin = 22;
     _kHorizontalBarBotMargin = 10;
-    _kHorizontalBarItemMargin = 8;
+    _kHorizontalBarItemMargin = 4;
     
     _leftDecimalCount = 0;
-    
     _rightDecimalCount = 0;
-    
 }
 
 @end

@@ -13,7 +13,7 @@
 -(instancetype)init
 {
     if (self = [super init]) {
-        _lineWidth = 3;
+        _lineWidth = 2;
         _mainColor = [UIColor blackColor];
         _fillLayerBackgroundColor = rgba(0, 0, 0, 0.2);
         _barPlaceholderColor = rgba(240, 240, 240, 1.0);
@@ -29,7 +29,6 @@
         _pieCenterUnitFont = [UIFont systemFontOfSize:11];
         _pieCenterUnitColor = [UIColor grayColor];
         _selectPointColor = [UIColor redColor];
-
     }
     return self;
 }

@@ -27,11 +27,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
     ChartViewXYAxisCustomStrType_LeftRight = 0 ,//从左到右撑满
     ChartViewXYAxisCustomStrType_Center, //居中布局
     ChartViewXYAxisCustomStrType_Corresponding ,//能与实际数据对应上.如果是Y轴.就和LeftRight效果一致
+    ChartViewXYAxisCustomStrType_Corresponding_Data ,//与实际X轴的位置对应
 };
 
 
 @interface FQChartConfiguration : NSObject
-
 
 /**
  如果指定显示的数组为showXAxisStringDatas或者showLeftYAxisNames.showRightYAxisNames时.参考该参数布局
@@ -47,9 +47,9 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, strong) NSArray<NSString *> *showXAxisStringDatas;
 
 /**
- 显示出来的X轴值.这种会根据X轴的数据去展示. [@1,@3,@7,@8]
+ 显示出来的X轴值.这种会根据X轴的数据选择性展示. 例如:[1,2,3,4,5,6,7,8,9]选中对面[@1,@3,@7,@8]
  */
-@property (nonatomic, strong) NSArray<NSString *> *showXAxisStringNumberDatas;
+@property (nonatomic, strong) NSArray<NSNumber *> *showXAxisStringNumberDatas;
 
 #pragma mark 优先级居中
 /**
@@ -180,6 +180,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL hiddenRightYAxisText;
 
+
 #pragma mark - 图表数据
 
 //叠加图.一般叠加图使用均是同一组x轴数据.即个数一致
@@ -277,7 +278,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 /**
  是否添加阴影
  */
-@property (nonatomic, assign) BOOL isShadow;
+@property (nonatomic, assign) BOOL isPopViewAddShadow;
 
 /**
  想自定义popTipView.直接传入该对象.不传则默认是用String样式.
@@ -295,6 +296,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  选中线条的类型
  */
 @property (nonatomic, assign) ChartSelectLineType selectLineType;
+
+/**
+ 是否隐藏当前选中标识线
+ */
+@property (nonatomic, assign) BOOL isHiddenCurrentLine;
 
 // ----- 选中点相关
 
@@ -389,7 +395,6 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL gestureEnabel;
 
-
 #pragma mark - 添加水平柱状图数据
 
 /**
@@ -436,7 +441,6 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  水平柱状图每个item的间距.默认为4.
  */
 @property (nonatomic, assign) CGFloat kHorizontalBarItemMargin;
-
 
 #pragma mark - 其他.
 

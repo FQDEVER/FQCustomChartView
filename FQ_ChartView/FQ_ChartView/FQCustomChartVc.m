@@ -80,6 +80,8 @@
          [self  chartviewSpecialChartChartType_CustomLeftRight];
     }else if (type == SpecialChartChartType_CustomCorresponding){
         [self  chartviewSpecialChartChartType_CustomCorresponding];
+    }else if (type == SpecialChartChartType_CustomXAxisItem){
+        [self  chartviewSpecialChartChartType_CustomXAxisItem];
     }
     
     //添加一个按钮.用来更新数据.
@@ -800,6 +802,53 @@
     
     chartConfiguration.showLeftYAxisNames = @[@"aaa",@"bbb",@"ccc",@"dddd"];
     chartConfiguration.showXAxisStringDatas = @[@"aaa",@"bbb"];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+-(void)chartviewSpecialChartChartType_CustomXAxisItem{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@10,@20,@10,@30,@60,@7].mutableCopy;
+    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    NSArray * xNumberDatas = @[@1.0,@1.5,@4.0,@5.0,@9.0,@18.0];
+    NSArray * yNumberDatas = @[@10,@20,@10,@30,@60,@7];
+    NSMutableArray * muArr = [NSMutableArray array];
+    for (int i = 0; i < xNumberDatas.count; i++) {
+        FQXAxisItem * xAxisItem = [[FQXAxisItem alloc]initWithDataNumber:xNumberDatas[i] dataValue:yNumberDatas[i]];
+        [muArr addObject:xAxisItem];
+    }
+    element.orginDatas = muArr;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_Corresponding_Data;
+    
+    chartConfiguration.elements = @[element];
+    chartConfiguration.hiddenLeftYAxis = NO;
+    
+    //隐藏popView以及选中线条
+//    chartConfiguration.isShowPopView = NO;
+//    chartConfiguration.isShowSelectPoint = NO;
+//    chartConfiguration.isHiddenCurrentLine = YES;
+    
+    //设定最大值范围
+    chartConfiguration.yLeftAxisMaxNumber = @70;
+    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+    
+    chartConfiguration.yAxisLeftTitle = @"min";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    
+//    chartConfiguration.showLeftYAxisNames = @[@"aaa",@"bbb",@"ccc",@"dddd"];
+//    chartConfiguration.showXAxisStringDatas = @[@"aaa",@"bbb"];
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 164, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];

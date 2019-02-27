@@ -48,7 +48,6 @@ typedef NS_ENUM(NSUInteger,FQArrowDirection){
  */
 @property (nonatomic, assign) BOOL isShadow;
 
-
 /**
  如果只有文本展示.则使用该方法
  

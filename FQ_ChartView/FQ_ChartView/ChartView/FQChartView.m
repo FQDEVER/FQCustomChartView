@@ -154,6 +154,7 @@ typedef struct {
 /**
  当前选中线
  */
+@property (nonatomic, strong) UIView *currentLineView;
 @property (nonatomic, weak) CAShapeLayer *currentlineLayer;
 
 /**
@@ -180,6 +181,7 @@ typedef struct {
  水平柱状图数据数组
  */
 @property (nonatomic, strong) NSMutableArray<FQHorizontalBarElement *> *horBarElements;
+
 
 /**
  选中点数组.全部记录下来.并且隐藏
@@ -217,6 +219,7 @@ typedef struct {
 @property (nonatomic, strong) NSMutableArray<CAShapeLayer *> *barBackLayerArr;
 @property (nonatomic, strong) CAGradientLayer *barGradientLayer;
 @property (nonatomic, strong) CALayer *barContainerLayer;//添加一个柱状图所有容器.方便做渐变
+
 
 /**
  圆饼图 - 只允许一组.
@@ -271,7 +274,7 @@ typedef struct {
 {
     if (self = [super initWithFrame:frame]) {
         self.configuration = configuration;
-//        [self fq_creatUI];
+        //        [self fq_creatUI];
     }
     return self;
 }
@@ -282,6 +285,7 @@ typedef struct {
     _chartViewBackGroundLayer.cornerRadius = 5.0f;
     _chartViewBackGroundLayer.masksToBounds = YES;
     _chartViewBackGroundLayer.backgroundColor = self.configuration.chartBackLayerColor.CGColor;
+    _chartViewBackGroundLayer.drawsAsynchronously = YES;
     _chartViewBackGroundLayer.frame = CGRectMake(self.configuration.chartBackLayerEdgeInsets.left, self.configuration.chartBackLayerEdgeInsets.top, self.bounds.size.width - self.configuration.chartBackLayerEdgeInsets.left - self.configuration.chartBackLayerEdgeInsets.right , self.bounds.size.height - self.configuration.chartBackLayerEdgeInsets.top - self.configuration.chartBackLayerEdgeInsets.bottom);
     [self.layer addSublayer:_chartViewBackGroundLayer];
     
@@ -315,10 +319,12 @@ typedef struct {
             CAShapeLayer *curveLineLayer = [CAShapeLayer new];
             curveLineLayer.fillColor = nil;
             curveLineLayer.lineJoin = kCALineCapRound;
+            curveLineLayer.drawsAsynchronously = YES;
             [mainContainer.layer addSublayer:curveLineLayer];
             [self.lineLayerArr addObject:curveLineLayer];
             
             CAShapeLayer * backLayer = [CAShapeLayer new];
+            backLayer.drawsAsynchronously = YES;
             [mainContainer.layer addSublayer:backLayer];
             [self.lineBackLayerArr addObject:backLayer];
             
@@ -326,12 +332,14 @@ typedef struct {
                 CAGradientLayer *lineGradientLayer = [CAGradientLayer new];
                 lineGradientLayer.startPoint = CGPointMake(1, 1);
                 lineGradientLayer.endPoint = CGPointMake(1, 0);
+                lineGradientLayer.drawsAsynchronously = YES;
                 [_mainContainer.layer addSublayer:lineGradientLayer];
                 [self.lineGradientLayerArr addObject:lineGradientLayer];
                 
                 CAGradientLayer *backGradientLayer = [CAGradientLayer new];
                 backGradientLayer.startPoint = CGPointMake(1, 1);
                 backGradientLayer.endPoint = CGPointMake(1, 0);
+                backGradientLayer.drawsAsynchronously = YES;
                 [_mainContainer.layer addSublayer:backGradientLayer];
                 [self.lineBackGradientLayerArr addObject:backGradientLayer];
             }
@@ -344,6 +352,7 @@ typedef struct {
             }
             
             self.barContainerLayer  = [[CALayer alloc]init];
+            self.barContainerLayer.drawsAsynchronously = YES;
             self.barContainerLayer.frame = self.mainContainer.bounds;
             [self.mainContainer.layer addSublayer:self.barContainerLayer];
             
@@ -351,20 +360,23 @@ typedef struct {
                 
                 CAShapeLayer * backLayer = [CAShapeLayer new];
                 backLayer.fillColor = nil;
-                [self.mainContainer.layer addSublayer:backLayer];
+                backLayer.drawsAsynchronously = YES;
+                [mainContainer.layer addSublayer:backLayer];
                 [self.barBackLayerArr addObject:backLayer];
                 
                 CAShapeLayer *barLayer = [CAShapeLayer new];
                 barLayer.fillColor = nil;
+                barLayer.drawsAsynchronously = YES;
                 [self.barContainerLayer addSublayer:barLayer];
                 [self.barLayerArr addObject:barLayer];
-        
+                
             }
             
             if (element.gradientColors.count > 0) {
                 CAGradientLayer *barGradientLayer = [CAGradientLayer new];
                 barGradientLayer.startPoint = CGPointMake(1, 1);
                 barGradientLayer.endPoint = CGPointMake(1, 0);
+                barGradientLayer.drawsAsynchronously = YES;
                 [mainContainer.layer addSublayer:barGradientLayer];
                 self.barGradientLayer = barGradientLayer;
             }
@@ -377,13 +389,21 @@ typedef struct {
         
         CAShapeLayer * averagelineLayer = [CAShapeLayer new];
         [self.averageLineLayerArr addObject:averagelineLayer];
+        averagelineLayer.drawsAsynchronously = YES;
         [mainContainer.layer addSublayer:averagelineLayer];
     }
     
     if (self.pieElements.count == 0) {
+        
+        _currentLineView = [[UIView alloc]init];
+        _currentLineView.backgroundColor = UIColor.clearColor;
+        _currentLineView.hidden = self.configuration.isHiddenCurrentLine;
+        [_mainContainer addSubview:_currentLineView];
+        
         CAShapeLayer *currentLineLayer = [CAShapeLayer new];
         _currentlineLayer = currentLineLayer;
-        [_mainContainer.layer addSublayer:currentLineLayer];
+        _currentlineLayer.drawsAsynchronously = YES;
+        [_currentLineView.layer addSublayer:currentLineLayer];
     }
 }
 
@@ -453,7 +473,6 @@ typedef struct {
     if (!_xAxisShowArr.count) {
         return;
     }
-    
     //获取所有文本的总长度.然后再
     
     __block CGFloat lastX = self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin;
@@ -461,6 +480,7 @@ typedef struct {
     CGFloat average = _mainContainerW / self.xAxisCount;
     BOOL xyAxisCustomStrTypeLeftRight = self.configuration.showXAxisStringDatas.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_LeftRight;
     BOOL xyAxisCustomStrTypeCenter = self.configuration.showXAxisStringDatas.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
+    BOOL xyAxisCustomStrTypeData = self.xAxisShowArr.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Corresponding_Data;
     
     if (xyAxisCustomStrTypeCenter) { //如果有指定的数据.则使用指定布局
         average = _mainContainerW / self.configuration.showXAxisStringDatas.count;
@@ -509,6 +529,7 @@ typedef struct {
             [self.layer addSublayer:bigDot];
         }else{
             CATextLayer * textlayer = [[CATextLayer alloc]init];
+            textlayer.drawsAsynchronously = YES;
             textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
             textlayer.string = columnName;
             textlayer.contentsScale = [UIScreen mainScreen].scale;
@@ -519,11 +540,22 @@ typedef struct {
             CGFontRelease(fontRef);
             textlayer.alignmentMode = kCAAlignmentCenter;
             textlayer.wrapped = NO;
-            textlayer.truncationMode = kCATruncationEnd;
+            //            textlayer.truncationMode = kCATruncationEnd;
             
             CGSize size = [self fq_sizeWithString:columnName font:self.configuration.xAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
             
             CGFloat textLayerX = xyAxisCustomStrTypeLeftRight ? (lastX + idx * average - size.width * 0.5) : (lastX + (idx + 1) * average - average * 0.5 - size.width * 0.5);
+            if (xyAxisCustomStrTypeData) {
+                if (self.elementPointsArr.count > 0) {
+                    NSArray * points = self.elementPointsArr.firstObject;
+                    if (points.count > idx) {
+                        NSNumber * number = points[idx];
+                        CGPoint point = [number CGPointValue];
+                        textLayerX = point.x + lastX - size.width * 0.5;
+                    }
+                }
+            }
+            
             
             CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
             textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
@@ -563,6 +595,7 @@ typedef struct {
     UIColor * unitColor = isYAxisLeft ? self.configuration.yAxisLeftTitleColor : self.configuration.yAxisRightTitleColor;
     UIFont * unitFont = isYAxisLeft ? self.configuration.yAxisLeftTitleFont : self.configuration.yAxisRightTitleFont;
     CATextLayer * textlayer = [[CATextLayer alloc]init];
+    textlayer.drawsAsynchronously = YES;
     textlayer.foregroundColor = unitColor.CGColor;
     textlayer.string = unitStr;
     textlayer.contentsScale = [UIScreen mainScreen].scale;
@@ -573,7 +606,7 @@ typedef struct {
     CGFontRelease(fontRef);
     textlayer.alignmentMode = isYAxisLeft ? kCAAlignmentRight : kCAAlignmentLeft;
     textlayer.wrapped = NO;
-    textlayer.truncationMode = kCATruncationEnd;
+    //    textlayer.truncationMode = kCATruncationEnd;
     
     CGSize size = [self fq_sizeWithString:unitStr font:unitFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     
@@ -630,8 +663,6 @@ typedef struct {
         xyAxisCustomStrTypeCenter = self.configuration.showRightYAxisNames.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
     }
     
-    //这种方式针对顶对顶.底对底
-//    CGFloat rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot - yAxisSize.height * showArr.count) / (showArr.count - 1);
     //这种方式针对.居中对齐
     CGFloat rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot - yAxisSize.height * showArr.count) / (showArr.count - 1);
     
@@ -650,7 +681,6 @@ typedef struct {
     if (xyAxisCustomStrTypeCenter) {
         lastY = - rowSpacing + self.yAxisLabelsContainerMarginTop + rowSpacing * 0.5;
     }
-    
     __block CGFloat maxWidth = 0;
     BOOL yAxisIsReverse = isLeft ? self.configuration.yLeftAxisIsReverse : self.configuration.yRightAxisIsReverse;
     
@@ -671,8 +701,8 @@ typedef struct {
     
     [reversedArray enumerateObjectsUsingBlock:^(NSString *rowName, NSUInteger idx, BOOL *stop) {
         CATextLayer * textlayer = [[CATextLayer alloc]init];
+        textlayer.drawsAsynchronously = YES;
         textlayer.foregroundColor = self.configuration.yAxisLabelsTitleColor.CGColor;
-        textlayer.backgroundColor = UIColor.redColor.CGColor;
         textlayer.string = rowName;
         textlayer.contentsScale = [UIScreen mainScreen].scale;
         
@@ -683,7 +713,7 @@ typedef struct {
         CGFontRelease(fontRef);
         textlayer.alignmentMode = kCAAlignmentCenter;
         textlayer.wrapped = NO;
-        textlayer.truncationMode = kCATruncationEnd;
+        //        textlayer.truncationMode = kCATruncationEnd;
         
         CGSize size = [self fq_sizeWithString:rowName font:self.configuration.yAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         
@@ -785,15 +815,23 @@ typedef struct {
     _mainContainer.frame = CGRectMake(self.yAxisLabelsContainerMarginLeft + _configuration.kYAxisChartViewMargin , self.yAxisLabelsContainerMarginTop, _mainContainerW, _mainContainerH);
     
     //提示竖直线
-    _currentlineLayer.frame = CGRectMake(0, 0, 1, _mainContainerH);
-    [self drawLineOfDashByCAShapeLayer:_currentlineLayer lineLength:5.0 lineSpacing: self.configuration.selectLineType == ChartSelectLineType_SolidLine ? 0 : 5.0 lineColor:self.configuration.currentLineColor directionHorizonal:NO];
-    _currentlineLayer.opacity = 0.0f;
+    _currentLineView.frame = CGRectMake(0, 0, 1, _mainContainerH);
+    _currentlineLayer.frame = _currentLineView.bounds;
+    [self drawLineOfDashByCAShapeLayer:_currentlineLayer lineLength:1.0 lineSpacing: self.configuration.selectLineType == ChartSelectLineType_SolidLine ? 0 : 2.0 lineColor:self.configuration.currentLineColor directionHorizonal:NO];
+    _currentLineView.alpha = 0;
     
     [CATransaction begin];
     [CATransaction setAnimationDuration:0];
     
-    CGFloat rowSpacing = (_mainContainerH - self.configuration.gridRowCount * self.configuration.gridLineWidth) / (self.configuration.gridRowCount - 1);
-    CGFloat columnSpacing = (_mainContainerW - self.configuration.gridColumnCount * self.configuration.gridLineWidth) / (self.configuration.gridColumnCount - 1);
+    CGFloat rowSpacing = 0;
+    if (self.configuration.gridRowCount - 1 > 0) {
+        rowSpacing = (_mainContainerH - self.configuration.gridRowCount * self.configuration.gridLineWidth) / (self.configuration.gridRowCount - 1);
+    }
+    
+    CGFloat columnSpacing = 0;
+    if (self.configuration.gridColumnCount - 1 > 0) {
+        columnSpacing = (_mainContainerW - self.configuration.gridColumnCount * self.configuration.gridLineWidth) / (self.configuration.gridColumnCount - 1);
+    }
     
     //绘制横竖网格线
     _rowReplicatorLayer.instanceCount = self.configuration.gridRowCount;
@@ -837,7 +875,7 @@ typedef struct {
             
             if (self.configuration.yLeftAxisIsReverse) {
                 if (self.configuration.xAxisIsBottom) {
-                     averageLineValue = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH;
+                    averageLineValue = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH;
                 }else{
                     averageLineValue = (1 - (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue)) * self.mainContainerH;
                 }
@@ -1004,10 +1042,10 @@ typedef struct {
     }
     
     self.selectIndex = index;
-    _currentlineLayer.opacity = 1.0f;
     self.popTipView.layer.opacity = 1.0;
     CGPoint selectLinePoint = [pointArr[index] CGPointValue];
-    _currentlineLayer.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
+    _currentLineView.alpha = 1.0f;
+    _currentLineView.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
     self.popTipView.contentTextStr = muStr.copy;
     
     if (_delegateFlag.tapSelectItem) {
@@ -1078,7 +1116,7 @@ typedef struct {
             }
             //            NSString * xAxisItemStr = [NSString stringWithFormat:@"x:%@,y:%@",xAxisItem.dataNumber,xAxisItem.dataValue];
             //默认为dataValue
-            NSString * xAxisItemStr = xAxisItem.dataValue.stringValue;
+            NSString * xAxisItemStr = [NSString stringWithFormat:@"%@",xAxisItem.dataValue];
             [muStr appendString:xAxisItemStr];
             [valueArr addObject:xAxisItem];
             [selectPointArr addObject:pointArr[index]];
@@ -1107,11 +1145,11 @@ typedef struct {
     }
     
     if (gesture.state == UIGestureRecognizerStateChanged) {
-        _currentlineLayer.opacity = 1.0f;
-        self.popTipView.layer.opacity = 1.0;
         
+        self.popTipView.layer.opacity = 1.0;
         CGPoint selectLinePoint = [pointArr[index] CGPointValue];
-        _currentlineLayer.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
+        _currentLineView.alpha = 1.0;
+        _currentLineView.frame = CGRectMake(selectLinePoint.x, 0, 1, _mainContainerH);
         self.popTipView.contentTextStr = muStr.copy;
         
         if (_delegateFlag.panChangeItem) {
@@ -1143,11 +1181,17 @@ typedef struct {
     }
 }
 
+/**
+ 隐藏popView
+ */
+-(void)fq_hiddenCurveView{
+    [self fq_endChangCurveView];
+}
 
 //3s消失
 -(void)fq_endChangCurveView{
     
-    self.currentlineLayer.opacity = 0.0f;
+    self.currentLineView.alpha = 0.0f;
     self.popTipView.layer.opacity = 0.0f;
     
     if (self.configuration.isShowSelectPoint) {
@@ -1230,23 +1274,33 @@ typedef struct {
     //y轴最大.最小值
     CGFloat ymaxValue = element.yAxisAligmentType == FQChartYAxisAligmentType_Left ? self.yAxisLeftMaxValue : self.yAxisRightMaxValue;
     CGFloat yminValue = element.yAxisAligmentType == FQChartYAxisAligmentType_Left ? self.yAxisLeftMinValue : self.yAxisRightMinValue;
+    
+    if (ymaxValue == yminValue) {
+        ymaxValue += 1;
+    }
     //x轴最大最小值
     CGFloat xmaxValue = self.xAxisMaxValue;
     CGFloat xminValue = self.xAxisMinValue;
     
-    CGFloat average = _mainContainerW / self.xAxisCount;
+    CGFloat average = 0;
+    if (self.xAxisCount > 0) {
+        average = _mainContainerW / self.xAxisCount;
+    }
     for (FQXAxisItem * dataItem in element.orginDatas) {
         
         //获取最大值.
         CGFloat xAxisNumber = dataItem.dataNumber.floatValue;
         CGFloat yAxisValue = dataItem.dataValue.floatValue;
+        
         CGFloat x = 0;
         if (xmaxValue != xminValue) {
             x = (xAxisNumber - xminValue)/(xmaxValue - xminValue) * (_mainContainerW - (self.configuration.startPointType == ChartViewStartPointType_Center ? average : 0)) + (self.configuration.startPointType == ChartViewStartPointType_Center ?  average * 0.5 : 0);
         }else{
             x = _mainContainerW * 0.5;
         }
+        
         CGFloat y = 0;
+        
         if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
             if (self.configuration.yLeftAxisIsReverse == YES) {
                 y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
@@ -1260,7 +1314,7 @@ typedef struct {
                 y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
             }
         }
-    
+        
         [pointArr addObject: [NSValue valueWithCGPoint:CGPointMake(x, y)]];
         
     }
@@ -1275,7 +1329,7 @@ typedef struct {
  */
 -(void)fq_getChartViewXAxisDataArr{
     
-    CGFloat xAxisMax = -1;
+    CGFloat xAxisMax = 0;
     CGFloat xAxisMin = CGFLOAT_MAX;
     NSInteger maxCount = 0;
     FQSeriesElement *maxCountElement;
@@ -1365,7 +1419,10 @@ typedef struct {
     for (int i = 0; i < elements.orginNumberDatas.count; ++i) {
         NSNumber *numValue = elements.orginNumberDatas[i];
         [startAccounted addObject:@(startFloat)];
-        CGFloat itemValue = [numValue floatValue] / subNum;
+        CGFloat itemValue = 0;
+        if (subNum != 0) {
+            itemValue = [numValue floatValue] / subNum;
+        }
         CGFloat piItemValue = itemValue ;
         [accounted addObject:@(itemValue)];
         startFloat += piItemValue;
@@ -1397,7 +1454,7 @@ typedef struct {
 
 /**
  获取水平柱状图的数据
-
+ 
  @param element 水平柱状图数据模型
  */
 -(void)fq_getHorizontalBarChartViewDataArrWithElement:(FQHorizontalBarElement *)element{
@@ -1430,7 +1487,10 @@ typedef struct {
     for (int i = 0; i < horBarItemArr.count; ++i) {
         FQHorizontalBarItem *barItem = horBarItemArr[i];
         
-        CGFloat itemAccount = barItem.valueData.floatValue / maxBarItem;
+        CGFloat itemAccount = 0;
+        if(maxBarItem != 0){
+            itemAccount = barItem.valueData.floatValue / maxBarItem;
+        }
         itemAccount = (floorf(itemAccount*100 + 0.5))/100;
         
         if (element.horizontalBarContentType == ChartHorizontalBarContentType_Top) {
@@ -1468,6 +1528,7 @@ typedef struct {
 }
 
 
+
 /**
  获取Y轴相关数据
  */
@@ -1476,9 +1537,9 @@ typedef struct {
     //根据x轴的值.给出源数据值
     if (self.configuration.elements.count != 0 && self.configuration.elements) {
         
-        CGFloat leftMaxValue = 0;
+        CGFloat leftMaxValue = -1000000;
         CGFloat leftMinValue = CGFLOAT_MAX;
-        CGFloat rightMaxValue = 0;
+        CGFloat rightMaxValue = -1000000;
         CGFloat rightMinValue = CGFLOAT_MAX;
         
         for (FQSeriesElement *element in self.configuration.elements) {
@@ -1579,7 +1640,7 @@ typedef struct {
         if (self.configuration.showLeftYAxisNames && self.configuration.showLeftYAxisNames.count) {
             self.yLeftAxisShowArr = self.configuration.showLeftYAxisNames.mutableCopy;
         }else{
-            if (self.yLeftAxisShowArr.count == 0  && self.yAxisLeftMinValue < MAXFLOAT) {
+            if (self.yAxisLeftMinValue < MAXFLOAT) {//self.yLeftAxisShowArr.count == 0  &&
                 CGFloat average = (self.yAxisLeftMaxValue - self.yAxisLeftMinValue)*1.0 / (_configuration.kDefaultYAxisNames - 1);
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration. kDefaultYAxisNames; ++i) {
@@ -1603,7 +1664,7 @@ typedef struct {
         if (self.configuration.showRightYAxisNames && self.configuration.showRightYAxisNames.count) {
             self.yRightAxisShowArr = self.configuration.showRightYAxisNames;
         }else{
-            if (self.yRightAxisShowArr.count == 0 && self.yAxisRightMinValue < MAXFLOAT) {
+            if (self.yAxisRightMinValue < MAXFLOAT) {//self.yRightAxisShowArr.count == 0 &&
                 CGFloat average = (self.yAxisRightMaxValue - self.yAxisRightMinValue) * 1.0 / (_configuration.kDefaultYAxisNames - 1);
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration.kDefaultYAxisNames; ++i) {
@@ -1643,6 +1704,7 @@ typedef struct {
 
 #pragma mark 绘制线条图表
 -(void)fq_makeLinePathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
+    
     //将最大与最小值均处理一下.
     NSMutableArray * pointMuArr = [NSMutableArray array];
     for (NSValue * pointValue in pointArray) {
@@ -1657,18 +1719,15 @@ typedef struct {
         [pointMuArr addObject:[NSValue valueWithCGPoint:point]];
     }
     pointArray = pointMuArr.copy;
-    
     //针对线条.处理
     UIBezierPath * path = [UIBezierPath bezierPath];
     UIBezierPath *backPath = [UIBezierPath bezierPath];
-    //起始点
     CGPoint firstPoint = [pointArray[0] CGPointValue];
-    //结束点
     CGPoint lastPoint = [pointArray[pointArray.count - 1] CGPointValue];
-    
     [path moveToPoint:firstPoint];
     [backPath moveToPoint:CGPointMake(firstPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
     [backPath addLineToPoint:firstPoint];
+    
     for (int i = 0; i < pointArray.count - 1; ++i) {
         if (element.modeType == FQModeType_RoundedCorners) {
             CGPoint point1 = [pointArray[i] CGPointValue];
@@ -1708,10 +1767,23 @@ typedef struct {
  *  根据path位置曲线
  */
 - (void)fq_drawLineWithPathWithIndex:(NSInteger)index{
-    UIBezierPath * path = _linePathArr[index];
-    UIBezierPath * backPath = _lineBackPathArr[index];
-    CAShapeLayer * backLayer = _lineBackLayerArr[index];
-    CAShapeLayer * lineLayer = _lineLayerArr[index];
+    
+    UIBezierPath * path;
+    if (_linePathArr.count > index) {
+        path = _linePathArr[index];
+    }
+    UIBezierPath * backPath;
+    if (_lineBackPathArr.count > index) {
+        backPath = _lineBackPathArr[index];
+    }
+    CAShapeLayer * backLayer;
+    if (_lineBackLayerArr.count > index) {
+        backLayer = _lineBackLayerArr[index];
+    }
+    CAShapeLayer * lineLayer ;
+    if (_lineLayerArr.count > index) {
+        lineLayer = _lineLayerArr[index];
+    }
     
     backLayer.path =  backPath.CGPath;
     lineLayer.path = path.CGPath;
@@ -1777,7 +1849,10 @@ typedef struct {
     for (int i = 0; i < element.orginDatas.count; ++i) {
         CAShapeLayer * barLayer = self.barLayerArr[i];
         CAShapeLayer * barBackLayer = self.barBackLayerArr[i];
-        CGPoint point = [pointArray[i] CGPointValue];
+        CGPoint point = CGPointZero;
+        if (pointArray.count > i) {
+            point = [pointArray[i] CGPointValue];
+        }
         // 创建柱状图
         UIBezierPath *barPath = [UIBezierPath bezierPath];
         UIBezierPath *barBackPath = [UIBezierPath bezierPath];
@@ -1900,7 +1975,7 @@ typedef struct {
 
 #pragma mark 绘制圆饼图
 -(void)fq_makePiePathWithElement:(FQSeriesElement *)element{
-    NSInteger descCount = ceilf(element.orginNumberDatas.count * 1.0 / 2.0);
+    NSInteger descCount = roundf(element.orginNumberDatas.count * 1.0 / 2.0);
     //计算字体高度.比较最大值.计算准确的中心点
     CGSize descSize = [self fq_sizeWithString:@" " font:element.pieDescFont maxSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
     CGSize accountSize = [self fq_sizeWithString:@" " font:element.pieAccountedFont maxSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX)];
@@ -1969,7 +2044,7 @@ typedef struct {
     CGFontRelease(accountFontRef);
     accountLayer.alignmentMode = kCAAlignmentLeft;
     accountLayer.wrapped = NO;
-    accountLayer.truncationMode = kCATruncationEnd;
+    //    accountLayer.truncationMode = kCATruncationEnd;
     
     CGSize accountLayerSize = [self fq_sizeWithString:accountedStr font:element.pieAccountedFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     
@@ -1991,7 +2066,7 @@ typedef struct {
     CGFontRelease(fontRef);
     textlayer.alignmentMode = kCAAlignmentLeft;
     textlayer.wrapped = NO;
-    textlayer.truncationMode = kCATruncationEnd;
+    //    textlayer.truncationMode = kCATruncationEnd;
     
     CGSize size = [self fq_sizeWithString:textDesc font:element.pieDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     
@@ -2020,7 +2095,7 @@ typedef struct {
     CGFontRelease(centerDescFontRef);
     centerDescLayer.alignmentMode = kCAAlignmentCenter;
     centerDescLayer.wrapped = NO;
-    centerDescLayer.truncationMode = kCATruncationEnd;
+    //    centerDescLayer.truncationMode = kCATruncationEnd;
     
     //单位
     CATextLayer * centerUnitlayer = [[CATextLayer alloc]init];
@@ -2034,7 +2109,7 @@ typedef struct {
     CGFontRelease(fontRef);
     centerUnitlayer.alignmentMode = kCAAlignmentCenter;
     centerUnitlayer.wrapped = NO;
-    centerUnitlayer.truncationMode = kCATruncationEnd;
+    //    centerUnitlayer.truncationMode = kCATruncationEnd;
     
     
     CGSize centerDescLayerSize = [self fq_sizeWithString:element.pieCenterDesc font:element.pieCenterDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
@@ -2043,11 +2118,11 @@ typedef struct {
     
     CGFloat centerDescLayerY = (self.bounds.size.height - (centerUnitlayerSize.height + centerDescLayerSize.height)) * 0.5;
     CGFloat centerDescLyaerX = self.frame.size.width * 0.5 - centerDescLayerSize.width * 0.5;
-    centerDescLayer.frame = CGRectMake(centerDescLyaerX,centerDescLayerY+8, centerDescLayerSize.width, centerDescLayerSize.height);
+    centerDescLayer.frame = CGRectMake(centerDescLyaerX,centerDescLayerY + 8, centerDescLayerSize.width, centerDescLayerSize.height);
     
     CGFloat centerUnitX = self.frame.size.width * 0.5 - centerUnitlayerSize.width * 0.5;
     CGFloat centerUnitY = CGRectGetMaxY(centerDescLayer.frame);
-    centerUnitlayer.frame = CGRectMake(centerUnitX,centerUnitY-8, centerUnitlayerSize.width, centerUnitlayerSize.height + 1);
+    centerUnitlayer.frame = CGRectMake(centerUnitX,centerUnitY - 8, centerUnitlayerSize.width, centerUnitlayerSize.height + 1);
     [self.layer addSublayer:centerDescLayer];
     [self.layer addSublayer:centerUnitlayer];
 }
@@ -2074,7 +2149,7 @@ typedef struct {
         UIBezierPath *barBackPath = [UIBezierPath bezierPath];
         
         if (point.x < barW * 0.5 && point.x > 0) {
-        
+            
             CGFloat startAngle = 2 * M_PI - M_PI_2;
             CGFloat endAngle = M_PI_2;
             [barPath moveToPoint:CGPointMake(point.x, point.y - barW * 0.5)];
@@ -2091,12 +2166,12 @@ typedef struct {
             [barPath addArcWithCenter:center radius:barW * 0.5 startAngle:startAngle endAngle:endAngle clockwise:YES];
             [barPath addLineToPoint:CGPointMake(0, point.y + barW * 0.5)];
         }
-            
+        
         [barBackPath moveToPoint:CGPointMake(0, point.y - barW * 0.5)];
         [barBackPath addLineToPoint:CGPointMake(_mainContainerW - barW * 0.5, point.y - barW * 0.5)];
         [barBackPath addArcWithCenter:CGPointMake(_mainContainerW - barW * 0.5, point.y) radius:barW * 0.5 startAngle:2 * M_PI - M_PI_2 endAngle:M_PI_2 clockwise:YES];
         [barBackPath addLineToPoint:CGPointMake(0, point.y + barW * 0.5)];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             barBackLayer.path = barBackPath.CGPath;
             barLayer.path = barPath.CGPath;
@@ -2139,7 +2214,7 @@ typedef struct {
     CGFontRelease(xAxisLeftFontRef);
     xAxisLeftTextLayer.alignmentMode = kCAAlignmentCenter;
     xAxisLeftTextLayer.wrapped = NO;
-    xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
+    //    xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
     
     //内容文本
     CATextLayer * contentlayer = [[CATextLayer alloc]init];
@@ -2153,8 +2228,8 @@ typedef struct {
     CGFontRelease(contentFontRef);
     contentlayer.alignmentMode = kCAAlignmentCenter;
     contentlayer.wrapped = NO;
-    contentlayer.truncationMode = kCATruncationEnd;
-
+    //    contentlayer.truncationMode = kCATruncationEnd;
+    
     //bar顶部描述
     CATextLayer * topBarTextlayer = [[CATextLayer alloc]init];
     topBarTextlayer.foregroundColor = element.chartTopLabColor.CGColor;
@@ -2167,8 +2242,8 @@ typedef struct {
     CGFontRelease(topBarTextFontRef);
     topBarTextlayer.alignmentMode = kCAAlignmentCenter;
     topBarTextlayer.wrapped = NO;
-    topBarTextlayer.truncationMode = kCATruncationEnd;
-
+    //    topBarTextlayer.truncationMode = kCATruncationEnd;
+    
     //right描述
     CATextLayer * xAxisRightTextLayer = [[CATextLayer alloc]init];
     xAxisRightTextLayer.foregroundColor = element.xRightAxisLabColor.CGColor;
@@ -2181,8 +2256,8 @@ typedef struct {
     CGFontRelease(xAxisRightFontRef);
     xAxisRightTextLayer.alignmentMode = kCAAlignmentCenter;
     xAxisRightTextLayer.wrapped = NO;
-    xAxisRightTextLayer.truncationMode = kCATruncationEnd;
-
+    //    xAxisRightTextLayer.truncationMode = kCATruncationEnd;
+    
     
     CGSize leftTextSize = [self fq_sizeWithString:leftText font:element.xLeftAxisLabFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     xAxisLeftTextLayer.frame = CGRectMake(self.configuration.kHorizontalBarLeftMargin, centerPoint.y - leftTextSize.height * 0.5 + self.configuration.kHorizontalBarTopMargin, MAX(leftTextSize.width, self.configuration.kHorizontalBarXAxisLeftLabW), leftTextSize.height);
@@ -2193,10 +2268,10 @@ typedef struct {
     }else{
         contentlayer.frame = CGRectMake(_mainContainer.frame.origin.x + 3, centerPoint.y - contentStrSize.height * 0.5 + self.configuration.kHorizontalBarTopMargin, contentStrSize.width, contentStrSize.height);
     }
-
+    
     CGSize topBarStrSize = [self fq_sizeWithString:topBarStr font:element.chartTopLabFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     topBarTextlayer.frame = CGRectMake(centerPoint.x + 2 + self.mainContainer.frame.origin.x, centerPoint.y - topBarStrSize.height * 0.5 + self.configuration.kHorizontalBarTopMargin, topBarStrSize.width, topBarStrSize.height);
-
+    
     CGSize rightTextSize = [self fq_sizeWithString:rightText font:element.xRightAxisLabFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
     xAxisRightTextLayer.frame = CGRectMake(self.bounds.size.width - self.configuration.kHorizontalBarRightMargin - rightTextSize.width, centerPoint.y - rightTextSize.height * 0.5 + self.configuration.kHorizontalBarTopMargin, rightTextSize.width, rightTextSize.height);
     
@@ -2227,7 +2302,7 @@ typedef struct {
         CGFontRelease(xAxisLeftFontRef);
         xAxisLeftTextLayer.alignmentMode = kCAAlignmentCenter;
         xAxisLeftTextLayer.wrapped = NO;
-        xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
+        //        xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
         xAxisLeftTextLayer.frame = CGRectMake(0, 0, self.mainContainer.frame.origin.x, self.configuration.kHorizontalBarTopMargin);
         [self.layer addSublayer:xAxisLeftTextLayer];
     }
@@ -2246,7 +2321,7 @@ typedef struct {
         CGFontRelease(contentFontRef);
         contentlayer.alignmentMode = kCAAlignmentCenter;
         contentlayer.wrapped = NO;
-        contentlayer.truncationMode = kCATruncationEnd;
+        //        contentlayer.truncationMode = kCATruncationEnd;
         CGSize contentStrSize = [self fq_sizeWithString:contentStr font:element.contentLabFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         contentlayer.frame = CGRectMake(_mainContainer.frame.origin.x, 0, contentStrSize.width, self.configuration.kHorizontalBarTopMargin);
         [self.layer addSublayer:contentlayer];
@@ -2266,12 +2341,12 @@ typedef struct {
         CGFontRelease(xAxisRightFontRef);
         xAxisRightTextLayer.alignmentMode = kCAAlignmentCenter;
         xAxisRightTextLayer.wrapped = NO;
-        xAxisRightTextLayer.truncationMode = kCATruncationEnd;
+        //        xAxisRightTextLayer.truncationMode = kCATruncationEnd;
         CGSize rightTextSize = [self fq_sizeWithString:rightText font:element.xRightAxisLabFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         xAxisRightTextLayer.frame = CGRectMake(self.bounds.size.width - self.configuration.kHorizontalBarRightMargin - rightTextSize.width, 0, rightTextSize.width, self.configuration.kHorizontalBarTopMargin);
         [self.layer addSublayer:xAxisRightTextLayer];
     }
-   
+    
 }
 
 -(void)fq_drawHorBarBotDescWithElement:(FQHorizontalBarElement *)element{
@@ -2290,7 +2365,7 @@ typedef struct {
         CGFontRelease(xAxisLeftFontRef);
         xAxisLeftTextLayer.alignmentMode = kCAAlignmentCenter;
         xAxisLeftTextLayer.wrapped = NO;
-        xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
+        //        xAxisLeftTextLayer.truncationMode = kCATruncationEnd;
         
         CGSize leftTextSize = [self fq_sizeWithString:leftText font:element.horBarBotLeftDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         xAxisLeftTextLayer.frame = CGRectMake(0, CGRectGetMaxY(self.mainContainer.frame) + self.configuration.kHorizontalBarItemMargin, self.mainContainer.frame.origin.x, leftTextSize.height);
@@ -2311,7 +2386,7 @@ typedef struct {
         CGFontRelease(contentFontRef);
         contentlayer.alignmentMode = kCAAlignmentCenter;
         contentlayer.wrapped = NO;
-        contentlayer.truncationMode = kCATruncationEnd;
+        //        contentlayer.truncationMode = kCATruncationEnd;
         CGSize contentStrSize = [self fq_sizeWithString:contentStr font:element.horBarBotDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         contentlayer.frame = CGRectMake(_mainContainer.frame.origin.x, CGRectGetMaxY(self.mainContainer.frame) + self.configuration.kHorizontalBarItemMargin, contentStrSize.width, contentStrSize.height);
         [self.layer addSublayer:contentlayer];
@@ -2331,7 +2406,7 @@ typedef struct {
         CGFontRelease(xAxisRightFontRef);
         xAxisRightTextLayer.alignmentMode = kCAAlignmentCenter;
         xAxisRightTextLayer.wrapped = NO;
-        xAxisRightTextLayer.truncationMode = kCATruncationEnd;
+        //        xAxisRightTextLayer.truncationMode = kCATruncationEnd;
         CGSize rightTextSize = [self fq_sizeWithString:rightText font:element.horBarBotRightDescFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         xAxisRightTextLayer.frame = CGRectMake(self.bounds.size.width - self.configuration.kHorizontalBarRightMargin - rightTextSize.width, CGRectGetMaxY(self.mainContainer.frame) + self.configuration.kHorizontalBarItemMargin, rightTextSize.width, rightTextSize.height);
         [self.layer addSublayer:xAxisRightTextLayer];
@@ -2402,7 +2477,6 @@ typedef struct {
  开始绘制
  */
 - (void)fq_drawCurveView{
-    
     BOOL isPie = NO;
     BOOL isHorizontalBar = NO;
     FQSeriesElement *pieElement;
@@ -2417,7 +2491,7 @@ typedef struct {
         isHorizontalBar = YES;
         horBarElement = self.configuration.horBarElement;
     }
-
+    
     //计算圆饼图对应的比例.判断有没有圆饼图
     if (isPie) {
         
@@ -2451,15 +2525,16 @@ typedef struct {
         [self addSubview:mainContainer];
         
         _mainContainer.backgroundColor = self.configuration.mainContainerBackColor;
-        _mainContainerW = self.frame.size.width - self.configuration.kHorizontalBarLeftMargin - self.configuration.kHorizontalBarXAxisLeftLabW - 12 - 5 - 2 - 45 - 5 - self.configuration.kHorizontalBarXAxisRightLabW - self.configuration.kHorizontalBarRightMargin;
+        _mainContainerW = self.frame.size.width - self.configuration.kHorizontalBarLeftMargin - self.configuration.kHorizontalBarXAxisLeftLabW - 12 - 5 - 2 - 30 - 5 - self.configuration.kHorizontalBarXAxisRightLabW - self.configuration.kHorizontalBarRightMargin;
         _mainContainerH = [self getCurrentHorizontalBarHeight] - self.configuration.kHorizontalBarTopMargin - self.configuration.kHorizontalBarBotMargin;
         _mainContainer.frame = CGRectMake(self.configuration.kHorizontalBarLeftMargin + self.configuration.kHorizontalBarXAxisLeftLabW + 12 , self.configuration.kHorizontalBarTopMargin, _mainContainerW, _mainContainerH);
         
         self.horBarContainerLayer  = [[CALayer alloc]init];
+        self.horBarContainerLayer.drawsAsynchronously = YES;
         self.horBarContainerLayer.backgroundColor = UIColor.clearColor.CGColor;
         self.horBarContainerLayer.frame = self.mainContainer.bounds;
         [self.mainContainer.layer addSublayer:self.horBarContainerLayer];
-
+        
         
         for (int i = 0; i < horBarElement.horizontalBarItemArr.count; ++i) {
             
@@ -2468,10 +2543,11 @@ typedef struct {
             if (horBarElement.colors > 0) {
                 color = horBarElement.colors[i%horBarElement.colors.count];
             }
-
+            
             CAShapeLayer * backLayer = [CAShapeLayer new];
             backLayer.fillColor = horBarElement.barPlaceholderColor.CGColor;
             backLayer.lineWidth = 1.0f;
+            backLayer.drawsAsynchronously = YES;
             [self.mainContainer.layer addSublayer:backLayer];
             [self.horBarBackLayerArr addObject:backLayer];
             
@@ -2490,6 +2566,7 @@ typedef struct {
             barGradientLayer.startPoint = CGPointMake(1, 1);
             barGradientLayer.endPoint = CGPointMake(0, 1);
             barGradientLayer.colors = horBarElement.gradientColors;
+            barGradientLayer.drawsAsynchronously = YES;
             [mainContainer.layer addSublayer:barGradientLayer];
             self.horBarGradientLayer = barGradientLayer;
             barGradientLayer.mask = self.horBarContainerLayer;
@@ -2502,28 +2579,28 @@ typedef struct {
         [self fq_creatUI];
         [self layoutIfNeeded];
         //获取X.Y轴相关数据.包含.最大值.最小值.展示值数组.参考值数组
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
-            [self fq_getChartViewYAxisDataArr];
-            [self fq_getChartViewXAxisDataArr];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                //初始化图表相关属性
-                [self fq_setMainContainer];
-                //获取图表的点与路径.并绘制
-                [self fq_getChartPointAndPath];
-                //X.Y轴的描述
-                [self fq_setXAxisLabelsContainer];
-                [self fq_setYAxisLeftLabelsContainer];
-                [self fq_setYAxisRightLabelsContainer];
-                //添加手势
-                [self fq_addGesture];
-                //添加提示视图
-                if (self.configuration.isShowPopView) {
-                    [self.layer addSublayer:self.popTipView.layer];
-                    self.popTipView.layer.opacity = 0.0;
-                    [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + self.configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
-                }
-            });
-        });
+        //        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        [self fq_getChartViewYAxisDataArr];
+        [self fq_getChartViewXAxisDataArr];
+        //            dispatch_async(dispatch_get_main_queue(), ^{
+        //初始化图表相关属性
+        [self fq_setMainContainer];
+        //获取图表的点与路径.并绘制
+        [self fq_getChartPointAndPath];
+        //X.Y轴的描述
+        [self fq_setXAxisLabelsContainer];
+        [self fq_setYAxisLeftLabelsContainer];
+        [self fq_setYAxisRightLabelsContainer];
+        //添加手势
+        [self fq_addGesture];
+        //添加提示视图
+        if (self.configuration.isShowPopView) {
+            [self.layer addSublayer:self.popTipView.layer];
+            self.popTipView.layer.opacity = 0.0;
+            [self.popTipView fq_drawRectWithOrigin:CGPointMake(self.mainContainerW + self->_configuration.kYAxisChartViewMargin, self.yAxisLabelsContainerMarginTop)];
+        }
+        //            });
+        //        });
     }
 }
 
@@ -2539,7 +2616,9 @@ typedef struct {
     //清空图表
     [self fq_clearChartView];
     
-    [self fq_drawCurveView];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self fq_drawCurveView];
+    });
 }
 
 /**
@@ -2576,7 +2655,7 @@ typedef struct {
     [self fq_clearChartView];
     
     self.configuration.elements = @[element];
-   
+    
     [self fq_drawCurveView];
 }
 
@@ -2612,7 +2691,7 @@ typedef struct {
 
 /**
  获取当前水平柱状图的高度
-
+ 
  @return  获取当前水平柱状的高度
  */
 -(CGFloat)getCurrentHorizontalBarHeight{
@@ -2898,7 +2977,6 @@ typedef struct {
     return _horBarElements;
 }
 
-
 -(FQPopTipView *)popTipView
 {
     if (!_popTipView) {
@@ -2909,7 +2987,7 @@ typedef struct {
             _popTipView.marginSpcingW = 10;
             _popTipView.marginSpcingH = 5;
             _popTipView.cornerRadius = 5.0f;
-            _popTipView.isShadow = self.configuration.isShadow;
+            _popTipView.isShadow = self.configuration.isPopViewAddShadow;
             _popTipView.contentBackColor = self.configuration.popContentBackColor;
         }
     }
@@ -2953,5 +3031,6 @@ typedef struct {
     }
     return _horBarBackLayerArr;
 }
+
 
 @end

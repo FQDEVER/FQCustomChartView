@@ -24,6 +24,7 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_CustomCenter,       //自定义居中
     SpecialChartChartType_CustomLeftRight,       //自定义左右对齐
     SpecialChartChartType_CustomCorresponding,       //自定义对应每条数据
+    SpecialChartChartType_CustomXAxisItem,       //自定义对应X轴数据不均等的情况
     
 };
 

@@ -45,6 +45,7 @@
                      @{@"自定义5":@"icon_calc"},
                      @{@"自定义6":@"icon_calc"},
                      @{@"自定义7":@"icon_calc"},
+                     @{@"自定义8-x轴自定位置":@"icon_calc"},
                      ];
     }
     return _dataArr;
