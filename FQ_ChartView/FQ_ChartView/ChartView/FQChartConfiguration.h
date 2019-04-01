@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "FQSeriesElement.h"
+#import "FQMeshElement.h"
 #import "FQPopTipView.h"
 #import "FQHorizontalBarElement.h"
+#import "FQBothwayBarElement.h"
+
 #define kXAxisShowNameWithBigDot @"kXAxisShowNameWithBigDot"
 #define kXAxisShowNameWithSmoDot @"kXAxisShowNameWithSmoDot"
 
@@ -40,7 +43,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 
 #pragma mark - X轴
 
-#pragma mark 优先级最高
+/*---------------------------------------------优先级最高----------------------------------------*/
+#pragma mark - 优先级最高
 /**
  显示出来的X轴的值.只想显示其中的是文字.这种只适用等分 @[20180103,20180203,20180303].
  */
@@ -51,13 +55,15 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, strong) NSArray<NSNumber *> *showXAxisStringNumberDatas;
 
-#pragma mark 优先级居中
+/*---------------------------------------------优先级第二----------------------------------------*/
+#pragma mark - 优先级第二
 /**
  显示出来的X轴的值.间隔.默认为0.例如.间隔为2.那么针对1,2,3.....24.取出来为.1.4.7...
  */
 @property (nonatomic, assign) NSInteger showXAxisInterval;
 
-#pragma mark 优先级最低
+/*---------------------------------------------优先级最低----------------------------------------*/
+#pragma mark - 优先级最低
 //默认为最小到最大全部排列.所以需要自己定义.
 
 /**
@@ -75,6 +81,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL isShowXAxisFlag;
 
+/*---------------------------------------------y轴----------------------------------------*/
 #pragma mark - y轴
 
 /**
@@ -131,6 +138,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, strong) NSArray<NSString *> *showRightYAxisNames;
 
+/*---------------------------------------------优先级最高----------------------------------------*/
 #pragma mark - 优先级最高
 
 /**
@@ -143,6 +151,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, strong) NSArray<NSNumber *> *showRightYAxisDatas;
 
+/*---------------------------------------------优先级第二----------------------------------------*/
 #pragma mark - 优先级第二
 
 //设定最大值
@@ -157,6 +166,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 //设定最小值
 @property (nonatomic, strong) NSNumber * yRightAxisMinNumber;
 
+/*---------------------------------------------优先级最小 - 默认.----------------------------------------*/
 #pragma mark - 优先级最小 - 默认.
 //如果没有就从0到最大.等分5次排列.
 
@@ -181,17 +191,20 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, assign) BOOL hiddenRightYAxisText;
 
 
+/*---------------------------------------------图表数据----------------------------------------*/
 #pragma mark - 图表数据
 
 //叠加图.一般叠加图使用均是同一组x轴数据.即个数一致
 @property (nonatomic, strong) NSArray <FQSeriesElement *>*elements;
 
+/*---------------------------------------------图表设定----------------------------------------*/
 #pragma mark - 图表设定
 /**
  是否显示图例 - #warning 还待完善
  */
 @property (nonatomic, assign) BOOL isShowLegend;
 
+/*---------------------------------------------布局相关.----------------------------------------*/
 #pragma mark - 布局相关.
 /**
  整个ChartView的内边距
@@ -305,6 +318,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 // ----- 选中点相关
 
 /**
+ 是否显示所有数据标点选中点.默认为NO
+ */
+@property (nonatomic, assign) BOOL isShowAllPoint;
+
+/**
  是否显示选中点.默认为YES
  */
 @property (nonatomic, assign) BOOL isShowSelectPoint;
@@ -315,7 +333,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, assign) BOOL isSelectPointBorder;
 
 
-#pragma 动画相关
+/*---------------------------------------------动画相关-待完善----------------------------------------*/
+#pragma mark - 动画相关-待完善
 
 /**
  绘制的时候是否需要动画，默认YES - 待完善
@@ -328,7 +347,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, assign) CGFloat drawAnimationDuration;
 
 
-#pragma 网格线相关
+/*---------------------------------------------网格线相关----------------------------------------*/
+#pragma mark - 网格线相关
 
 /**
  是否隐藏x轴方向(水平)网格线，默认NO
@@ -351,6 +371,16 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, strong) UIColor *gridLineColor;
 
 /**
+ 网格线的长度. -- -- -- -- -- --.单小段 -- 的长度
+ */
+@property (nonatomic, assign) CGFloat gridlineLength;
+
+/**
+ 网格线间距的的长度. -- -- -- -- -- --.单小段的间距-- --的长度
+ */
+@property (nonatomic, assign) CGFloat gridlineSpcing;
+
+/**
  行网格线数量，默认10
  */
 @property (nonatomic, assign) NSUInteger gridRowCount;
@@ -360,7 +390,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) NSUInteger gridColumnCount;
 
-#pragma columnLabels,列标相关
+/*---------------------------------------------columnLabels,列标相关----------------------------------------*/
+#pragma mark - columnLabels,列标相关
 
 /**
  x轴label的颜色, 默认黑色
@@ -372,7 +403,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, strong) UIFont *xAxisLabelsTitleFont;
 
-#pragma rowLabels,行标相关
+/*---------------------------------------------rowLabels,行标相关----------------------------------------*/
+#pragma mark - rowLabels,行标相关
 
 /**
  y轴label的颜色, 默认黑色
@@ -395,6 +427,7 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL gestureEnabel;
 
+/*---------------------------------------------添加水平柱状图数据----------------------------------------*/
 #pragma mark - 添加水平柱状图数据
 
 /**
@@ -442,7 +475,8 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) CGFloat kHorizontalBarItemMargin;
 
-#pragma mark - 其他.
+/*---------------------------------------------其他图表----------------------------------------*/
+#pragma mark - 其他图表
 
 /**
  图表开始绘制的起点. --- 一般有柱状的时候是取中心.如果只有折线时取左右.两者叠加时.使用中心样式.
@@ -458,6 +492,22 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  右侧YAxis文本保留几位小数.默认为0.最大为3位
  */
 @property (nonatomic, assign) NSInteger rightDecimalCount;
+
+/*---------------------------------------------绘制网状图表----------------------------------------*/
+#pragma mark - 网状图表
+
+/**
+ 绘制网状图表样式
+ */
+@property (nonatomic, strong) FQMeshElement *meshElement;
+
+/*---------------------------------------------绘制横向图表----------------------------------------*/
+#pragma mark - 绘制横向图表
+
+/**
+ 水平横向图表样式
+ */
+@property (nonatomic, strong) FQBothwayBarElement * bothwayBarElement ;
 
 @end
 

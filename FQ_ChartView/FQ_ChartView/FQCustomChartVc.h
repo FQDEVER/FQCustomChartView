@@ -25,8 +25,14 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_CustomLeftRight,       //自定义左右对齐
     SpecialChartChartType_CustomCorresponding,       //自定义对应每条数据
     SpecialChartChartType_CustomXAxisItem,       //自定义对应X轴数据不均等的情况
-    
+    SpecialChartChartType_AdvancedBarTopLine,       //进阶9 - 柱状.顶部折线展示(一组数据)
+    SpecialChartChartType_AdvancedLineAndDot,       //进阶10 - 折线-点图展示(一组数据)
+    SpecialChartChartType_AdvancedRadarChart,       //进阶11 - 雷达网状图展示
+    SpecialChartChartType_AdvancedRoundCakesChart,          //进阶12 - 炫酷圆饼展示
+    SpecialChartChartType_AdvancedBothwayBarChart,       //进阶13 - 左右横向柱状图展示
+    SpecialChartChartType_AdvancedTransverseBarChart,    //进阶14 - 运动频率图展示
 };
+
 
 @interface FQCustomChartVc : UIViewController
 

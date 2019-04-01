@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B90E7BCE22519CB6005C11FF /* FQFrequencyTimeItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B90E7BCD22519CB6005C11FF /* FQFrequencyTimeItem.m */; };
 		B9BD550221A7D5BF0071AD3E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD550121A7D5BF0071AD3E /* AppDelegate.m */; };
 		B9BD550521A7D5BF0071AD3E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD550421A7D5BF0071AD3E /* ViewController.m */; };
 		B9BD550821A7D5BF0071AD3E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B9BD550621A7D5BF0071AD3E /* Main.storyboard */; };
@@ -17,16 +18,20 @@
 		B9BD553D21A7D6280071AD3E /* FQChartConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553421A7D6280071AD3E /* FQChartConfiguration.m */; };
 		B9BD553E21A7D6280071AD3E /* FQChartView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553621A7D6280071AD3E /* FQChartView.m */; };
 		B9BD553F21A7D6280071AD3E /* FQPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553821A7D6280071AD3E /* FQPopTipView.m */; };
-		B9BD554021A7D6280071AD3E /* FQSeriesElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553A21A7D6280071AD3E /* FQSeriesElement.m */; };
-		B9BD554121A7D6280071AD3E /* FQXAxisItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD553C21A7D6280071AD3E /* FQXAxisItem.m */; };
 		B9BD554421A7D63A0071AD3E /* FQCustomChartVc.m in Sources */ = {isa = PBXBuildFile; fileRef = B9BD554221A7D63A0071AD3E /* FQCustomChartVc.m */; };
 		B9BD554621A7D7810071AD3E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B9BD554521A7D7800071AD3E /* Assets.xcassets */; };
+		B9C52503224B568400E1F86D /* FQSeriesElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C524F8224B568300E1F86D /* FQSeriesElement.m */; };
+		B9C52504224B568400E1F86D /* FQXAxisItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C524F9224B568300E1F86D /* FQXAxisItem.m */; };
+		B9C52505224B568400E1F86D /* FQHorizontalBarElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C524FF224B568400E1F86D /* FQHorizontalBarElement.m */; };
+		B9C52506224B568400E1F86D /* FQHorizontalBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C52501224B568400E1F86D /* FQHorizontalBarItem.m */; };
+		B9C52509224B5BBA00E1F86D /* FQMeshElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C52508224B5BBA00E1F86D /* FQMeshElement.m */; };
+		B9C5250C224B5BCF00E1F86D /* FQMeshItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C5250B224B5BCF00E1F86D /* FQMeshItem.m */; };
+		B9C52510224CA64A00E1F86D /* FQBothwayBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C5250F224CA64A00E1F86D /* FQBothwayBarItem.m */; };
+		B9C52513224CA66A00E1F86D /* FQBothwayBarElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C52512224CA66A00E1F86D /* FQBothwayBarElement.m */; };
 		B9D325DA21B7A67D00566FE7 /* FQSportDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325D921B7A67C00566FE7 /* FQSportDetailCell.m */; };
 		B9D325DD21B7A7D000566FE7 /* FQSportDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325DC21B7A7D000566FE7 /* FQSportDetailModel.m */; };
 		B9D325E021B7ACAF00566FE7 /* FQSportDetailDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B9D325DF21B7ACAF00566FE7 /* FQSportDetailDataModel.m */; };
 		B9E3AEF421B61E0D00A4D22E /* FQTableViewC.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF321B61E0D00A4D22E /* FQTableViewC.m */; };
-		B9E3AEF721B626AF00A4D22E /* FQHorizontalBarElement.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */; };
-		B9E3AEFA21B626EA00A4D22E /* FQHorizontalBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B90E7BCC22519CB6005C11FF /* FQFrequencyTimeItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQFrequencyTimeItem.h; sourceTree = "<group>"; };
+		B90E7BCD22519CB6005C11FF /* FQFrequencyTimeItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQFrequencyTimeItem.m; sourceTree = "<group>"; };
 		B9BD54FD21A7D5BE0071AD3E /* FQ_ChartView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FQ_ChartView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9BD550021A7D5BF0071AD3E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9BD550121A7D5BF0071AD3E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -68,13 +75,25 @@
 		B9BD553621A7D6280071AD3E /* FQChartView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQChartView.m; sourceTree = "<group>"; };
 		B9BD553721A7D6280071AD3E /* FQPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQPopTipView.h; sourceTree = "<group>"; };
 		B9BD553821A7D6280071AD3E /* FQPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQPopTipView.m; sourceTree = "<group>"; };
-		B9BD553921A7D6280071AD3E /* FQSeriesElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQSeriesElement.h; sourceTree = "<group>"; };
-		B9BD553A21A7D6280071AD3E /* FQSeriesElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQSeriesElement.m; sourceTree = "<group>"; };
-		B9BD553B21A7D6280071AD3E /* FQXAxisItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQXAxisItem.h; sourceTree = "<group>"; };
-		B9BD553C21A7D6280071AD3E /* FQXAxisItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQXAxisItem.m; sourceTree = "<group>"; };
 		B9BD554221A7D63A0071AD3E /* FQCustomChartVc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQCustomChartVc.m; sourceTree = "<group>"; };
 		B9BD554321A7D63A0071AD3E /* FQCustomChartVc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQCustomChartVc.h; sourceTree = "<group>"; };
 		B9BD554521A7D7800071AD3E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B9C524F8224B568300E1F86D /* FQSeriesElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQSeriesElement.m; sourceTree = "<group>"; };
+		B9C524F9224B568300E1F86D /* FQXAxisItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQXAxisItem.m; sourceTree = "<group>"; };
+		B9C524FA224B568300E1F86D /* FQSeriesElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQSeriesElement.h; sourceTree = "<group>"; };
+		B9C524FB224B568300E1F86D /* FQXAxisItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQXAxisItem.h; sourceTree = "<group>"; };
+		B9C524FE224B568400E1F86D /* FQHorizontalBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarItem.h; sourceTree = "<group>"; };
+		B9C524FF224B568400E1F86D /* FQHorizontalBarElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarElement.m; sourceTree = "<group>"; };
+		B9C52500224B568400E1F86D /* FQHorizontalBarElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarElement.h; sourceTree = "<group>"; };
+		B9C52501224B568400E1F86D /* FQHorizontalBarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarItem.m; sourceTree = "<group>"; };
+		B9C52507224B5BBA00E1F86D /* FQMeshElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQMeshElement.h; sourceTree = "<group>"; };
+		B9C52508224B5BBA00E1F86D /* FQMeshElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQMeshElement.m; sourceTree = "<group>"; };
+		B9C5250A224B5BCF00E1F86D /* FQMeshItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQMeshItem.h; sourceTree = "<group>"; };
+		B9C5250B224B5BCF00E1F86D /* FQMeshItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQMeshItem.m; sourceTree = "<group>"; };
+		B9C5250E224CA64A00E1F86D /* FQBothwayBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQBothwayBarItem.h; sourceTree = "<group>"; };
+		B9C5250F224CA64A00E1F86D /* FQBothwayBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQBothwayBarItem.m; sourceTree = "<group>"; };
+		B9C52511224CA66A00E1F86D /* FQBothwayBarElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQBothwayBarElement.h; sourceTree = "<group>"; };
+		B9C52512224CA66A00E1F86D /* FQBothwayBarElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQBothwayBarElement.m; sourceTree = "<group>"; };
 		B9D325D821B7A67C00566FE7 /* FQSportDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQSportDetailCell.h; sourceTree = "<group>"; };
 		B9D325D921B7A67C00566FE7 /* FQSportDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQSportDetailCell.m; sourceTree = "<group>"; };
 		B9D325DB21B7A7D000566FE7 /* FQSportDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQSportDetailModel.h; sourceTree = "<group>"; };
@@ -83,10 +102,6 @@
 		B9D325DF21B7ACAF00566FE7 /* FQSportDetailDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQSportDetailDataModel.m; sourceTree = "<group>"; };
 		B9E3AEF221B61E0D00A4D22E /* FQTableViewC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQTableViewC.h; sourceTree = "<group>"; };
 		B9E3AEF321B61E0D00A4D22E /* FQTableViewC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQTableViewC.m; sourceTree = "<group>"; };
-		B9E3AEF521B626AF00A4D22E /* FQHorizontalBarElement.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarElement.h; sourceTree = "<group>"; };
-		B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarElement.m; sourceTree = "<group>"; };
-		B9E3AEF821B626EA00A4D22E /* FQHorizontalBarItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FQHorizontalBarItem.h; sourceTree = "<group>"; };
-		B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FQHorizontalBarItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,22 +197,72 @@
 		B9BD553221A7D6280071AD3E /* ChartView */ = {
 			isa = PBXGroup;
 			children = (
+				B9C5250D224CA5EC00E1F86D /* BothwayBarChart */,
+				B9C52502224B568400E1F86D /* FrequencyTimeChart */,
+				B9C524FC224B568400E1F86D /* MeshChart */,
+				B9C524F7224B568300E1F86D /* OtherChart */,
+				B9C524FD224B568400E1F86D /* HorizontalBarChart */,
 				B9BD553321A7D6280071AD3E /* FQChartConfiguration.h */,
 				B9BD553421A7D6280071AD3E /* FQChartConfiguration.m */,
 				B9BD553521A7D6280071AD3E /* FQChartView.h */,
 				B9BD553621A7D6280071AD3E /* FQChartView.m */,
 				B9BD553721A7D6280071AD3E /* FQPopTipView.h */,
 				B9BD553821A7D6280071AD3E /* FQPopTipView.m */,
-				B9BD553921A7D6280071AD3E /* FQSeriesElement.h */,
-				B9BD553A21A7D6280071AD3E /* FQSeriesElement.m */,
-				B9BD553B21A7D6280071AD3E /* FQXAxisItem.h */,
-				B9BD553C21A7D6280071AD3E /* FQXAxisItem.m */,
-				B9E3AEF521B626AF00A4D22E /* FQHorizontalBarElement.h */,
-				B9E3AEF621B626AF00A4D22E /* FQHorizontalBarElement.m */,
-				B9E3AEF821B626EA00A4D22E /* FQHorizontalBarItem.h */,
-				B9E3AEF921B626EA00A4D22E /* FQHorizontalBarItem.m */,
 			);
 			path = ChartView;
+			sourceTree = "<group>";
+		};
+		B9C524F7224B568300E1F86D /* OtherChart */ = {
+			isa = PBXGroup;
+			children = (
+				B9C524FA224B568300E1F86D /* FQSeriesElement.h */,
+				B9C524F8224B568300E1F86D /* FQSeriesElement.m */,
+				B9C524FB224B568300E1F86D /* FQXAxisItem.h */,
+				B9C524F9224B568300E1F86D /* FQXAxisItem.m */,
+			);
+			path = OtherChart;
+			sourceTree = "<group>";
+		};
+		B9C524FC224B568400E1F86D /* MeshChart */ = {
+			isa = PBXGroup;
+			children = (
+				B9C52507224B5BBA00E1F86D /* FQMeshElement.h */,
+				B9C52508224B5BBA00E1F86D /* FQMeshElement.m */,
+				B9C5250A224B5BCF00E1F86D /* FQMeshItem.h */,
+				B9C5250B224B5BCF00E1F86D /* FQMeshItem.m */,
+			);
+			path = MeshChart;
+			sourceTree = "<group>";
+		};
+		B9C524FD224B568400E1F86D /* HorizontalBarChart */ = {
+			isa = PBXGroup;
+			children = (
+				B9C52500224B568400E1F86D /* FQHorizontalBarElement.h */,
+				B9C524FF224B568400E1F86D /* FQHorizontalBarElement.m */,
+				B9C524FE224B568400E1F86D /* FQHorizontalBarItem.h */,
+				B9C52501224B568400E1F86D /* FQHorizontalBarItem.m */,
+			);
+			path = HorizontalBarChart;
+			sourceTree = "<group>";
+		};
+		B9C52502224B568400E1F86D /* FrequencyTimeChart */ = {
+			isa = PBXGroup;
+			children = (
+				B90E7BCC22519CB6005C11FF /* FQFrequencyTimeItem.h */,
+				B90E7BCD22519CB6005C11FF /* FQFrequencyTimeItem.m */,
+			);
+			path = FrequencyTimeChart;
+			sourceTree = "<group>";
+		};
+		B9C5250D224CA5EC00E1F86D /* BothwayBarChart */ = {
+			isa = PBXGroup;
+			children = (
+				B9C5250E224CA64A00E1F86D /* FQBothwayBarItem.h */,
+				B9C5250F224CA64A00E1F86D /* FQBothwayBarItem.m */,
+				B9C52511224CA66A00E1F86D /* FQBothwayBarElement.h */,
+				B9C52512224CA66A00E1F86D /* FQBothwayBarElement.m */,
+			);
+			path = BothwayBarChart;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -331,20 +396,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				B9D325DD21B7A7D000566FE7 /* FQSportDetailModel.m in Sources */,
-				B9E3AEF721B626AF00A4D22E /* FQHorizontalBarElement.m in Sources */,
+				B9C52505224B568400E1F86D /* FQHorizontalBarElement.m in Sources */,
 				B9BD550521A7D5BF0071AD3E /* ViewController.m in Sources */,
+				B9C52513224CA66A00E1F86D /* FQBothwayBarElement.m in Sources */,
 				B9BD553F21A7D6280071AD3E /* FQPopTipView.m in Sources */,
 				B9BD554421A7D63A0071AD3E /* FQCustomChartVc.m in Sources */,
+				B9C52503224B568400E1F86D /* FQSeriesElement.m in Sources */,
+				B90E7BCE22519CB6005C11FF /* FQFrequencyTimeItem.m in Sources */,
+				B9C52506224B568400E1F86D /* FQHorizontalBarItem.m in Sources */,
+				B9C5250C224B5BCF00E1F86D /* FQMeshItem.m in Sources */,
 				B9BD553E21A7D6280071AD3E /* FQChartView.m in Sources */,
-				B9BD554121A7D6280071AD3E /* FQXAxisItem.m in Sources */,
+				B9C52509224B5BBA00E1F86D /* FQMeshElement.m in Sources */,
 				B9D325DA21B7A67D00566FE7 /* FQSportDetailCell.m in Sources */,
 				B9D325E021B7ACAF00566FE7 /* FQSportDetailDataModel.m in Sources */,
+				B9C52504224B568400E1F86D /* FQXAxisItem.m in Sources */,
 				B9BD551021A7D5CE0071AD3E /* main.m in Sources */,
 				B9BD553D21A7D6280071AD3E /* FQChartConfiguration.m in Sources */,
 				B9BD550221A7D5BF0071AD3E /* AppDelegate.m in Sources */,
-				B9E3AEFA21B626EA00A4D22E /* FQHorizontalBarItem.m in Sources */,
+				B9C52510224CA64A00E1F86D /* FQBothwayBarItem.m in Sources */,
 				B9E3AEF421B61E0D00A4D22E /* FQTableViewC.m in Sources */,
-				B9BD554021A7D6280071AD3E /* FQSeriesElement.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

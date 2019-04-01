@@ -27,6 +27,9 @@
     _gridLineColor = rgba(0, 0, 0, 0.2);
     _gridRowCount = 10;
     _gridColumnCount = 10;
+    _gridlineLength = 5;
+    _gridlineSpcing = 5;
+    
     _gestureEnabel = YES;
     _drawAnimationDuration = 0.0f;
     _hiddenLeftYAxis = YES;

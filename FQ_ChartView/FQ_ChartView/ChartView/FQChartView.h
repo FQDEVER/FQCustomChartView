@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "FQChartConfiguration.h"
 #import "FQSeriesElement.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class FQChartView;

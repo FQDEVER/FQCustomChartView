@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "FQXAxisItem.h"
+#import "FQFrequencyTimeItem.h"
 #define rgba(r, g, b, a) [UIColor colorWithRed:(r) / 255.0 green:(g) / 255.0 blue:(b) / 255.0 alpha:(a)]
 
 typedef NS_ENUM(NSInteger,FQChartType) {
     FQChartType_Line = 0 ,        //折线图
     FQChartType_Bar ,      //柱状图
     FQChartType_Pie,           //圆π图
-    FQChartType_Point,        //点图
+    FQChartType_Frequency,           //频率图
 };
 
 typedef NS_ENUM(NSInteger,FQChartYAxisAligmentType) {
@@ -209,6 +210,23 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, strong) UIColor *pieCenterUnitColor;
 
+/**
+ 圆饼半径是否递减.默认为NO
+ */
+@property (nonatomic, assign) BOOL pieIsdiminishingRadius;
+
+/**
+ 圆饼描述其他文本
+ */
+@property (nonatomic, strong) NSArray<NSString *>* pieSportTimeStrArr;
+
+/*---------------------------------------------频率图表----------------------------------------*/
+#pragma mark - 频率图表
+
+/**
+ 数据源数组
+ */
+@property (nonatomic, strong) NSArray<FQFrequencyTimeItem *> * frequencyDataArr ;
 
 @end
 
