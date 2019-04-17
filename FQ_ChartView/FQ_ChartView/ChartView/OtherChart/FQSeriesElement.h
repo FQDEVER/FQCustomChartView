@@ -98,6 +98,11 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
 #pragma mark - 折线图
 
 /**
+ 是否过滤零点值.默认为NO
+ */
+@property (nonatomic, assign) BOOL isFilterWithZero;
+
+/**
  绘制曲线宽度，默认2.00f
  */
 @property (nonatomic, assign) CGFloat lineWidth;

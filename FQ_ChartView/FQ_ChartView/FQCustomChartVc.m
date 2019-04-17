@@ -100,6 +100,9 @@
     }else if (type == SpecialChartChartType_AdvancedTransverseBarChart){
         /*进阶14 - 运动频率图展示*/
         [self  chartviewSpecialChartChartType_AdvancedTransverseBarChart];
+    }else if (type == SpecialChartChartType_AdvancedSportScheduleChart){
+        /*进阶15 - 多段赛程展示*/
+        [self  chartviewSpecialChartChartType_AdvancedSportScheduleChart];
     }
     
     //添加一个按钮.用来更新数据.
@@ -885,7 +888,7 @@
 /*进阶9 - 柱状.顶部折线展示(一组数据)*/
 -(void)chartviewSpecialChartChartType_AdvancedBarTopLine{
     
-    NSArray *dataArr = @[@20,@7,@10,@30,@70,@17];
+    NSArray *dataArr = @[@0,@7.98,@7.72,@0,@0,@0,@0];
     
     FQSeriesElement * element = [[FQSeriesElement alloc]init];
     element.chartType = FQChartType_Bar;
@@ -906,6 +909,7 @@
     element1.gradientColors = @[(id)rgba(136, 32, 255, 1).CGColor,(id)rgba(255, 28, 189, 1).CGColor];
     element1.fillLayerHidden = YES;
     element1.modeType = FQModeType_RoundedCorners;
+    element1.isFilterWithZero = YES;
     
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element,element1];
@@ -929,7 +933,8 @@
     //------设定刚好把Y轴隔离出背景Layer.
     chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin);
     
-    chartConfiguration.yLeftAxisIsReverse = NO;//YES;
+    chartConfiguration.yLeftAxisIsReverse = NO;
+    chartConfiguration.xAxisIsBottom = YES;
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
@@ -937,6 +942,55 @@
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
+
+///*进阶10 - 折线-点图展示(一组数据) ---- 空数据样式*/
+//-(void)chartviewSpecialChartChartType_AdvancedLineAndDot{
+//
+//    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+//    element.chartType = FQChartType_Line;
+//    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+//    element.fillLayerHidden = YES;
+//    element.modeType = FQModeType_None;
+//    element.selectPointColor = rgba(0, 122, 255, 1);
+//
+//    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+//    chartConfiguration.elements = @[element];//element1
+//    chartConfiguration.hiddenLeftYAxis = NO;
+//    chartConfiguration.hiddenRightYAxis = NO;
+//
+//    chartConfiguration.xAxisGridHidden = NO;
+//    chartConfiguration.yAxisGridHidden = NO;
+//    chartConfiguration.gridLineColor = rgba(220, 220, 220, 1);
+//    chartConfiguration.gridlineSpcing = 0.0;
+//    chartConfiguration.gridRowCount = 4;
+//    chartConfiguration.gridColumnCount = 7;
+//    chartConfiguration.isShowSelectPoint = YES;
+//    chartConfiguration.isShowAllPoint = YES;
+//    chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
+//    chartConfiguration.currentLineColor = rgba(102, 102, 102, 1);
+//
+//    chartConfiguration.mainContainerBackColor = rgba(250, 250, 250, 1.0f);
+//    chartConfiguration.kYAxisLabelMargin = 10; //y轴描述到y轴的间距
+//    chartConfiguration.kYAxisChartViewMargin = 12;  //y轴描述到图表的间距
+//    chartConfiguration.kChartViewWidthMargin = 30;  //y轴描述的宽度
+//    chartConfiguration.startPointType = ChartViewStartPointType_Left;
+//    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
+//    chartConfiguration.leftDecimalCount = 4;
+//
+//    chartConfiguration.chartBackLayerColor = rgba(250, 250, 250, 1.0f);
+//    chartConfiguration.chartViewEdgeInsets = UIEdgeInsetsMake(30, 10, 5, 10); //图表内边距.
+//    //------设定刚好把Y轴隔离出背景Layer.
+//    chartConfiguration.chartBackLayerEdgeInsets = UIEdgeInsetsMake(0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin, 0, chartConfiguration.kYAxisChartViewMargin + chartConfiguration.kChartViewWidthMargin); //图表背景的内边距
+//
+//    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 170, self.view.bounds.size.width, 162)];
+//    curveView.backgroundColor = [UIColor whiteColor];
+//    _chartView = curveView;
+//    //    curveView.chartDelegate = self;
+//    [self.view addSubview:curveView];
+//    [curveView fq_drawCurveView];
+//}
+
+
 /*进阶10 - 折线-点图展示(一组数据)*/
 -(void)chartviewSpecialChartChartType_AdvancedLineAndDot{
     
@@ -1216,6 +1270,57 @@
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
+/*---------------------------------------------赛程样式展示----------------------------------------*/
+#pragma mark - 赛程样式展示
+-(void)chartviewSpecialChartChartType_AdvancedSportScheduleChart{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@5,@10,@70,@30].mutableCopy;
+    element.fillLayerBackgroundColor = [[UIColor orangeColor] colorWithAlphaComponent:0.3];
+    element.gradientColors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor cyanColor].CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element];
+    chartConfiguration.hiddenLeftYAxis = NO;
+    //    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@70].mutableCopy;
+    chartConfiguration.showXAxisStringDatas = @[@"22:99",@"10:20",@"30:10",@"19:20",@"18:00"];
+    chartConfiguration.sportSchedules = @[@1,@2,@3];
+    //设定最大值范围
+    //    chartConfiguration.yLeftAxisMaxNumber = @70;
+    //    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
+    //
+    //    chartConfiguration.yRightAxisMaxNumber = @70;
+    //    chartConfiguration.yRightAxisMinNumber = @0;
+    
+    chartConfiguration.yAxisLeftTitle = @"min";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.yAxisRightTitle = @"m/s";
+    chartConfiguration.yAxisRightTitleColor = [UIColor blueColor];
+    chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.xAxisGridHidden = YES;
+    chartConfiguration.yAxisGridHidden = YES;
+    
+    chartConfiguration.mainContainerBackColor = rgba(250, 250, 250, 1.0f);
+    chartConfiguration.kYAxisLabelMargin = 10;
+    chartConfiguration.kYAxisChartViewMargin = 0;
+    chartConfiguration.startPointType = ChartViewStartPointType_Left;
+    chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
+    chartConfiguration.leftDecimalCount = 4;
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(20, 70, self.view.bounds.size.width - 40, 400)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    //    curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }

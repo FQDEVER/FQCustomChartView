@@ -475,6 +475,15 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) CGFloat kHorizontalBarItemMargin;
 
+/*---------------------------------------------赛程样式分段标识数组----------------------------------------*/
+#pragma mark - 赛程样式图表.
+
+/**
+ 全数据中的索引数组
+ */
+@property (nonatomic, strong) NSArray <NSNumber *>* sportSchedules ;
+
+
 /*---------------------------------------------其他图表----------------------------------------*/
 #pragma mark - 其他图表
 

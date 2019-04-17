@@ -193,6 +193,11 @@ typedef struct {
  */
 @property (nonatomic, assign) NSInteger selectIndex;
 
+/*---------------------------------------------赛程标识数据----------------------------------------*/
+#pragma mark - 赛程标识数据
+@property (nonatomic, strong) NSMutableArray<UIView *> * sportSchedulesLayerArr ;
+
+
 /*---------------------------------------------绘制折线----------------------------------------*/
 
 /**
@@ -619,10 +624,14 @@ typedef struct {
     
     if (!self.configuration.hiddenRightYAxisText) {
         if (!self.configuration.hiddenRightYAxis) {
-            if (!_yRightAxisShowArr.count && _yLeftAxisShowArr.count > 0) {
-                _yRightAxisShowArr = _yLeftAxisShowArr;
+//            if (!_yRightAxisShowArr.count && _yLeftAxisShowArr.count > 0) {
+//                _yRightAxisShowArr = _yLeftAxisShowArr;
+//            }
+            if (_yRightAxisShowArr.count == 0) {
+                return;
+            }else{
+                [self fq_getYAxisDataLabelLayerWithShowArr:_yRightAxisShowArr left:NO];
             }
-            [self fq_getYAxisDataLabelLayerWithShowArr:_yRightAxisShowArr left:NO];
         }
     }
 }
@@ -702,19 +711,24 @@ typedef struct {
     }
     
     //这种方式针对.居中对齐
-    CGFloat rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot - yAxisSize.height * showArr.count) / (showArr.count - 1);
+    CGFloat rowSpacing =  0;
     
-    if (xyAxisCustomStrTypeCenter) {
-        rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot)/(showArr.count);
+    if (showArr.count != 1) {
+        rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot - yAxisSize.height * showArr.count) / (showArr.count - 1);
+        
+        if (xyAxisCustomStrTypeCenter) {
+            rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot)/(showArr.count);
+        }
+        
+        if (xyAxisCustomStrTypeLeftRight) {
+            rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot)/(showArr.count - 1);
+        }
+        
+        if (rowSpacing <= 0) {
+            NSLog(@"y轴labels文字过多或字体过大，布局可能有问题");
+        }
     }
     
-    if (xyAxisCustomStrTypeLeftRight) {
-        rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot)/(showArr.count - 1);
-    }
-    
-    if (rowSpacing <= 0) {
-        NSLog(@"y轴labels文字过多或字体过大，布局可能有问题");
-    }
     __block CGFloat lastY = - rowSpacing + self.yAxisLabelsContainerMarginTop;
     if (xyAxisCustomStrTypeCenter) {
         lastY = - rowSpacing + self.yAxisLabelsContainerMarginTop + rowSpacing * 0.5;
@@ -1273,6 +1287,53 @@ typedef struct {
                 [_mainContainer.layer addSublayer:pointLayer];
             }
             [self.pointLayerArrs addObject:pointViewArr.copy];
+        }
+        
+        if (self.configuration.sportSchedules.count > 0) {
+        
+            for (int i = 0; i < pointArr.count; i++) {
+                for (int j = 0; j < self.configuration.sportSchedules.count; j++) {
+                    NSNumber * sportSchedulesIndex = self.configuration.sportSchedules[j];
+                    if ([sportSchedulesIndex intValue] == i) {
+                        NSValue * pointValue = pointArr[i];
+                        CGPoint point = [pointValue CGPointValue];
+                        
+                        CGFloat sportSchedulesWH = 16;
+                        
+                        UIView * sportSchedulesView = [[UIView alloc]init];
+                        sportSchedulesView.frame = CGRectMake(point.x - sportSchedulesWH * 0.5, 0, sportSchedulesWH, _mainContainerH);
+                        
+                        UIImageView * imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon16／sportsdetails_charts_daylinepoint_icon"]];
+                        imgView.frame = CGRectMake(0, -sportSchedulesWH, sportSchedulesWH, sportSchedulesWH);
+                        [sportSchedulesView addSubview:imgView];
+                        
+                        UILabel * labelIndex = [[UILabel alloc]init];
+                        labelIndex.text = @(self.sportSchedulesLayerArr.count + 1).stringValue;
+                        labelIndex.textColor = UIColor.whiteColor;
+                        labelIndex.font = [UIFont systemFontOfSize:8];
+                        labelIndex.frame = CGRectMake(0, -sportSchedulesWH, sportSchedulesWH, sportSchedulesWH);
+                        labelIndex.textAlignment = NSTextAlignmentCenter;
+                        [sportSchedulesView addSubview:labelIndex];
+                        
+                        UIView * layerView = [[UIView alloc]init];
+                        layerView.frame = CGRectMake((sportSchedulesWH - 1) * 0.5, 0, 1, _mainContainerH);
+                        //创建虚线直线
+                        CAShapeLayer * sportSchedulesLayer = [CAShapeLayer new];
+                        sportSchedulesLayer.drawsAsynchronously = YES;
+                        //提示竖直线
+                        sportSchedulesLayer.frame = layerView.bounds;
+                        [self drawLineOfDashByCAShapeLayer:sportSchedulesLayer lineLength:1.0 lineSpacing: 1.0 lineColor:rgba(0, 0, 0, 0.2) directionHorizonal:NO];
+                        [layerView.layer addSublayer:sportSchedulesLayer];
+                        
+                        [sportSchedulesView addSubview:layerView];
+                        [_mainContainer addSubview:sportSchedulesView];
+                        [self.sportSchedulesLayerArr addObject:sportSchedulesView];
+                        
+                    }
+                    
+                }
+            }
+            
         }
         
         if (element.chartType == FQChartType_Line) {
@@ -1893,6 +1954,10 @@ typedef struct {
 #pragma mark 绘制线条图表
 -(void)fq_makeLinePathWithElement:(FQSeriesElement *)element withArr:(NSArray *)pointArray andChartTypeIndex:(NSInteger)index {
     
+    if (pointArray.count == 0) {
+        return;
+    }
+    
     //将最大与最小值均处理一下.
     NSMutableArray * pointMuArr = [NSMutableArray array];
     for (NSValue * pointValue in pointArray) {
@@ -1910,38 +1975,119 @@ typedef struct {
     //针对线条.处理
     UIBezierPath * path = [UIBezierPath bezierPath];
     UIBezierPath *backPath = [UIBezierPath bezierPath];
-    CGPoint firstPoint = [pointArray[0] CGPointValue];
-    CGPoint lastPoint = [pointArray[pointArray.count - 1] CGPointValue];
-    [path moveToPoint:firstPoint];
-    [backPath moveToPoint:CGPointMake(firstPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
-    [backPath addLineToPoint:firstPoint];
     
-    for (int i = 0; i < pointArray.count - 1; ++i) {
-        if (element.modeType == FQModeType_RoundedCorners) {
-            CGPoint point1 = [pointArray[i] CGPointValue];
-            CGPoint point2 = [pointArray[i + 1] CGPointValue];
-            
-            CGPoint midPoint = [self centerWithP1:point1 p2:point2];
-            [backPath addQuadCurveToPoint:midPoint
-                             controlPoint:[self controlPointWithP1:midPoint p2:point1]];
-            [backPath addQuadCurveToPoint:point2
-                             controlPoint:[self controlPointWithP1:midPoint p2:point2]];
-            
-            [path addQuadCurveToPoint:midPoint
-                         controlPoint:[self controlPointWithP1:midPoint p2:point1]];
-            [path addQuadCurveToPoint:point2
-                         controlPoint:[self controlPointWithP1:midPoint p2:point2]];
-            
+/*排除为0的情况*/
+    if (element.isFilterWithZero) {
+        CGFloat minPointY = 0;
+        if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
+            if (self.configuration.xAxisIsBottom) {
+                if (self.configuration.yLeftAxisIsReverse == YES) {
+                    minPointY = 1;
+                }else{
+                    minPointY = _mainContainerH - 1;
+                }
+            }else{
+                if (self.configuration.yLeftAxisIsReverse == YES) {
+                    minPointY = _mainContainerH - 1;
+                }else{
+                    minPointY = 1;
+                }
+            }
         }else{
-            
-            NSValue * pointValue = pointArray[i + 1];
-            CGPoint point = [pointValue CGPointValue];
-            [backPath addLineToPoint:point];
-            [path addLineToPoint:point];
+            if (self.configuration.xAxisIsBottom) {
+                if (self.configuration.yRightAxisIsReverse == YES) {
+                    minPointY = 1;
+                }else{
+                    minPointY = _mainContainerH - 1;
+                }
+            }else{
+                if (self.configuration.yRightAxisIsReverse == YES) {
+                    minPointY = _mainContainerH - 1;
+                }else{
+                    minPointY = 1;
+                }
+            }
         }
-    }
+        //排除为空值得情况
+        NSMutableArray *currentPointMuArr = [NSMutableArray array];
+        for (NSValue * pointValue in pointArray) {
+            
+            if (pointValue.CGPointValue.y != minPointY) {
+                [currentPointMuArr addObject:pointValue];
+            }
+        }
+        CGPoint firstPoint = [currentPointMuArr[0] CGPointValue];
+        CGPoint lastPoint = [pointArray[currentPointMuArr.count - 1] CGPointValue];
+        [path moveToPoint:firstPoint];
+        [backPath moveToPoint:CGPointMake(firstPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+        [backPath addLineToPoint:firstPoint];
+        
+        for (int i = 0; i < currentPointMuArr.count - 1; i++) {
+            if (element.modeType == FQModeType_RoundedCorners) {
+                
+                CGPoint point1 = [currentPointMuArr[i] CGPointValue];
+                CGPoint point2 = [currentPointMuArr[i + 1] CGPointValue];
+                if (point1.y == minPointY) {
+                    
+                    continue;
+                }
+                
+                CGPoint midPoint = [self centerWithP1:point1 p2:point2];
+                [backPath addQuadCurveToPoint:midPoint
+                                 controlPoint:[self controlPointWithP1:midPoint p2:point1]];
+                [backPath addQuadCurveToPoint:point2
+                                 controlPoint:[self controlPointWithP1:midPoint p2:point2]];
+                
+                [path addQuadCurveToPoint:midPoint
+                             controlPoint:[self controlPointWithP1:midPoint p2:point1]];
+                [path addQuadCurveToPoint:point2
+                             controlPoint:[self controlPointWithP1:midPoint p2:point2]];
+                
+            }else{
+                
+                NSValue * pointValue = currentPointMuArr[i + 1];
+                CGPoint point = [pointValue CGPointValue];
+                if (point.y == minPointY) {
+                    continue;
+                }
+                [backPath addLineToPoint:point];
+                [path addLineToPoint:point];
+            }
+        }
+        [backPath addLineToPoint:CGPointMake(lastPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+    }else{
+        CGPoint firstPoint = [pointArray[0] CGPointValue];
+        CGPoint lastPoint = [pointArray[pointArray.count - 1] CGPointValue];
+        [path moveToPoint:firstPoint];
+        [backPath moveToPoint:CGPointMake(firstPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+        [backPath addLineToPoint:firstPoint];
+        
+        for (int i = 0; i < pointArray.count - 1; ++i) {
+            if (element.modeType == FQModeType_RoundedCorners) {
+                CGPoint point1 = [pointArray[i] CGPointValue];
+                CGPoint point2 = [pointArray[i + 1] CGPointValue];
     
-    [backPath addLineToPoint:CGPointMake(lastPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+                CGPoint midPoint = [self centerWithP1:point1 p2:point2];
+                [backPath addQuadCurveToPoint:midPoint
+                                 controlPoint:[self controlPointWithP1:midPoint p2:point1]];
+                [backPath addQuadCurveToPoint:point2
+                                 controlPoint:[self controlPointWithP1:midPoint p2:point2]];
+    
+                [path addQuadCurveToPoint:midPoint
+                             controlPoint:[self controlPointWithP1:midPoint p2:point1]];
+                [path addQuadCurveToPoint:point2
+                             controlPoint:[self controlPointWithP1:midPoint p2:point2]];
+    
+            }else{
+    
+                NSValue * pointValue = pointArray[i + 1];
+                CGPoint point = [pointValue CGPointValue];
+                [backPath addLineToPoint:point];
+                [path addLineToPoint:point];
+            }
+        }
+        [backPath addLineToPoint:CGPointMake(lastPoint.x, self.configuration.xAxisIsBottom ? _mainContainerH : 0)];
+    }
     
     [self.linePathArr addObject: path];
     [self.lineBackPathArr addObject:backPath];
@@ -3460,6 +3606,7 @@ typedef struct {
     [_midTextBothwayBarLayerArr removeAllObjects];
     [_leftTextBothwayBarLayerArr removeAllObjects];
     [_rightTextBothwayBarLayerArr removeAllObjects];
+    [_sportSchedulesLayerArr removeAllObjects];
     NSInteger count = self.layer.sublayers.count;
     for (int i = 0; i < count; ++i) {
         CALayer *layer = self.layer.sublayers[0];
@@ -3846,6 +3993,14 @@ typedef struct {
         _rightTextBothwayBarLayerArr = [NSMutableArray array];
     }
     return _rightTextBothwayBarLayerArr;
+}
+
+-(NSMutableArray<UIView *> *)sportSchedulesLayerArr
+{
+    if (!_sportSchedulesLayerArr) {
+        _sportSchedulesLayerArr = [NSMutableArray array];
+    }
+    return _sportSchedulesLayerArr;
 }
 
 @end
