@@ -108,8 +108,6 @@
         _tableView.rowHeight = 60;
         _tableView.backgroundColor = [UIColor blackColor];
         _tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
-        _tableView.sectionFooterHeight = CGFLOAT_MIN;
-        _tableView.estimatedSectionFooterHeight = CGFLOAT_MIN;
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"AlertController"];
     }
     return _tableView;

@@ -95,6 +95,11 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, strong) UIColor *selectPointColor;
 
+/**
+ 是否展示选中点
+ */
+@property (nonatomic, assign) BOOL isShowSelectPoint;
+
 #pragma mark - 折线图
 
 /**

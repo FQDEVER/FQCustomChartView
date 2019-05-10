@@ -23,7 +23,7 @@
         _rightBarColors = @[(id)UIColor.redColor.CGColor,(id)UIColor.blueColor.CGColor];
         _descTextColor = UIColor.lightTextColor;
         _descTextFont = [UIFont systemFontOfSize:10];
-        _bothwayTopMargin = 20;
+        _bothwayTopMargin = 10;
         _bothwayMidContentW = 28;
         _bothwayBarH = 6;
         _bothwayBarMargin = 14;

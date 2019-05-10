@@ -77,7 +77,7 @@
 @property (nonatomic, assign) NSInteger borderLineCount;
 
 /**
- 最大半径是多少.默认为屏幕的0.25
+ 最大半径是多少.默认为屏幕的0.21
  */
 @property (nonatomic, assign) CGFloat maxRadius;
 

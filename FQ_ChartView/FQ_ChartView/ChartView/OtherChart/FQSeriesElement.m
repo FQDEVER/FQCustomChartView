@@ -29,6 +29,7 @@
         _pieCenterUnitFont = [UIFont systemFontOfSize:11];
         _pieCenterUnitColor = [UIColor grayColor];
         _selectPointColor = [UIColor redColor];
+        _isShowSelectPoint = YES;
     }
     return self;
 }

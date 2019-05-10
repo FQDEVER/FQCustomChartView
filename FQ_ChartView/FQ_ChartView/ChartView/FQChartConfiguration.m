@@ -65,6 +65,9 @@
     
     _leftDecimalCount = 0;
     _rightDecimalCount = 0;
+    
+    _yAxisLeftTitleType = ChartViewTitleDescType_Right;
+    _yAxisRightTitleType = ChartViewTitleDescType_Left;
 }
 
 @end

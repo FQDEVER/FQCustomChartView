@@ -426,9 +426,9 @@ typedef struct {
             [self.barElements addObject:element];
             
         }
-//        else if (element.chartType == FQChartType_Point){
-//            [self.pointElements addObject:element];
-//        }
+        //        else if (element.chartType == FQChartType_Point){
+        //            [self.pointElements addObject:element];
+        //        }
         
         CAShapeLayer * averagelineLayer = [CAShapeLayer new];
         [self.averageLineLayerArr addObject:averagelineLayer];
@@ -530,7 +530,7 @@ typedef struct {
     }
     
     //如果是左右
-    if (xyAxisCustomStrTypeLeftRight) { //如果有指定的数据.则使用指定布局
+    if (xyAxisCustomStrTypeLeftRight && self.configuration.showXAxisStringDatas.count > 1) { //如果有指定的数据.则使用指定布局
         //实际布局宽度
         CGFloat currentW = _mainContainerW ;
         if (self.configuration.startPointType == ChartViewStartPointType_Center) {
@@ -601,7 +601,12 @@ typedef struct {
             
             
             CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
-            textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
+            //只有一条数据时
+            if (_xAxisShowArr.count == 1) {
+                textlayer.frame = CGRectMake( (self.bounds.size.width - size.width) * 0.5,  textLayerY, size.width, size.height);
+            }else{
+                textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
+            }
             [self.layer addSublayer:textlayer];
         }
     }];
@@ -624,9 +629,10 @@ typedef struct {
     
     if (!self.configuration.hiddenRightYAxisText) {
         if (!self.configuration.hiddenRightYAxis) {
-//            if (!_yRightAxisShowArr.count && _yLeftAxisShowArr.count > 0) {
-//                _yRightAxisShowArr = _yLeftAxisShowArr;
-//            }
+            //            if (!_yRightAxisShowArr.count && _yLeftAxisShowArr.count > 0) {
+            //                _yRightAxisShowArr = _yLeftAxisShowArr;
+            //            }
+            //            [self fq_getYAxisDataLabelLayerWithShowArr:_yRightAxisShowArr left:NO];
             if (_yRightAxisShowArr.count == 0) {
                 return;
             }else{
@@ -667,9 +673,19 @@ typedef struct {
         if (size.width < _configuration.kChartViewWidthMargin) {
             textLayerW = textLayerW + 1;
             if (isYAxisLeft) {
-                yAxisTextLayerX = self.yAxisLabelsContainerMarginLeft - size.width - (self.configuration.hiddenLeftYAxis ? 0 :self.configuration. kYAxisLabelMargin);
+                if (_configuration.yAxisLeftTitleType == ChartViewTitleDescType_Right) {
+                    yAxisTextLayerX = self.yAxisLabelsContainerMarginLeft - size.width - (self.configuration.hiddenLeftYAxis ? 0 :self.configuration. kYAxisLabelMargin);
+                }else{
+                    yAxisTextLayerX = self.yAxisLabelsContainerMarginLeft;
+                }
+                
             }else{
-                yAxisTextLayerX = self.frame.size.width - self.yAxisLabelsContainerMarginRight + (self.configuration.hiddenRightYAxis ? 0 : self.configuration.kYAxisLabelMargin);
+                
+                if (_configuration.yAxisRightTitleType == ChartViewTitleDescType_Left) {
+                    yAxisTextLayerX = self.frame.size.width - self.yAxisLabelsContainerMarginRight + (self.configuration.hiddenRightYAxis ? 0 : self.configuration.kYAxisLabelMargin);
+                }else{
+                    yAxisTextLayerX = self.frame.size.width - self.yAxisLabelsContainerMarginRight - size.width;
+                }
             }
         }else{
             
@@ -1270,6 +1286,33 @@ typedef struct {
     //获取每个点对应的位置.
     [self fq_getChartViewPointArr];
     
+    //只需要依据一组的x轴即可
+    NSArray * pointArr = self.elementPointsArr.firstObject;
+    if (self.configuration.sportSchedulesIndex.count > 0 || self.configuration.sportSchedulesprogress.count > 0) {
+        
+        BOOL isSportSchedulesIndex = self.configuration.sportSchedulesIndex.count > 0;
+        
+        NSArray * sportSchedulesArr = isSportSchedulesIndex ? self.configuration.sportSchedulesIndex : self.configuration.sportSchedulesprogress;
+        
+        if (isSportSchedulesIndex) {
+            for (int i = 0; i < pointArr.count; i++) {
+                for (int j = 0; j < sportSchedulesArr.count; j++) {
+                    NSNumber * sportSchedulesIndex = sportSchedulesArr[j];
+                    if ([sportSchedulesIndex intValue] == i) {
+                        NSValue * pointValue = pointArr[i];
+                        CGPoint point = [pointValue CGPointValue];
+                        [self fq_setSportEventSchedulesWithViewX:point.x];
+                        
+                    }
+                }
+            }
+        }else{
+            for (int i = 0; i < sportSchedulesArr.count; i++) {
+                [self fq_setSportEventSchedulesWithViewX:[sportSchedulesArr[i] floatValue] * _mainContainerW];
+            }
+        }
+    }
+    
     NSInteger lineElementIndex = 0;
     NSInteger barElementIndex = 0;
     //开始绘制折线
@@ -1281,59 +1324,12 @@ typedef struct {
         if (self.configuration.isShowSelectPoint) {
             NSMutableArray * pointViewArr = [NSMutableArray array];
             for (NSValue * pointValue in pointArr) {
-                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:10 color:element.selectPointColor center:[pointValue CGPointValue] borderColor:UIColor.whiteColor borderW:self.configuration.isSelectPointBorder ? 3.0 : 0.0];
+                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:self.configuration.isSelectPointBorder ? 12.0 : 10.0 color:element.isShowSelectPoint ? element.selectPointColor : UIColor.clearColor center:[pointValue CGPointValue] borderColor:element.isShowSelectPoint ? UIColor.whiteColor : UIColor.clearColor borderW:self.configuration.isSelectPointBorder ? 2.0 : 0.0];
                 pointLayer.opacity = self.configuration.isShowAllPoint ? 1.0f : 0.0f;
                 [pointViewArr addObject:pointLayer];
                 [_mainContainer.layer addSublayer:pointLayer];
             }
             [self.pointLayerArrs addObject:pointViewArr.copy];
-        }
-        
-        if (self.configuration.sportSchedules.count > 0) {
-        
-            for (int i = 0; i < pointArr.count; i++) {
-                for (int j = 0; j < self.configuration.sportSchedules.count; j++) {
-                    NSNumber * sportSchedulesIndex = self.configuration.sportSchedules[j];
-                    if ([sportSchedulesIndex intValue] == i) {
-                        NSValue * pointValue = pointArr[i];
-                        CGPoint point = [pointValue CGPointValue];
-                        
-                        CGFloat sportSchedulesWH = 16;
-                        
-                        UIView * sportSchedulesView = [[UIView alloc]init];
-                        sportSchedulesView.frame = CGRectMake(point.x - sportSchedulesWH * 0.5, 0, sportSchedulesWH, _mainContainerH);
-                        
-                        UIImageView * imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon16／sportsdetails_charts_daylinepoint_icon"]];
-                        imgView.frame = CGRectMake(0, -sportSchedulesWH, sportSchedulesWH, sportSchedulesWH);
-                        [sportSchedulesView addSubview:imgView];
-                        
-                        UILabel * labelIndex = [[UILabel alloc]init];
-                        labelIndex.text = @(self.sportSchedulesLayerArr.count + 1).stringValue;
-                        labelIndex.textColor = UIColor.whiteColor;
-                        labelIndex.font = [UIFont systemFontOfSize:8];
-                        labelIndex.frame = CGRectMake(0, -sportSchedulesWH, sportSchedulesWH, sportSchedulesWH);
-                        labelIndex.textAlignment = NSTextAlignmentCenter;
-                        [sportSchedulesView addSubview:labelIndex];
-                        
-                        UIView * layerView = [[UIView alloc]init];
-                        layerView.frame = CGRectMake((sportSchedulesWH - 1) * 0.5, 0, 1, _mainContainerH);
-                        //创建虚线直线
-                        CAShapeLayer * sportSchedulesLayer = [CAShapeLayer new];
-                        sportSchedulesLayer.drawsAsynchronously = YES;
-                        //提示竖直线
-                        sportSchedulesLayer.frame = layerView.bounds;
-                        [self drawLineOfDashByCAShapeLayer:sportSchedulesLayer lineLength:1.0 lineSpacing: 1.0 lineColor:rgba(0, 0, 0, 0.2) directionHorizonal:NO];
-                        [layerView.layer addSublayer:sportSchedulesLayer];
-                        
-                        [sportSchedulesView addSubview:layerView];
-                        [_mainContainer addSubview:sportSchedulesView];
-                        [self.sportSchedulesLayerArr addObject:sportSchedulesView];
-                        
-                    }
-                    
-                }
-            }
-            
         }
         
         if (element.chartType == FQChartType_Line) {
@@ -1345,6 +1341,44 @@ typedef struct {
         }
     }
 }
+
+/**
+ 根据x值.绘制标识
+ 
+ @param viewX x轴x值
+ */
+-(void)fq_setSportEventSchedulesWithViewX:(CGFloat)viewX{
+    CGFloat sportSchedulesWH = 16;
+    UIView * sportSchedulesView = [[UIView alloc]init];
+    sportSchedulesView.frame = CGRectMake(viewX - sportSchedulesWH * 0.5, 0, sportSchedulesWH, _mainContainerH);
+    
+    UIImageView * imgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"icon16／sportsdetails_charts_daylinepoint_icon"]];
+    imgView.frame = CGRectMake(0, -sportSchedulesWH * 0.8, sportSchedulesWH, sportSchedulesWH);
+    [sportSchedulesView addSubview:imgView];
+    
+    UILabel * labelIndex = [[UILabel alloc]init];
+    labelIndex.text = @(self.sportSchedulesLayerArr.count + 1).stringValue;
+    labelIndex.textColor = UIColor.whiteColor;
+    labelIndex.font = [UIFont systemFontOfSize:8];
+    labelIndex.frame = CGRectMake(0, -sportSchedulesWH * 0.8, sportSchedulesWH, sportSchedulesWH);
+    labelIndex.textAlignment = NSTextAlignmentCenter;
+    [sportSchedulesView addSubview:labelIndex];
+    
+    UIView * layerView = [[UIView alloc]init];
+    layerView.frame = CGRectMake((sportSchedulesWH - 1) * 0.5, sportSchedulesWH * 0.2, 1, _mainContainerH - sportSchedulesWH * 0.2);
+    //创建虚线直线
+    CAShapeLayer * sportSchedulesLayer = [CAShapeLayer new];
+    sportSchedulesLayer.drawsAsynchronously = YES;
+    //提示竖直线
+    sportSchedulesLayer.frame = layerView.bounds;
+    [self drawLineOfDashByCAShapeLayer:sportSchedulesLayer lineLength:1.0 lineSpacing: 1.0 lineColor:rgba(0, 0, 0, 0.2) directionHorizonal:NO];
+    [layerView.layer addSublayer:sportSchedulesLayer];
+    
+    [sportSchedulesView addSubview:layerView];
+    [_mainContainer addSubview:sportSchedulesView];
+    [self.sportSchedulesLayerArr addObject:sportSchedulesView];
+}
+
 
 /**
  计算出每个点的位置
@@ -1633,7 +1667,7 @@ typedef struct {
     CGFloat leftMaxBarItem = 0;
     //右侧最大值item
     CGFloat rightMaxBarItem = 0;
-
+    
     //比较获取最大值.作为最大参考
     for (FQBothwayBarItem *barItem in element.orginDatas) {
         leftMaxBarItem = MAX(barItem.leftData.floatValue, leftMaxBarItem);
@@ -1689,7 +1723,7 @@ typedef struct {
         
         [leftDataArr addObject:barItem.leftData];
         [rightDataArr addObject:barItem.rightData];
-    
+        
     }
     
     CGFloat midContentH = element.dateTextFont.lineHeight + 1;
@@ -1714,18 +1748,18 @@ typedef struct {
         // 创建柱状图
         UIBezierPath *leftBarPath = [UIBezierPath bezierPath];
         UIBezierPath *rightBarPath = [UIBezierPath bezierPath];
-    
+        
         [self setShapeLayerWithPath:leftBarPath point:leftPoint barW:barHeight isLeft:YES];
         [self setShapeLayerWithPath:rightBarPath point:rightPoint barW:barHeight isLeft:NO];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-        
+            
             leftBarLayer.path = leftBarPath.CGPath;
             rightBarLayer.path = rightBarPath.CGPath;
             leftBarLayer.strokeEnd = 1;
             rightBarLayer.strokeEnd = 1;
             //绘制左侧.内容.topBar.右侧描述文本
-//            [self fq_drawHorBarTextWithElement:horBarElement andIndex:i];
+            //            [self fq_drawHorBarTextWithElement:horBarElement andIndex:i];
             //绘制中间layer.绘制左右的layer.
         });
     }
@@ -1976,7 +2010,7 @@ typedef struct {
     UIBezierPath * path = [UIBezierPath bezierPath];
     UIBezierPath *backPath = [UIBezierPath bezierPath];
     
-/*排除为0的情况*/
+    /*排除为0的情况*/
     if (element.isFilterWithZero) {
         CGFloat minPointY = 0;
         if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
@@ -2012,10 +2046,16 @@ typedef struct {
         NSMutableArray *currentPointMuArr = [NSMutableArray array];
         for (NSValue * pointValue in pointArray) {
             
-            if (pointValue.CGPointValue.y != minPointY) {
-                [currentPointMuArr addObject:pointValue];
+            @synchronized (currentPointMuArr) {
+                if (pointValue.CGPointValue.y != minPointY) {
+                    [currentPointMuArr addObject:pointValue];
+                }
             }
         }
+        if (currentPointMuArr.count < 1) {
+            return;
+        }
+        
         CGPoint firstPoint = [currentPointMuArr[0] CGPointValue];
         CGPoint lastPoint = [pointArray[currentPointMuArr.count - 1] CGPointValue];
         [path moveToPoint:firstPoint];
@@ -2066,20 +2106,20 @@ typedef struct {
             if (element.modeType == FQModeType_RoundedCorners) {
                 CGPoint point1 = [pointArray[i] CGPointValue];
                 CGPoint point2 = [pointArray[i + 1] CGPointValue];
-    
+                
                 CGPoint midPoint = [self centerWithP1:point1 p2:point2];
                 [backPath addQuadCurveToPoint:midPoint
                                  controlPoint:[self controlPointWithP1:midPoint p2:point1]];
                 [backPath addQuadCurveToPoint:point2
                                  controlPoint:[self controlPointWithP1:midPoint p2:point2]];
-    
+                
                 [path addQuadCurveToPoint:midPoint
                              controlPoint:[self controlPointWithP1:midPoint p2:point1]];
                 [path addQuadCurveToPoint:point2
                              controlPoint:[self controlPointWithP1:midPoint p2:point2]];
-    
+                
             }else{
-    
+                
                 NSValue * pointValue = pointArray[i + 1];
                 CGPoint point = [pointValue CGPointValue];
                 [backPath addLineToPoint:point];
@@ -2432,7 +2472,7 @@ typedef struct {
     textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
     [self.layer addSublayer:textlayer];
     
-//    如果是递减样式.则需要更改布局样式
+    //    如果是递减样式.则需要更改布局样式
     if (element.pieIsdiminishingRadius) {
         colorLayer.frame = CGRectMake(self.bounds.size.width - PieColorLayerW - 110, centerY - PieColorLayerH * 0.5, PieColorLayerW, PieColorLayerH);
         accountLayer.frame = CGRectMake(CGRectGetMaxX(colorLayer.frame) + 8,accountLayerY, accountLayerSize.width, accountLayerSize.height);
@@ -2482,11 +2522,12 @@ typedef struct {
     
     CGFloat centerDescLayerY = (self.bounds.size.height - (centerUnitlayerSize.height + centerDescLayerSize.height)) * 0.5;
     CGFloat centerDescLyaerX = element.pieIsdiminishingRadius ? (self.frame.size.width * 0.25 - centerDescLayerSize.width * 0.5):(self.frame.size.width * 0.5 - centerDescLayerSize.width * 0.5);
-    centerDescLayer.frame = CGRectMake(centerDescLyaerX,centerDescLayerY + 8, centerDescLayerSize.width, centerDescLayerSize.height);
+    CGFloat centerFontDiff = -element.pieCenterDescFont.descender;
+    centerDescLayer.frame = CGRectMake(centerDescLyaerX,centerDescLayerY + centerFontDiff, centerDescLayerSize.width, centerDescLayerSize.height);
     
     CGFloat centerUnitX = element.pieIsdiminishingRadius ? (self.frame.size.width * 0.25 - centerUnitlayerSize.width * 0.5) : (self.frame.size.width * 0.5 - centerUnitlayerSize.width * 0.5);
-    CGFloat centerUnitY = CGRectGetMaxY(centerDescLayer.frame);
-    centerUnitlayer.frame = CGRectMake(centerUnitX,centerUnitY - 8, centerUnitlayerSize.width, centerUnitlayerSize.height + 1);
+    CGFloat centerUnitY = CGRectGetMaxY(centerDescLayer.frame) - centerFontDiff;
+    centerUnitlayer.frame = CGRectMake(centerUnitX,centerUnitY, centerUnitlayerSize.width, centerUnitlayerSize.height + 1);
     [self.layer addSublayer:centerDescLayer];
     [self.layer addSublayer:centerUnitlayer];
 }
@@ -2775,14 +2816,19 @@ typedef struct {
 
 #pragma mark 绘制网状图
 -(void)fq_makeMeshChartPathWithElement:(FQMeshElement *)meshElement{
- 
-    self.backgroundColor = [UIColor whiteColor];
-    CGRect rectSize = CGRectMake((self.bounds.size.width - 179) * 0.5, (self.bounds.size.height - 171) * 0.5, 179, 171);
-    CALayer * meshChartLayer = [[CALayer alloc]init];
-    meshChartLayer.frame = rectSize;
-    meshChartLayer.backgroundColor = UIColor.grayColor.CGColor;
     
-    CGPoint centerPoint = self.center;
+    self.backgroundColor = [UIColor whiteColor];
+    
+    CGFloat nameH = meshElement.nameFont.lineHeight;
+    CGFloat valueH = meshElement.valueFont.lineHeight;
+
+    CGFloat chartCententH = (self.bounds.size.height - nameH * 2.0 - valueH * 2.0 - 4 * 10);
+    // + 10是去掉上下的间距.让中间的网状图尽可能大
+    meshElement.maxRadius = MIN(chartCententH / (1 + sqrt(3) * 0.5), meshElement.maxRadius) + 10;
+    // -5是去掉上面的间距
+    CGFloat centerPointY = nameH + 10 + valueH + 10 + meshElement.maxRadius - 5;
+    
+    CGPoint centerPoint = CGPointMake(self.bounds.size.width * 0.5, centerPointY);
     //全长半径
     CGFloat radius = meshElement.maxRadius;
     CGFloat radiusDiff = radius / meshElement.borderLineCount;
@@ -2801,7 +2847,7 @@ typedef struct {
         CAShapeLayer *backGroundSpiderLayer = [CAShapeLayer layer];
         [self.layer addSublayer:backGroundSpiderLayer];
         CGFloat currentRadius = radius - radiusDiff * i;
-        NSMutableArray * pointMuArr = [self backgroundSpiderLayer:backGroundSpiderLayer count:meshElement.orginDatas.count radius:currentRadius startAngle:startAngle];
+        NSMutableArray * pointMuArr = [self backgroundSpiderLayer:backGroundSpiderLayer count:meshElement.orginDatas.count radius:currentRadius startAngle:startAngle centerPoint:centerPoint];
         if (i == 0) {
             positionMuArr = pointMuArr;
         }
@@ -2819,11 +2865,11 @@ typedef struct {
     UIBezierPath *contentFillLayerPath = [UIBezierPath bezierPath];
     //绘制对应的点
     for (int i = 0; i < meshElement.orginDatas.count; i++) {
-    
+        
         FQMeshItem * meshItem = meshElement.orginDatas[i];
         //所占的比例.
         CGFloat progress = MAX(meshItem.value.floatValue / meshElement.maxValue, showMin);
-
+        
         CGFloat currentRadius = radius * progress;
         
         //当前角度
@@ -2840,7 +2886,7 @@ typedef struct {
         
         CGPoint positionPoint = [positionMuArr[i] CGPointValue];
         //绘制文本
-        [self meshElementChartViewWithMeshItem:meshItem meshElement:meshElement point:positionPoint];
+        [self meshElementChartViewWithMeshItem:meshItem meshElement:meshElement point:positionPoint centerPoint:centerPoint];
         
         //随后创建一个线条的视图
         if (i == 0 ) {
@@ -2856,12 +2902,12 @@ typedef struct {
 
 /**
  绘制网状图上文本
-
+ 
  @param meshItem 网状图每项数据
  @param meshElement 网状图图表元素数据
  @param positionPoint 文本内容展示基点位置
  */
--(void)meshElementChartViewWithMeshItem:(FQMeshItem *)meshItem meshElement:(FQMeshElement *)meshElement point:(CGPoint)positionPoint {
+-(void)meshElementChartViewWithMeshItem:(FQMeshItem *)meshItem meshElement:(FQMeshElement *)meshElement point:(CGPoint)positionPoint centerPoint:(CGPoint)centerPoint{
     
     
     CGSize nameTextSize = [self fq_sizeWithString:meshItem.name font:meshElement.nameFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
@@ -2914,14 +2960,14 @@ typedef struct {
     CGFloat wDiff = (wMax - wMin) * 0.5;
     
     //根据point点与self.center点之间的偏移获取其准确的位置
-    if (positionPoint.x < self.center.x && positionPoint.y < self.center.y) { //最左侧.//极限的位置
+    if (positionPoint.x < centerPoint.x && positionPoint.y < centerPoint.y) { //最左侧.//极限的位置
         CGFloat nameLayerX = positionPoint.x - wMax - 10;
         CGFloat valueLayerX =  nameLayerX + wDiff;
         if (valueTextSize.width == wMax) { //底部长.
-
+            
             valueLayerX = positionPoint.x - wMax - 10;
             nameLayerX = valueLayerX + wDiff;
-        
+            
         }
         CGFloat valueLyaerY = positionPoint.y + 2;
         CGFloat nameLayerY = positionPoint.y - 2 - nameTextSize.height;
@@ -2930,7 +2976,7 @@ typedef struct {
         valueTextLayer.frame = CGRectMake(valueLayerX, valueLyaerY, valueTextSize.width, valueTextSize.height);
         nameTextLayer.frame = CGRectMake(nameLayerX, nameLayerY, nameTextSize.width, nameTextSize.height);
         descTextLayer.frame = CGRectMake(descLayerX, descLayerY, descTextSize.width, descTextSize.height);
-    }else if(positionPoint.x < self.center.x  && positionPoint.y > self.center.y){//左下
+    }else if(positionPoint.x < centerPoint.x  && positionPoint.y > centerPoint.y){//左下
         //无氧耐力的位置
         CGFloat nameLayerX = positionPoint.x - wMax + 10;
         CGFloat valueLayerX =  nameLayerX + wDiff;
@@ -2940,14 +2986,14 @@ typedef struct {
         }
         
         CGFloat nameLayerY = positionPoint.y + 9;
-       CGFloat descLayerY = nameLayerY + nameTextSize.height - descTextSize.height;
+        CGFloat descLayerY = nameLayerY + nameTextSize.height - descTextSize.height;
         CGFloat valueLyaerY = nameLayerY + nameTextSize.height + 4;
         
         CGFloat descLayerX = nameLayerX + 2 + nameTextSize.width;
         valueTextLayer.frame = CGRectMake(valueLayerX, valueLyaerY, valueTextSize.width, valueTextSize.height);
         nameTextLayer.frame = CGRectMake(nameLayerX, nameLayerY, nameTextSize.width, nameTextSize.height);
         descTextLayer.frame = CGRectMake(descLayerX, descLayerY, descTextSize.width, descTextSize.height);
-    }else if(positionPoint.x > self.center.x && positionPoint.y >self.center.y) {//右下
+    }else if(positionPoint.x > centerPoint.x && positionPoint.y >centerPoint.y) {//右下
         //有氧耐力位置
         CGFloat nameLayerX = positionPoint.x - 10;
         CGFloat valueLayerX =  nameLayerX + wDiff;
@@ -2964,7 +3010,7 @@ typedef struct {
         valueTextLayer.frame = CGRectMake(valueLayerX, valueLyaerY, valueTextSize.width, valueTextSize.height);
         nameTextLayer.frame = CGRectMake(nameLayerX, nameLayerY, nameTextSize.width, nameTextSize.height);
         descTextLayer.frame = CGRectMake(descLayerX, descLayerY, descTextSize.width, descTextSize.height);
-    }else if(positionPoint.x > self.center.x && positionPoint.y < self.center.y){//最右侧
+    }else if(positionPoint.x > centerPoint.x && positionPoint.y < centerPoint.y){//最右侧
         
         //燃脂
         CGFloat nameLayerX = positionPoint.x + 10;
@@ -3006,17 +3052,16 @@ typedef struct {
 
 /**
  绘制背景色layer
-
+ 
  @param layer 需要添加线条的layer
  @param count 总的点数
  @param currentRadius 当前角度
  @param startAngle 开始角度
  */
-- (NSMutableArray *)backgroundSpiderLayer:(CAShapeLayer*)layer count:(NSInteger)count radius:(CGFloat)currentRadius startAngle:(CGFloat)startAngle  {
-    CGPoint centerPoint = self.center;
+- (NSMutableArray *)backgroundSpiderLayer:(CAShapeLayer*)layer count:(NSInteger)count radius:(CGFloat)currentRadius startAngle:(CGFloat)startAngle centerPoint:(CGPoint)centerPoint {
     //单个的角度
     CGFloat itemAngle = M_PI * 2.0 / count * 1.0;
-
+    
     //绘制网状路径
     UIBezierPath *backGroundSpiderLayerPath = [UIBezierPath bezierPath];
     NSMutableArray * muArr = [NSMutableArray array];
@@ -3042,7 +3087,7 @@ typedef struct {
     layer.fillColor = rgba(51, 51, 51, 0.04).CGColor;
     layer.lineWidth = 0.8f;
     return muArr;
-
+    
 }
 
 
@@ -3108,7 +3153,7 @@ typedef struct {
  开始绘制
  */
 - (void)fq_drawCurveView{
-
+    
     /*
      圆饼图
      */
@@ -3147,17 +3192,17 @@ typedef struct {
         [self fq_drawCurveBothwayBarChartViewWithElement:self.configuration.bothwayBarElement];
         return;
     }
-
+    
     
     /*
      其他折线样式
-    */
+     */
     [self fq_drawCurveOtherChartViewWithElement:nil];
 }
 
 /**
  绘制运动频率样式
-
+ 
  @param element 数据样式
  */
 -(void)fq_drawCurveFrequencyChartViewWithElement:(FQSeriesElement *)element{
@@ -3186,12 +3231,12 @@ typedef struct {
             contentMargin *= 1;
         }
     }
-
-
+    
+    
     NSMutableArray * muArr = [NSMutableArray array];
     //获取多组起点.终点的数组
     for (int i = 0; i < element.frequencyDataArr.count ; i++) {
-
+        
         CGFloat pointY = y + i * contentMargin;
         
         FQFrequencyTimeItem * frequencyItem = element.frequencyDataArr[i];
@@ -3205,12 +3250,12 @@ typedef struct {
         [barContainerLayer addSublayer:tempLayer];
         
         for (NSArray * valueArr in frequencyItem.dataItemArr) {
-
+            
             NSNumber * startValue = valueArr.firstObject;
             NSNumber * endValue = valueArr.lastObject;
             CGFloat startPointX = (startValue.floatValue / 24.0) * contentChartW + leftMargin;
             CGFloat endPointX = (endValue.floatValue / 24.0) * contentChartW + leftMargin;
-
+            
             //保存self.layer
             [muArr addObject:@[[NSValue valueWithCGPoint:CGPointMake(startPointX, pointY)],[NSValue valueWithCGPoint:CGPointMake(endPointX, pointY)]]];
             
@@ -3218,7 +3263,7 @@ typedef struct {
             barLayer.backgroundColor = UIColor.grayColor.CGColor;
             barLayer.frame = CGRectMake(startPointX, 0, endPointX - startPointX, barH);
             [tempLayer addSublayer:barLayer];
-        
+            
         }
         CAGradientLayer *gradientLayer = [[CAGradientLayer alloc]init];
         gradientLayer.frame = barContainerLayer.bounds;
@@ -3229,12 +3274,12 @@ typedef struct {
         gradientLayer.mask = tempLayer;
     }
     
-
+    
 }
 
 /**
  绘制主要的折线.柱状.叠加图等
-
+ 
  @param element 空
  */
 -(void)fq_drawCurveOtherChartViewWithElement:(FQSeriesElement *)element{
@@ -3305,7 +3350,7 @@ typedef struct {
 
 /**
  绘制水平柱状图.包含配速图.心率区间图等
-
+ 
  @param horBarElement 水平柱状数据元素
  */
 -(void)fq_drawCurveHorizontalBarChartViewWithElement:(FQHorizontalBarElement *)horBarElement{
@@ -3371,7 +3416,7 @@ typedef struct {
 
 /**
  绘制双向柱状图
-
+ 
  @param bothwayElement 双向柱状视图数据
  */
 -(void)fq_drawCurveBothwayBarChartViewWithElement:(FQBothwayBarElement *)bothwayElement{
@@ -3396,14 +3441,14 @@ typedef struct {
     
     CALayer * midLayer = [[CALayer alloc]init];
     midLayer.backgroundColor = UIColor.whiteColor.CGColor;
-    midLayer.frame = CGRectMake(self.bounds.size.width * 0.5 - midContentW * 0.5, topBotMargin * 0.5, midContentW, barCount * barH + (barCount - 1) * barMargin + topBotMargin);
+    midLayer.frame = CGRectMake(self.bounds.size.width * 0.5 - midContentW * 0.5, 0, midContentW, barCount * barH + (barCount - 1) * barMargin + topBotMargin * 2.0);
     midLayer.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.2].CGColor;
     midLayer.shadowRadius = 5.0;
     midLayer.shadowOffset = CGSizeMake(0, 3);
     midLayer.shadowOpacity = 1;
     midLayer.shouldRasterize = YES;
     midLayer.rasterizationScale = [UIScreen mainScreen].scale;
-    midLayer.maskedCorners = 5.0;
+    midLayer.cornerRadius = 5.0;
     [self.layer addSublayer:midLayer];
     
     for (int i = 0; i < bothwayElement.orginDatas.count; ++i) {
@@ -3469,7 +3514,7 @@ typedef struct {
         [self.layer addSublayer:rightTextLayer];
         [self.rightTextBothwayBarLayerArr addObject:rightTextLayer];
     }
-
+    
     CAGradientLayer *rightBarGradientLayer = [CAGradientLayer new];
     rightBarGradientLayer.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.height);
     rightBarGradientLayer.startPoint = CGPointMake(0, 0);
@@ -3587,7 +3632,7 @@ typedef struct {
     [_mainContainer removeFromSuperview];
     [_barElements removeAllObjects];
     [_lineElements removeAllObjects];
-//    [_pointElements removeAllObjects];
+    //    [_pointElements removeAllObjects];
     [_pieElements removeAllObjects];
     [_horBarElements removeAllObjects];
     [_linePathArr removeAllObjects];
@@ -3608,10 +3653,12 @@ typedef struct {
     [_rightTextBothwayBarLayerArr removeAllObjects];
     [_sportSchedulesLayerArr removeAllObjects];
     NSInteger count = self.layer.sublayers.count;
-    for (int i = 0; i < count; ++i) {
-        CALayer *layer = self.layer.sublayers[0];
-        [layer removeFromSuperlayer];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (int i = 0; i < count; ++i) {
+            CALayer *layer = self.layer.sublayers[0];
+            [layer removeFromSuperlayer];
+        }
+    });
 }
 
 /**
@@ -4002,5 +4049,6 @@ typedef struct {
     }
     return _sportSchedulesLayerArr;
 }
+
 
 @end

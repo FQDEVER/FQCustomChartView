@@ -21,6 +21,11 @@ typedef NS_ENUM(NSInteger,ChartViewUnitDescrType) {
     ChartViewUnitDescrType_LeftRight ,//左侧Y轴在左侧.右边Y轴在右侧.
 };
 
+typedef NS_ENUM(NSInteger,ChartViewTitleDescType) {
+    ChartViewTitleDescType_Right = 0 ,//标题描述居右对齐  标题- |
+    ChartViewTitleDescType_Left, //标题描述居左对齐  | -标题
+};
+
 typedef NS_ENUM(NSInteger,ChartViewStartPointType) {
     ChartViewStartPointType_Center = 0, //中心点
     ChartViewStartPointType_Left ,//起点.结束点.
@@ -104,9 +109,19 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, copy) NSString *yAxisLeftTitle;
 
 /**
+ 左Y轴单位布局 - 默认为ChartViewTitleDescType_Right
+ */
+@property (nonatomic, assign) ChartViewTitleDescType yAxisLeftTitleType;
+
+/**
  右Y轴单位
  */
 @property (nonatomic, copy) NSString *yAxisRightTitle;
+
+/**
+ 右Y轴单位布局 - 默认为ChartViewTitleDescType_Left
+ */
+@property (nonatomic, assign) ChartViewTitleDescType yAxisRightTitleType;
 
 /**
  左Y轴单位字体
@@ -479,9 +494,14 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 #pragma mark - 赛程样式图表.
 
 /**
- 全数据中的索引数组
+ 全数据中的索引数组@[@1,@3,@9]
  */
-@property (nonatomic, strong) NSArray <NSNumber *>* sportSchedules ;
+@property (nonatomic, strong) NSArray <NSNumber *>* sportSchedulesIndex ;
+
+/**
+ 全数据中x轴占比数组@[@0.3,@0.6,@0.9]
+ */
+@property (nonatomic, strong) NSArray <NSNumber *>* sportSchedulesprogress ;
 
 
 /*---------------------------------------------其他图表----------------------------------------*/

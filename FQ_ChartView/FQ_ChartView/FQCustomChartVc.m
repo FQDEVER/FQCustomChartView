@@ -186,7 +186,8 @@
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element];
     chartConfiguration.hiddenLeftYAxis = NO;
-//    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@70].mutableCopy;
+    chartConfiguration.hiddenRightYAxis = NO;
+    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@70].mutableCopy;
     chartConfiguration.showXAxisStringDatas = @[@"22:99",@"10:20",@"30:10",@"19:20",@"18:00"];
     //设定最大值范围
 //    chartConfiguration.yLeftAxisMaxNumber = @70;
@@ -205,6 +206,8 @@
     
     chartConfiguration.xAxisGridHidden = YES;
     chartConfiguration.yAxisGridHidden = YES;
+    chartConfiguration.yAxisLeftTitleType = ChartViewTitleDescType_Left;
+    chartConfiguration.yAxisRightTitleType = ChartViewTitleDescType_Right;
     
     chartConfiguration.mainContainerBackColor = rgba(250, 250, 250, 1.0f);
     chartConfiguration.kYAxisLabelMargin = 10;
@@ -337,6 +340,7 @@
     chartConfiguration.yLeftAxisMinNumber = @0;
     chartConfiguration.yRightAxisMaxNumber = @80;
     chartConfiguration.yRightAxisMinNumber = @0;
+    chartConfiguration.sportSchedulesprogress = @[@0.2,@0.4,@0.9];
     
     chartConfiguration.yAxisLeftTitle = @"min";//@"步频(次/分钟)";
     chartConfiguration.yAxisRightTitle = @"m/s";//@"海拔高度(米)";
@@ -1114,19 +1118,19 @@
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.meshElement = meshElement;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 300)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 64, self.view.bounds.size.width, 224)];
     _chartView = curveView;
     curveView.chartDelegate = self;
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
-    
+    curveView.backgroundColor = UIColor.orangeColor;
 }
 
 /*进阶12 - 炫酷圆饼展示*/
 -(void)chartviewSpecialChartChartType_AdvancedRoundCakesChart{
     FQSeriesElement * element = [[FQSeriesElement alloc]init];
     element.chartType = FQChartType_Pie;
-    element.orginNumberDatas = @[@60,@30,@20,@10,@10,@9,@7].mutableCopy;
+    element.orginNumberDatas = @[@122,@82,@42,@26,@16,@8,@7].mutableCopy;
     element.pieColors = @[[UIColor redColor],[UIColor blueColor],[UIColor orangeColor],[UIColor cyanColor],[UIColor greenColor],[UIColor lightGrayColor],[UIColor cyanColor]];
     element.showPieNameDatas = @[@"跑步",@"游泳",@"骑行",@"铁人三项",@"夜跑",@"室内跑",@"室内游泳"];
     element.pieSportTimeStrArr = @[@"122min",@"82min",@"42min",@"26min",@"16min",@"8min",@"7min"];
@@ -1210,7 +1214,7 @@
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.bothwayBarElement = bothwayElement;
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 300)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 164)];
     _chartView = curveView;
     curveView.chartDelegate = self;
     [self.view addSubview:curveView];
@@ -1247,9 +1251,10 @@
     chartConfiguration.showXAxisStringDatas = xAxisMuArr.copy;
     chartConfiguration.showLeftYAxisNames = @[@"周一",@"周二",@"周三",@"周四",@"周五",@"周六",@"周日"];
     chartConfiguration.yLeftAxisIsReverse = YES;
-    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:9];
+    
+    chartConfiguration.yAxisLabelsTitleFont = [UIFont systemFontOfSize:9];
     chartConfiguration.xAxisLabelsTitleFont = [UIFont systemFontOfSize:9];
-    chartConfiguration.yAxisLeftTitleColor = rgba(102, 102, 102, 1);
+    chartConfiguration.yAxisLabelsTitleColor = rgba(102, 102, 102, 1);
     chartConfiguration.xAxisLabelsTitleColor = rgba(153, 153, 153, 1);
     
     chartConfiguration.xAxisGridHidden = YES;
@@ -1265,8 +1270,9 @@
     chartConfiguration.startPointType = ChartViewStartPointType_Left;
     chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
     chartConfiguration.leftDecimalCount = 4;
+    chartConfiguration.chartViewEdgeInsets = UIEdgeInsetsMake(0, 0, 16, 0);
     
-    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(20, 70, self.view.bounds.size.width - 40, 204)];
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(5, 70, self.view.bounds.size.width - 15, 224)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
     curveView.chartDelegate = self;
@@ -1291,7 +1297,8 @@
     chartConfiguration.hiddenLeftYAxis = NO;
     //    chartConfiguration.showRightYAxisDatas = @[@0,@10,@20,@30,@40,@50,@70].mutableCopy;
     chartConfiguration.showXAxisStringDatas = @[@"22:99",@"10:20",@"30:10",@"19:20",@"18:00"];
-    chartConfiguration.sportSchedules = @[@1,@2,@3];
+//    chartConfiguration.sportSchedulesIndex = @[@1,@2,@3];
+        chartConfiguration.sportSchedulesprogress = @[@0.2,@0.4,@0.9];
     //设定最大值范围
     //    chartConfiguration.yLeftAxisMaxNumber = @70;
     //    chartConfiguration.yLeftAxisMinNumber = @10; //如果不是最小.则使用数据中的最小.
