@@ -103,6 +103,8 @@
     }else if (type == SpecialChartChartType_AdvancedSportScheduleChart){
         /*进阶15 - 多段赛程展示*/
         [self  chartviewSpecialChartChartType_AdvancedSportScheduleChart];
+    }else if (type == SpecialChartChartType_HorizontalBarChart){
+        [self chartviewSpecialChartChartType_HorizontalBar];
     }
     
     //添加一个按钮.用来更新数据.
@@ -439,6 +441,7 @@
     chartConfiguration.yAxisRightTitleColor = [UIColor blueColor];
     chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
     chartConfiguration.xAxisIsBottom = NO;
+    chartConfiguration.yRightAxisIsReverse = NO;
     
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
@@ -624,23 +627,23 @@
     
     FQHorizontalBarItem * barItem = [[FQHorizontalBarItem alloc]init];
     barItem.xLeftAxisStr = @"1";
-    barItem.contentStr = @"5’56”";
-    barItem.barTopStr = @"+293";
+    barItem.contentStr = @"5'56''";
+    barItem.barTopStr = @"+0'56''";
     barItem.xRightAxisStr = @"6:30";
     barItem.valueData = @100;
     barItem.isSelect = YES;
     
     FQHorizontalBarItem * barItem1 = [[FQHorizontalBarItem alloc]init];
-    barItem1.xLeftAxisStr = @"1";
-    barItem1.contentStr = @"5’56”";
-    barItem1.barTopStr = @"+293";
+    barItem1.xLeftAxisStr = @"2";
+    barItem1.contentStr = @"5'56''";
+    barItem1.barTopStr = @"-0'23";
     barItem1.xRightAxisStr = @"6:30";
     barItem1.valueData = @50;
     
     FQHorizontalBarItem * barItem2 = [[FQHorizontalBarItem alloc]init];
-    barItem2.xLeftAxisStr = @"1";
-    barItem2.contentStr = @"5/’56/”";
-    barItem2.barTopStr = @"+293";
+    barItem2.xLeftAxisStr = @"3";
+    barItem2.contentStr = @"5'56''";
+    barItem2.barTopStr = @"+1'23";
     barItem2.xRightAxisStr = @"6:30";
     barItem2.valueData = @0;
     
@@ -649,6 +652,7 @@
     element.horizontalBarContentType = ChartHorizontalBarContentType_Inside;
     element.isShowXLeftAxisStr = YES;
     element.isShowXRightAxisStr = YES;
+    element.barPlaceholderColor = rgba(240, 240, 240, 240);
     //设定他展示的最小值
     element.narrowestW = 66;
     
@@ -1009,8 +1013,8 @@
     
     FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
     element1.chartType = FQChartType_Line;
-    element1.yAxisAligmentType = FQChartYAxisAligmentType_Left;
-    element1.orginNumberDatas = @[@18,@17,@3,@5,@10,@70,@30].mutableCopy;
+    element1.yAxisAligmentType = FQChartYAxisAligmentType_Right;
+    element1.orginNumberDatas = @[@18,@17,@3,@5,@10,@50,@30].mutableCopy;
     element1.gradientColors = @[(id)rgba(255, 28, 189, 1).CGColor,(id)rgba(136, 32, 255, 1).CGColor];
     element1.fillLayerHidden = YES;
     element1.modeType = FQModeType_None;
@@ -1022,10 +1026,12 @@
     chartConfiguration.hiddenLeftYAxis = NO;
     chartConfiguration.hiddenRightYAxis = NO;
     chartConfiguration.showXAxisStringDatas = @[@"22:99",@"10:20",@"30:10",@"19:20",@"18:00",@"11:00"];
+    chartConfiguration.showLeftYAxisNames = @[@"10",@"20",@"30",@"40"];
     
     chartConfiguration.yAxisLeftTitle = @"min/km";
     chartConfiguration.yAxisLeftTitleColor = rgba(0, 122, 255, 1);;
     chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:12];
+    
     
     chartConfiguration.yAxisRightTitle = @"bpm";
     chartConfiguration.yAxisRightTitleColor = rgba(255, 0, 145, 1);
@@ -1162,13 +1168,13 @@
     NSArray * bothwayDataArr = @[
                               @{
                                   @"dateStr":@"20",
-                                  @"leftData":@"124",
+                                  @"leftData":@"0",
                                   @"rightData":@"20",
                                   },
                               @{
                                   @"dateStr":@"21",
                                   @"leftData":@"72",
-                                  @"rightData":@"16",
+                                  @"rightData":@"0",
                                   },
                               @{
                                   @"dateStr":@"22",
@@ -1331,6 +1337,55 @@
     [self.view addSubview:curveView];
     [curveView fq_drawCurveView];
 }
+
+
+/*---------------------------------------------正常的柱状图样式----------------------------------------*/
+#pragma mark - 正常的水平柱状图样式
+-(void)chartviewSpecialChartChartType_HorizontalBar{
+    
+    NSArray * rangValueArr = @[@"<4'",@"4'-5'",@"5'-6'",@"6'-7'",@"7'-8'",@"8'-9'",@">9'"];
+    NSArray * valueStr = @[@"0",@"0",@"28",@"32",@"12",@"0",@"0"];
+    NSMutableArray * horizontalBarArr = [NSMutableArray array];
+    CGFloat rightContentW = 0;
+    CGFloat leftContentW = 0;
+    for (int i = 0; i < rangValueArr.count; i++) {
+        FQHorizontalBarItem * barItem = [[FQHorizontalBarItem alloc]init];
+        barItem.xLeftAxisStr = rangValueArr[i];
+        barItem.xRightAxisStr = [NSString stringWithFormat:@"%@km",valueStr[i]];
+        barItem.valueData =  @([valueStr[i] integerValue]);
+        [horizontalBarArr addObject:barItem];
+        CGFloat barItemRightW = [barItem.xRightAxisStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont fontWithName:@"PingFangSC-Semibold"size:12]} context:nil].size.width;
+        CGFloat barItemLeftW = [barItem.xLeftAxisStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin |NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont fontWithName:@"PingFangSC-Regular"size:12]} context:nil].size.width;
+        rightContentW = MAX(barItemRightW, rightContentW);
+        leftContentW = MAX(barItemLeftW, leftContentW);
+    }
+    
+    FQHorizontalBarElement * element = [[FQHorizontalBarElement alloc]init];
+    element.horizontalBarItemArr = horizontalBarArr.copy;
+    element.horizontalBarContentType = ChartHorizontalBarContentType_Inside;
+    element.isShowXLeftAxisStr = YES;
+    element.isShowXRightAxisStr = YES;
+    element.barPlaceholderColor = rgba(240, 240, 240, 240);
+    
+    element.xLeftAxisLabColor = rgba(102, 102, 102, 1.0f);
+    element.xLeftAxisLabFont = [UIFont fontWithName:@"PingFangSC-Regular"size:12];
+    element.xRightAxisLabColor = rgba(102, 102, 102, 1.0f);
+    element.xRightAxisLabFont = [UIFont fontWithName:@"PingFangSC-Semibold"size:12];
+    element.gradientColors = @[(id)rgba(0, 122, 255, 1).CGColor,(id)rgba(0, 122, 255, 1).CGColor];
+    element.barTopStrWidth = 0;
+    element.barContentMargin = 0;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.horBarElement = element;
+    chartConfiguration.kHorizontalBarXAxisLeftLabW = leftContentW;
+    chartConfiguration.kHorizontalBarXAxisRightLabW = rightContentW;
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 300)];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
+
 
 /*---------------------------------------------更新数据----------------------------------------*/
 #pragma mark - 更新数据

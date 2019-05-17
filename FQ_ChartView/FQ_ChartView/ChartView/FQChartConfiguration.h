@@ -32,7 +32,7 @@ typedef NS_ENUM(NSInteger,ChartViewStartPointType) {
 };
 
 typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局样式
-    ChartViewXYAxisCustomStrType_LeftRight = 0 ,//从左到右撑满
+    ChartViewXYAxisCustomStrType_LeftRight = 0 ,//从左到右撑满.上下撑满
     ChartViewXYAxisCustomStrType_Center, //居中布局
     ChartViewXYAxisCustomStrType_Corresponding ,//能与实际数据对应上.如果是Y轴.就和LeftRight效果一致
     ChartViewXYAxisCustomStrType_Corresponding_Data ,//与实际X轴的位置对应

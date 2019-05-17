@@ -603,7 +603,7 @@ typedef struct {
             CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
             //只有一条数据时
             if (_xAxisShowArr.count == 1) {
-                textlayer.frame = CGRectMake( (self.bounds.size.width - size.width) * 0.5,  textLayerY, size.width, size.height);
+                textlayer.frame = CGRectMake( CGRectGetMinX(_mainContainer.frame) + (_mainContainerW - size.width) * 0.5,  textLayerY, size.width, size.height);
             }else{
                 textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
             }
@@ -719,11 +719,14 @@ typedef struct {
     BOOL xyAxisCustomStrTypeLeftRight = NO;
     BOOL xyAxisCustomStrTypeCenter = NO;
     if (isLeft) {
-        xyAxisCustomStrTypeLeftRight = self.configuration.showLeftYAxisNames.count > 0 && (self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_LeftRight ||self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Corresponding);
-        xyAxisCustomStrTypeCenter = self.configuration.showLeftYAxisNames.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
+        xyAxisCustomStrTypeLeftRight = self.yLeftAxisShowArr.count > 0 && (self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_LeftRight ||self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Corresponding
+                                                                           ||self.configuration.xyAxisCustomStrType ==ChartViewXYAxisCustomStrType_Corresponding_Data);
+        xyAxisCustomStrTypeCenter = self.yLeftAxisShowArr.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
     }else{
-        xyAxisCustomStrTypeLeftRight = self.configuration.showRightYAxisNames.count > 0 && (self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_LeftRight ||self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Corresponding);
-        xyAxisCustomStrTypeCenter = self.configuration.showRightYAxisNames.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
+        
+        xyAxisCustomStrTypeLeftRight = self.yRightAxisShowArr.count > 0 && (self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_LeftRight ||self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Corresponding
+                                                                            ||self.configuration.xyAxisCustomStrType ==ChartViewXYAxisCustomStrType_Corresponding_Data);
+        xyAxisCustomStrTypeCenter = self.yRightAxisShowArr.count > 0 && self.configuration.xyAxisCustomStrType == ChartViewXYAxisCustomStrType_Center;
     }
     
     //这种方式针对.居中对齐
@@ -731,7 +734,6 @@ typedef struct {
     
     if (showArr.count != 1) {
         rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot - yAxisSize.height * showArr.count) / (showArr.count - 1);
-        
         if (xyAxisCustomStrTypeCenter) {
             rowSpacing = (self.frame.size.height - self.yAxisLabelsContainerMarginTop - self.yAxisLabelsContainerMarginBot)/(showArr.count);
         }
@@ -786,86 +788,91 @@ typedef struct {
         CGSize size = [self fq_sizeWithString:rowName font:self.configuration.yAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
         
         CGFloat textLayerY = lastY + rowSpacing;
-        if (isLeft && (self.configuration.showLeftYAxisDatas.count > 0)) {
-            
-            CGFloat axisYValue = 0;
-            if (self.configuration.xAxisIsBottom) {
-                if (yAxisIsReverse) {
-                    axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
-                }else{
-                    axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
-                }
-            }else{
-                if (yAxisIsReverse) {
-                    axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
-                }else{
-                    axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
-                }
-            }
-            if (yAxisIsReverse) {
-                
-                if (self.configuration.xAxisIsBottom) {
-                    textLayerY = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH  + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }else{
-                    textLayerY = (1 - (axisYValue - self.self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }
-                
-            }else{
-                
-                if (self.configuration.xAxisIsBottom) {
-                    textLayerY = (1 - (axisYValue - self.self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }else{
-                    textLayerY = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }
-            }
-            
-        }
-        
-        if (!isLeft && (self.configuration.showRightYAxisDatas.count > 0)) {
-            
-            CGFloat axisYValue = 0;
-            if (self.configuration.xAxisIsBottom) {
-                if (yAxisIsReverse) {
-                    axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
-                }else{
-                    axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
-                }
-            }else{
-                if (yAxisIsReverse) {
-                    axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
-                }else{
-                    axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
-                }
-            }
-            
-            if (yAxisIsReverse) {
-                
-                if (self.configuration.xAxisIsBottom) {
-                    textLayerY = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }else{
-                    textLayerY = (1 - (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }
-                
-            }else{
-                if (self.configuration.xAxisIsBottom) {
-                    textLayerY = (1 - (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }else{
-                    textLayerY = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
-                }
-            }
-        }
+        //找到对应的Y轴点.去掉了
+        //        if (isLeft && (self.configuration.showLeftYAxisDatas.count > 0)) {
+        //
+        //            CGFloat axisYValue = 0;
+        //            if (self.configuration.xAxisIsBottom) {
+        //                if (yAxisIsReverse) {
+        //                    axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
+        //                }else{
+        //                    axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
+        //                }
+        //            }else{
+        //                if (yAxisIsReverse) {
+        //                    axisYValue = [self.configuration.showLeftYAxisDatas[reversedArray.count - idx - 1] floatValue];
+        //                }else{
+        //                    axisYValue = [self.configuration.showLeftYAxisDatas[idx] floatValue];
+        //                }
+        //            }
+        //            if (yAxisIsReverse) {
+        //
+        //                if (self.configuration.xAxisIsBottom) {
+        //                    textLayerY = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH  + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }else{
+        //                    textLayerY = (1 - (axisYValue - self.self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }
+        //
+        //            }else{
+        //
+        //                if (self.configuration.xAxisIsBottom) {
+        //                    textLayerY = (1 - (axisYValue - self.self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }else{
+        //                    textLayerY = (axisYValue - self.yAxisLeftMinValue)/(self.yAxisLeftMaxValue - self.yAxisLeftMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }
+        //            }
+        //
+        //        }
+        //
+        //        if (!isLeft && (self.configuration.showRightYAxisDatas.count > 0)) {
+        //
+        //            CGFloat axisYValue = 0;
+        //            if (self.configuration.xAxisIsBottom) {
+        //                if (yAxisIsReverse) {
+        //                    axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
+        //                }else{
+        //                    axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
+        //                }
+        //            }else{
+        //                if (yAxisIsReverse) {
+        //                    axisYValue = [self.configuration.showRightYAxisDatas[reversedArray.count - idx - 1] floatValue];
+        //                }else{
+        //                    axisYValue = [self.configuration.showRightYAxisDatas[idx] floatValue];
+        //                }
+        //            }
+        //
+        //            if (yAxisIsReverse) {
+        //
+        //                if (self.configuration.xAxisIsBottom) {
+        //                    textLayerY = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }else{
+        //                    textLayerY = (1 - (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }
+        //
+        //            }else{
+        //                if (self.configuration.xAxisIsBottom) {
+        //                    textLayerY = (1 - (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue)) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }else{
+        //                    textLayerY = (axisYValue - self.yAxisRightMinValue)/(self.yAxisRightMaxValue - self.yAxisRightMinValue) * self.mainContainerH + self.yAxisLabelsContainerMarginTop - size.height * 0.5;
+        //                }
+        //            }
+        //        }
         
         CGFloat yAxisTextLayerX = 0;
+        CGFloat yAxisTextLayerOffY = 0;
         if (isLeft) {
             //如果使用的是默认的
             yAxisTextLayerX = self.yAxisLabelsContainerMarginLeft - size.width - (self.configuration.hiddenLeftYAxis ? 0 :self.configuration. kYAxisLabelMargin);
+            yAxisTextLayerOffY = (self.yLeftAxisShowArr.count > 0 ? yAxisSize.height * 0.5 : 0);
         }else{
             yAxisTextLayerX = self.frame.size.width - self.yAxisLabelsContainerMarginRight + (self.configuration.hiddenRightYAxis ? 0 : self.configuration.kYAxisLabelMargin);
+            yAxisTextLayerOffY = (self.yRightAxisShowArr.count > 0 ? yAxisSize.height * 0.5 : 0);
         }
-        textlayer.frame = CGRectMake(yAxisTextLayerX,textLayerY - (self.configuration.showLeftYAxisNames.count > 0 ? yAxisSize.height * 0.5 : 0), size.width, size.height); //size.width
+        
+        textlayer.frame = CGRectMake(yAxisTextLayerX,textLayerY - yAxisTextLayerOffY, size.width, size.height); //size.width
         
         [self.layer addSublayer:textlayer];
-        lastY = CGRectGetMaxY(textlayer.frame) - (self.configuration.showLeftYAxisNames.count > 0 ? yAxisSize.height * 0.5 : 0);
+        lastY = CGRectGetMaxY(textlayer.frame) - yAxisTextLayerOffY;
         if (size.width > maxWidth) {
             maxWidth = size.width;
         }
@@ -1920,10 +1927,38 @@ typedef struct {
             self.yRightAxisShowArr = muarr;
         }
         
+        if (self.yAxisLeftMinValue == CGFLOAT_MAX) {
+            self.yAxisLeftMinValue = 0;
+        }
+        
+        if (self.yAxisRightMinValue == CGFLOAT_MAX) {
+            self.yAxisRightMinValue = 0;
+        }
+        
+        if (self.yAxisLeftMaxValue == self.yAxisLeftMinValue) { //防止最大最小一样.没有区间展示效果
+            if (self.yAxisLeftMaxValue > 4) {
+                self.yAxisLeftMinValue = self.yAxisLeftMaxValue - 4;
+            }else if(self.yAxisLeftMaxValue > 0 && self.yAxisLeftMaxValue <= 4){
+                self.yAxisLeftMinValue = 0;
+            }else{
+                self.yAxisLeftMaxValue = self.yAxisLeftMinValue + 100;
+            }
+        }
+        
+        if (self.yAxisRightMaxValue == self.yAxisRightMinValue) { //防止最大最小一样.没有区间展示效果
+            if (self.yAxisRightMaxValue > 4) {
+                self.yAxisRightMinValue = self.yAxisRightMaxValue - 4;
+            }else if(self.yAxisRightMaxValue > 0 && self.yAxisRightMaxValue <= 4){
+                self.yAxisRightMinValue = 0;
+            }else{
+                self.yAxisRightMaxValue = self.yAxisRightMinValue + 100;
+            }
+        }
+        
         if (self.configuration.showLeftYAxisNames && self.configuration.showLeftYAxisNames.count) {
             self.yLeftAxisShowArr = self.configuration.showLeftYAxisNames.mutableCopy;
         }else{
-            if (self.yAxisLeftMinValue < MAXFLOAT) {//self.yLeftAxisShowArr.count == 0  &&
+            if (self.yAxisLeftMinValue < MAXFLOAT &&  self.yAxisLeftMaxValue != -1000000) {//self.yLeftAxisShowArr.count == 0  &&
                 CGFloat average = (self.yAxisLeftMaxValue - self.yAxisLeftMinValue)*1.0 / (_configuration.kDefaultYAxisNames - 1);
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration. kDefaultYAxisNames; ++i) {
@@ -1947,7 +1982,7 @@ typedef struct {
         if (self.configuration.showRightYAxisNames && self.configuration.showRightYAxisNames.count) {
             self.yRightAxisShowArr = self.configuration.showRightYAxisNames;
         }else{
-            if (self.yAxisRightMinValue < MAXFLOAT) {//self.yRightAxisShowArr.count == 0 &&
+            if (self.yAxisRightMinValue < MAXFLOAT && self.yAxisRightMaxValue != -1000000) {//self.yRightAxisShowArr.count == 0 &&
                 CGFloat average = (self.yAxisRightMaxValue - self.yAxisRightMinValue) * 1.0 / (_configuration.kDefaultYAxisNames - 1);
                 NSMutableArray * muarr = [NSMutableArray array];
                 for (int i = 0; i < _configuration.kDefaultYAxisNames; ++i) {
@@ -1968,21 +2003,21 @@ typedef struct {
             }
         }
     }
-    if (self.yAxisLeftMinValue == CGFLOAT_MAX) {
-        self.yAxisLeftMinValue = 0;
-    }
-    
-    if (self.yAxisRightMinValue == CGFLOAT_MAX) {
-        self.yAxisRightMinValue = 0;
-    }
-    
-    if (self.yAxisLeftMaxValue == self.yAxisLeftMinValue) { //防止最大最小一样.没有区间展示效果
-        self.yAxisLeftMaxValue = self.yAxisLeftMinValue + 100;
-    }
-    
-    if (self.yAxisRightMaxValue == self.yAxisRightMinValue) { //防止最大最小一样.没有区间展示效果
-        self.yAxisRightMaxValue = self.yAxisRightMinValue + 100;
-    }
+    //    if (self.yAxisLeftMinValue == CGFLOAT_MAX) {
+    //        self.yAxisLeftMinValue = 0;
+    //    }
+    //
+    //    if (self.yAxisRightMinValue == CGFLOAT_MAX) {
+    //        self.yAxisRightMinValue = 0;
+    //    }
+    //
+    //    if (self.yAxisLeftMaxValue == self.yAxisLeftMinValue) { //防止最大最小一样.没有区间展示效果
+    //        self.yAxisLeftMaxValue = self.yAxisLeftMinValue + 100;
+    //    }
+    //
+    //    if (self.yAxisRightMaxValue == self.yAxisRightMinValue) { //防止最大最小一样.没有区间展示效果
+    //        self.yAxisRightMaxValue = self.yAxisRightMinValue + 100;
+    //    }
 }
 
 #pragma mark 绘制线条图表
@@ -2821,7 +2856,7 @@ typedef struct {
     
     CGFloat nameH = meshElement.nameFont.lineHeight;
     CGFloat valueH = meshElement.valueFont.lineHeight;
-
+    
     CGFloat chartCententH = (self.bounds.size.height - nameH * 2.0 - valueH * 2.0 - 4 * 10);
     // + 10是去掉上下的间距.让中间的网状图尽可能大
     meshElement.maxRadius = MIN(chartCententH / (1 + sqrt(3) * 0.5), meshElement.maxRadius) + 10;
@@ -3207,6 +3242,10 @@ typedef struct {
  */
 -(void)fq_drawCurveFrequencyChartViewWithElement:(FQSeriesElement *)element{
     
+    if (element.frequencyDataArr.count == 0 || element.frequencyDataArr.count == 1) {
+        return;
+    }
+    
     CGFloat leftMargin = 42;
     CGFloat rightMargin = 16;
     CGFloat contentMargin = self.mainContainerH / (element.frequencyDataArr.count - 1);
@@ -3290,18 +3329,22 @@ typedef struct {
     [self fq_getChartViewXAxisDataArr];
     //初始化图表相关属性
     [self fq_setMainContainer];
-    //X.Y轴的描述
-    [self fq_setXAxisLabelsContainer];
-    [self fq_setYAxisLeftLabelsContainer];
-    [self fq_setYAxisRightLabelsContainer];
     
     if (element.frequencyDataArr.count) {
+        //X.Y轴的描述
+        [self fq_setXAxisLabelsContainer];
+        [self fq_setYAxisLeftLabelsContainer];
+        [self fq_setYAxisRightLabelsContainer];
         //如果是频率
         [self fq_drawCurveFrequencyChartViewWithElement:element];
     }else{
         //如果是其他
         //获取图表的点与路径.并绘制
         [self fq_getChartPointAndPath];
+        //X.Y轴的描述
+        [self fq_setXAxisLabelsContainer];
+        [self fq_setYAxisLeftLabelsContainer];
+        [self fq_setYAxisRightLabelsContainer];
         //添加手势
         [self fq_addGesture];
         //添加提示视图
@@ -3361,9 +3404,9 @@ typedef struct {
     [self addSubview:mainContainer];
     
     _mainContainer.backgroundColor = self.configuration.mainContainerBackColor;
-    _mainContainerW = self.frame.size.width - self.configuration.kHorizontalBarLeftMargin - self.configuration.kHorizontalBarXAxisLeftLabW - 12 - 5 - 2 - 30 - 5 - self.configuration.kHorizontalBarXAxisRightLabW - self.configuration.kHorizontalBarRightMargin;
+    _mainContainerW = self.frame.size.width - self.configuration.kHorizontalBarLeftMargin - self.configuration.kHorizontalBarXAxisLeftLabW - horBarElement.barLeftMargin - horBarElement.barContentMargin -horBarElement.barTopStrWidth - horBarElement.barRightMargin - self.configuration.kHorizontalBarXAxisRightLabW - self.configuration.kHorizontalBarRightMargin;
     _mainContainerH = [self getCurrentHorizontalBarHeight] - self.configuration.kHorizontalBarTopMargin - self.configuration.kHorizontalBarBotMargin;
-    _mainContainer.frame = CGRectMake(self.configuration.kHorizontalBarLeftMargin + self.configuration.kHorizontalBarXAxisLeftLabW + 12 , self.configuration.kHorizontalBarTopMargin, _mainContainerW, _mainContainerH);
+    _mainContainer.frame = CGRectMake(self.configuration.kHorizontalBarLeftMargin + self.configuration.kHorizontalBarXAxisLeftLabW + horBarElement.barLeftMargin , self.configuration.kHorizontalBarTopMargin, _mainContainerW, _mainContainerH);
     
     self.horBarContainerLayer  = [[CALayer alloc]init];
     self.horBarContainerLayer.drawsAsynchronously = YES;
@@ -3439,18 +3482,6 @@ typedef struct {
     leftContainerLayer.backgroundColor = UIColor.clearColor.CGColor;
     [self.layer addSublayer:leftContainerLayer];
     
-    CALayer * midLayer = [[CALayer alloc]init];
-    midLayer.backgroundColor = UIColor.whiteColor.CGColor;
-    midLayer.frame = CGRectMake(self.bounds.size.width * 0.5 - midContentW * 0.5, 0, midContentW, barCount * barH + (barCount - 1) * barMargin + topBotMargin * 2.0);
-    midLayer.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.2].CGColor;
-    midLayer.shadowRadius = 5.0;
-    midLayer.shadowOffset = CGSizeMake(0, 3);
-    midLayer.shadowOpacity = 1;
-    midLayer.shouldRasterize = YES;
-    midLayer.rasterizationScale = [UIScreen mainScreen].scale;
-    midLayer.cornerRadius = 5.0;
-    [self.layer addSublayer:midLayer];
-    
     for (int i = 0; i < bothwayElement.orginDatas.count; ++i) {
         
         FQBothwayBarItem * bothwayBarItem = bothwayElement.orginDatas[i];
@@ -3481,13 +3512,12 @@ typedef struct {
         CGFontRelease(fontRef);
         midTextLayer.alignmentMode = kCAAlignmentCenter;
         midTextLayer.wrapped = NO;
-        [self.layer addSublayer:midTextLayer];
         [self.midTextBothwayBarLayerArr addObject:midTextLayer];
         
         CATextLayer * leftTextLayer = [[CATextLayer alloc]init];
         leftTextLayer.drawsAsynchronously = YES;
         leftTextLayer.foregroundColor = bothwayElement.leftDataTextColor.CGColor;
-        leftTextLayer.string = bothwayBarItem.leftData;
+        leftTextLayer.string = bothwayBarItem.leftData.integerValue == 0 ? @"" : bothwayBarItem.leftData;
         leftTextLayer.contentsScale = [UIScreen mainScreen].scale;
         CFStringRef leftFontName = (__bridge CFStringRef)bothwayElement.leftDataTextFont.fontName;
         CGFontRef leftFontRef = CGFontCreateWithFontName(leftFontName);
@@ -3502,7 +3532,7 @@ typedef struct {
         CATextLayer * rightTextLayer = [[CATextLayer alloc]init];
         rightTextLayer.drawsAsynchronously = YES;
         rightTextLayer.foregroundColor = bothwayElement.rightDataTextColor.CGColor;
-        rightTextLayer.string = bothwayBarItem.rightData;
+        rightTextLayer.string = bothwayBarItem.rightData.integerValue == 0 ? @"" : bothwayBarItem.rightData;
         rightTextLayer.contentsScale = [UIScreen mainScreen].scale;
         CFStringRef rightFontName = (__bridge CFStringRef)bothwayElement.rightDataTextFont.fontName;
         CGFontRef rightFontRef = CGFontCreateWithFontName(rightFontName);
@@ -3563,6 +3593,22 @@ typedef struct {
     rightDescTextLayer.wrapped = NO;
     [self.layer addSublayer:rightDescTextLayer];
     rightDescTextLayer.frame = CGRectMake(self.bounds.size.width * 0.5 + midContentW * 0.5 + descBarMargin, barCount * barH + (barCount - 1) * barMargin + topBotMargin + descBarMargin, self.bounds.size.width * 0.5 - midContentW * 0.5 -descBarMargin, bothwayElement.descTextFont.lineHeight + 1);
+    
+    CALayer * midLayer = [[CALayer alloc]init];
+    midLayer.backgroundColor = UIColor.whiteColor.CGColor;
+    midLayer.frame = CGRectMake(self.bounds.size.width * 0.5 - midContentW * 0.5, 0, midContentW, barCount * barH + (barCount - 1) * barMargin + topBotMargin * 2.0);
+    midLayer.shadowColor = [UIColor.blackColor colorWithAlphaComponent:0.2].CGColor;
+    midLayer.shadowRadius = 5.0;
+    midLayer.shadowOffset = CGSizeMake(0, 3);
+    midLayer.shadowOpacity = 1;
+    midLayer.shouldRasterize = YES;
+    midLayer.rasterizationScale = [UIScreen mainScreen].scale;
+    midLayer.cornerRadius = 5.0;
+    [self.layer addSublayer:midLayer];
+    
+    for (CATextLayer * midTextLayer in self.midTextBothwayBarLayerArr) {
+        [self.layer addSublayer:midTextLayer];
+    }
     
     [self fq_getBothwayBarChartViewDataArrWithElement:bothwayElement];
     

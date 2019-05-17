@@ -195,5 +195,24 @@ typedef NS_ENUM(NSInteger,ChartHorizontalBarContentType){ //水平柱状图.描�
  */
 @property (nonatomic, assign) CGFloat narrowestW;
 
+/**
+ 水平柱状与左侧文本的间距.默认为5
+ */
+@property (nonatomic, assign) CGFloat barLeftMargin;
+
+/**
+ 水平柱状与右侧文本的间距.默认为5
+ */
+@property (nonatomic, assign) CGFloat barRightMargin;
+
+/**
+ 类似"-0'23''"文本的宽度.默认为30
+ */
+@property (nonatomic, assign) CGFloat barTopStrWidth;
+
+/**
+ 水平柱状之间的间距.默认为5
+ */
+@property (nonatomic, assign) CGFloat barContentMargin;
 @end
 

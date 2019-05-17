@@ -41,6 +41,10 @@
         _xLeftAxisSelectLabFont = [UIFont systemFontOfSize:12];
         _xLeftAxisSelectLabColor = [UIColor colorWithRed:0 green:122.0/255.0 blue:1.0 alpha:1.0];
          _narrowestW = _horBarHeight * 0.5;
+        _barLeftMargin = 5;
+        _barRightMargin = 5;
+        _barTopStrWidth = 30;
+        _barContentMargin = 5;
     }
     return self;
 }

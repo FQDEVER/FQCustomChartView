@@ -21,6 +21,7 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_NoneDataPie,     //无数据的饼状图展示
     SpecialChartChartType_MeterCircle,     //计圈样式
     SpecialChartChartType_HeartRate,       //心率样式
+    SpecialChartChartType_HorizontalBarChart,//水平柱状
     SpecialChartChartType_CustomCenter,       //自定义居中
     SpecialChartChartType_CustomLeftRight,       //自定义左右对齐
     SpecialChartChartType_CustomCorresponding,       //自定义对应每条数据
@@ -32,6 +33,7 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_AdvancedBothwayBarChart,       //进阶13 - 左右横向柱状图展示
     SpecialChartChartType_AdvancedTransverseBarChart,    //进阶14 - 运动频率图展示
     SpecialChartChartType_AdvancedSportScheduleChart,    //进阶15 - 多段赛事展示
+    
 };
 
 
