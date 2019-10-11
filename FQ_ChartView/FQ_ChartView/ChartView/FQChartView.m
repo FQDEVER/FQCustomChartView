@@ -512,6 +512,35 @@ typedef struct {
 
 #pragma mark - 私有方法 - 绘制X.Y轴
 
+- (void)fq_setYAxisLabelsContainer{
+//数据数组.
+    FQSeriesElement * element = self.configuration.elements.firstObject;
+    NSArray<FQXAxisItem *>*dataArr = element.orginDatas;
+    NSArray * pointValueArr = self.elementPointsArr;
+    for (int i = 0; i < dataArr.count; ++i) {
+        FQXAxisItem * axisItem = dataArr[i];
+        NSString *valueStr = [NSString stringWithFormat:@"%@%@", axisItem.dataValue.stringValue,element.unitStr];
+        CGPoint point = [pointValueArr.firstObject[i] CGPointValue];
+        CATextLayer * textlayer = [[CATextLayer alloc]init];
+//        textlayer.backgroundColor = UIColor.redColor.CGColor;
+        textlayer.drawsAsynchronously = YES;
+        textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
+        textlayer.string = valueStr;
+        textlayer.contentsScale = [UIScreen mainScreen].scale;
+        CFStringRef fontName = (__bridge CFStringRef)self.configuration.xAxisLabelsTitleFont.fontName;
+        CGFontRef fontRef = CGFontCreateWithFontName(fontName);
+        textlayer.font = fontRef;
+        textlayer.fontSize = self.configuration.xAxisLabelsTitleFont.pointSize;
+        CGFontRelease(fontRef);
+        textlayer.alignmentMode = kCAAlignmentCenter;
+        textlayer.wrapped = NO;
+        CGSize size = [self fq_sizeWithString:valueStr font:self.configuration.xAxisLabelsTitleFont maxSize:CGSizeMake(MAXFLOAT, MAXFLOAT)];
+       textlayer.frame = CGRectMake(point.x, point.y, size.width, size.height);
+        [self.layer addSublayer:textlayer];
+    }
+    
+}
+
 - (void)fq_setXAxisLabelsContainer{
     if (!_xAxisShowArr.count) {
         return;
@@ -602,8 +631,8 @@ typedef struct {
             
             CGFloat textLayerY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
             //只有一条数据时
-            if (_xAxisShowArr.count == 1) {
-                textlayer.frame = CGRectMake( CGRectGetMinX(_mainContainer.frame) + (_mainContainerW - size.width) * 0.5,  textLayerY, size.width, size.height);
+            if (self->_xAxisShowArr.count == 1) {
+                textlayer.frame = CGRectMake( CGRectGetMinX(self->_mainContainer.frame) + (self->_mainContainerW - size.width) * 0.5,  textLayerY, size.width, size.height);
             }else{
                 textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
             }
@@ -1440,8 +1469,15 @@ typedef struct {
         if (element.yAxisAligmentType == FQChartYAxisAligmentType_Left) {
             if (self.configuration.yLeftAxisIsReverse == YES) {
                 y = self.configuration.xAxisIsBottom ? (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH : (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH;
+                
             }else{
                 y = self.configuration.xAxisIsBottom ? (1 - (yAxisValue - yminValue)/(ymaxValue - yminValue)) * _mainContainerH : (yAxisValue - yminValue)/(ymaxValue - yminValue) * _mainContainerH;
+                //针对现有需求调整最小高度.其他不变
+                if (element.minHeight != 0) {
+                    if (self.configuration.xAxisIsBottom) {
+                        y = (_mainContainerH - element.minHeight) * y / _mainContainerH;
+                    }
+                }
             }
         }else{
             if (self.configuration.yRightAxisIsReverse == YES) {
@@ -3343,6 +3379,13 @@ typedef struct {
         [self fq_getChartPointAndPath];
         //X.Y轴的描述
         [self fq_setXAxisLabelsContainer];
+        //针对只有柱状.并且显示y轴上的数据时
+        if (self.barElements.count == 1) {
+            FQSeriesElement * barElement = self.barElements.firstObject;
+            if (barElement.showYValueLab) {
+                [self fq_setYAxisLabelsContainer];
+            }
+        }
         [self fq_setYAxisLeftLabelsContainer];
         [self fq_setYAxisRightLabelsContainer];
         //添加手势

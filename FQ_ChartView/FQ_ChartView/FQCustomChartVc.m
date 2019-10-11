@@ -105,6 +105,8 @@
         [self  chartviewSpecialChartChartType_AdvancedSportScheduleChart];
     }else if (type == SpecialChartChartType_HorizontalBarChart){
         [self chartviewSpecialChartChartType_HorizontalBar];
+    }else if(type == SpecialChartChartType_Histogram_Gradient){
+        [self chartviewSpecialChartChartType_Histogram_Gradient];
     }
     
     //添加一个按钮.用来更新数据.
@@ -1448,6 +1450,46 @@
     chartConfiguration.hiddenLeftYAxis = YES;
     
     [self.chartView fq_refreshChartViewWithConfiguration:chartConfiguration];
+}
+
+/**
+ 柱状渐变图
+ */
+-(void)chartviewSpecialChartChartType_Histogram_Gradient{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Bar;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@20.12,@30.3,@15.2,@18.12,@17.90,@20.32,@30.00].mutableCopy;
+    element.gradientColors = @[(id)rgba(175, 179, 191, 1).CGColor,(id)rgba(223, 228, 246, 1).CGColor,(id)rgba(137, 143, 155, 1).CGColor];
+    element.fillLayerHidden = NO;
+    element.barWidth = 8;
+    element.barPlaceholderColor = UIColor.clearColor;
+    element.modeType = FQModeType_RoundedCorners;
+    element.minHeight = 80;
+    element.showYValueLab = YES;
+    element.isShowSelectPoint = NO;
+    element.unitStr = @"万";
+
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element];
+    chartConfiguration.xAxisGridHidden = YES;
+    chartConfiguration.yAxisGridHidden = YES;
+    chartConfiguration.showXAxisStringDatas = @[@"19/08",@"20/02",@"20/08",@"21/02",@"21/08",@"22/02",@"22/08"].mutableCopy;
+    chartConfiguration.isShowPopView = YES;
+    chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
+    chartConfiguration.popArrowDirection = FQArrowDirectionUP;
+    chartConfiguration.popContentBackColor = [UIColor orangeColor];
+    chartConfiguration.xAxisLabelsTitleColor = rgba(102, 102, 102, 1);
+    chartConfiguration.xAxisLabelsTitleFont = [UIFont systemFontOfSize:9];
+    chartConfiguration.isShowPopView = NO;
+    chartConfiguration.isHiddenCurrentLine = YES;
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 70, self.view.bounds.size.width, 200)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
 }
 
 

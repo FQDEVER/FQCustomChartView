@@ -149,6 +149,21 @@ typedef NS_ENUM(NSInteger,ChartSelectLineType) {
  */
 @property (nonatomic, assign) CGFloat barSpacing;
 
+/**
+ 最小高度.默认为0
+ */
+@property (nonatomic, assign) CGFloat minHeight;
+
+/**
+ 是否展示y轴的值
+ */
+@property (nonatomic, assign) BOOL showYValueLab;
+
+/**
+ 单位str
+ */
+@property (nonatomic, copy) NSString *unitStr;
+
 #pragma mark - 圆饼图
 /**
  各组颜色 - 针对每种柱状图.圆饼图颜色不一样时

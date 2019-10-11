@@ -33,6 +33,7 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_AdvancedBothwayBarChart,       //进阶13 - 左右横向柱状图展示
     SpecialChartChartType_AdvancedTransverseBarChart,    //进阶14 - 运动频率图展示
     SpecialChartChartType_AdvancedSportScheduleChart,    //进阶15 - 多段赛事展示
+    SpecialChartChartType_Histogram_Gradient, //柱状渐变
     
 };
 

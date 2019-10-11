@@ -30,6 +30,7 @@
         _pieCenterUnitColor = [UIColor grayColor];
         _selectPointColor = [UIColor redColor];
         _isShowSelectPoint = YES;
+        _showYValueLab = NO;
     }
     return self;
 }

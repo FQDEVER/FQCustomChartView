@@ -54,6 +54,7 @@
                      @{@"进阶13 - 左右横向柱状图展示":@"icon_leftRight"},
                      @{@"进阶14 - 运动频率图展示":@"icon_week"},
                      @{@"进阶15 - 多段赛事展示":@"icon_sportEvent"},
+                     @{@"柱状渐变图":@"icon_rubber"},
                      ];
     }
     return _dataArr;
