@@ -68,6 +68,11 @@
     
     _yAxisLeftTitleType = ChartViewTitleDescType_Right;
     _yAxisRightTitleType = ChartViewTitleDescType_Left;
+    
+    _xAxisSelectTitleColor = UIColor.whiteColor;
+    _showXAxisSelectColor = NO;
+    _pointBorderColor = UIColor.whiteColor;
+    _kChartViewAndYAxisLabelMargin = 20.0;
 }
 
 @end

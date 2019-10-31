@@ -115,6 +115,11 @@ typedef struct {
  */
 @property (nonatomic, strong) NSArray *elementPointsArr;
 
+/**
+纪录x轴的所有textLayer.方便更新调整状态
+*/
+@property (nonatomic, strong) NSMutableArray<CATextLayer *>* xAiaxTextLayers;
+
 #pragma mark - 图表绘制相关
 
 /**
@@ -467,14 +472,14 @@ typedef struct {
     
     if (configuration.yAxisLeftTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
         
-        self.yAxisLabelsContainerMarginLeft =  20 + ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
+        self.yAxisLabelsContainerMarginLeft =  configuration.kChartViewAndYAxisLabelMargin + ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
     }else{
         self.yAxisLabelsContainerMarginLeft = ((!configuration.hiddenLeftYAxis) ? configuration.kChartViewWidthMargin + configuration.kYAxisLabelMargin : 0);
     }
     
     if (configuration.yAxisRightTitle.length != 0 && configuration.unitDescrType == ChartViewUnitDescrType_LeftRight) {
         
-        self.yAxisLabelsContainerMarginRight = 20 + ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
+        self.yAxisLabelsContainerMarginRight = configuration.kChartViewAndYAxisLabelMargin + ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
     }else{
         self.yAxisLabelsContainerMarginRight = ((!configuration.hiddenRightYAxis) ?configuration.kChartViewWidthMargin +configuration.kYAxisLabelMargin : 0);
     }
@@ -578,7 +583,7 @@ typedef struct {
         
         //分出两种.一个是大圆点.一个是小圆点
         if ([columnName isEqualToString:kXAxisShowNameWithSmoDot]) {
-            CALayer * smoDot = [[CALayer alloc]init];
+            CATextLayer * smoDot = [[CATextLayer alloc]init];
             smoDot.backgroundColor = rgba(216, 216, 216, 1.0).CGColor;
             smoDot.cornerRadius = 2.0f;
             smoDot.masksToBounds = YES;
@@ -588,8 +593,9 @@ typedef struct {
             CGFloat smoDotY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
             smoDot.frame = CGRectMake(smoDotX, smoDotY, size.width, size.height);
             [self.layer addSublayer:smoDot];
+            [self.xAiaxTextLayers addObject:smoDot];
         }else if([columnName isEqualToString:kXAxisShowNameWithBigDot]){
-            CALayer * bigDot = [[CALayer alloc]init];
+            CATextLayer * bigDot = [[CATextLayer alloc]init];
             bigDot.backgroundColor = rgba(102, 102, 102, 1).CGColor;
             bigDot.cornerRadius = 3.0f;
             bigDot.masksToBounds = YES;
@@ -599,6 +605,7 @@ typedef struct {
             CGFloat bigDotY = self.configuration.xAxisIsBottom ? self.frame.size.height - self.yAxisLabelsContainerMarginBot +self.configuration.kXAxisLabelTop : self.yAxisLabelsContainerMarginTop - self.configuration.kXAxisLabelTop - size.height;
             bigDot.frame = CGRectMake(bigDotX, bigDotY, size.width, size.height);
             [self.layer addSublayer:bigDot];
+            [self.xAiaxTextLayers addObject:bigDot];
         }else{
             CATextLayer * textlayer = [[CATextLayer alloc]init];
             textlayer.drawsAsynchronously = YES;
@@ -637,6 +644,7 @@ typedef struct {
                 textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
             }
             [self.layer addSublayer:textlayer];
+            [self.xAiaxTextLayers addObject:textlayer];
         }
     }];
     
@@ -1165,6 +1173,13 @@ typedef struct {
     if (_changePopViewPositionBlock) {
         _changePopViewPositionBlock(self,_popTipView,valueArr.copy);
     }
+    if (self.configuration.showXAxisSelectColor) {
+        for (CATextLayer * textLayer in self.xAiaxTextLayers) {
+            textLayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
+        }
+        CATextLayer * selectTextLayer = self.xAiaxTextLayers[index];
+        selectTextLayer.foregroundColor = self.configuration.xAxisSelectTitleColor.CGColor;
+    }
     
     [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
     
@@ -1270,6 +1285,14 @@ typedef struct {
             _changePopViewPositionBlock(self,_popTipView,valueArr.copy);
         }
         
+        if (self.configuration.showXAxisSelectColor) {
+            for (CATextLayer * textLayer in self.xAiaxTextLayers) {
+                textLayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
+            }
+            CATextLayer * selectTextLayer = self.xAiaxTextLayers[index];
+            selectTextLayer.foregroundColor = self.configuration.xAxisSelectTitleColor.CGColor;
+        }
+        
         [self.popTipView fq_drawRectWithOrigin:CGPointMake(currentPoint.x, self.yAxisLabelsContainerMarginTop)];
     }
     
@@ -1283,6 +1306,14 @@ typedef struct {
         //3s消失
         [self performSelector:@selector(fq_endChangCurveView) withObject:nil afterDelay:3.0f];
     }
+}
+
+/**
+获取当前索引下的textLayer
+*/
+-(NSString *)getCurrentXAxisTextLayer:(NSInteger)index{
+    CATextLayer * textLayer = self.xAiaxTextLayers[index];
+    return textLayer.string;
 }
 
 /**
@@ -1360,7 +1391,7 @@ typedef struct {
         if (self.configuration.isShowSelectPoint) {
             NSMutableArray * pointViewArr = [NSMutableArray array];
             for (NSValue * pointValue in pointArr) {
-                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:self.configuration.isSelectPointBorder ? 12.0 : 10.0 color:element.isShowSelectPoint ? element.selectPointColor : UIColor.clearColor center:[pointValue CGPointValue] borderColor:element.isShowSelectPoint ? UIColor.whiteColor : UIColor.clearColor borderW:self.configuration.isSelectPointBorder ? 2.0 : 0.0];
+                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:self.configuration.isSelectPointBorder ? 10.0 : 8.0 color:element.isShowSelectPoint ? element.selectPointColor : UIColor.clearColor center:[pointValue CGPointValue] borderColor:element.isShowSelectPoint ? self.configuration.pointBorderColor : UIColor.clearColor borderW:self.configuration.isSelectPointBorder ? 2.0 : 0.0];
                 pointLayer.opacity = self.configuration.isShowAllPoint ? 1.0f : 0.0f;
                 [pointViewArr addObject:pointLayer];
                 [_mainContainer.layer addSublayer:pointLayer];
@@ -4139,5 +4170,12 @@ typedef struct {
     return _sportSchedulesLayerArr;
 }
 
+-(NSMutableArray<CATextLayer *> *)xAiaxTextLayers
+{
+    if (!_xAiaxTextLayers) {
+        _xAiaxTextLayers = [NSMutableArray array];
+    }
+    return _xAiaxTextLayers;
+}
 
 @end

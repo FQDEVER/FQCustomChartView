@@ -252,6 +252,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
 @property (nonatomic, assign) CGFloat kXAxisLabelTop;
 
 /**
+ 图表视图与y轴描述的间距.默认为20.0
+ */
+@property (nonatomic, assign) CGFloat kChartViewAndYAxisLabelMargin;
+
+/**
  y轴描述距离y轴的间距.默认为5.0
  */
 @property (nonatomic, assign) CGFloat kYAxisLabelMargin;
@@ -347,6 +352,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL isSelectPointBorder;
 
+/**
+ 选中点的边框颜色.默认为白色
+ */
+@property (nonatomic, strong) UIColor *pointBorderColor;
+
 
 /*---------------------------------------------动画相关-待完善----------------------------------------*/
 #pragma mark - 动画相关-待完善
@@ -417,6 +427,16 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  x轴label的字体，默认12
  */
 @property (nonatomic, strong) UIFont *xAxisLabelsTitleFont;
+
+/**
+ x轴label选中的颜色，默认白色
+ */
+@property (nonatomic, strong) UIColor *xAxisSelectTitleColor;
+
+/**
+x轴label是否展示选中的颜色，默认NO
+*/
+@property (nonatomic, assign) BOOL showXAxisSelectColor;
 
 /*---------------------------------------------rowLabels,行标相关----------------------------------------*/
 #pragma mark - rowLabels,行标相关

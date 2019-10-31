@@ -107,6 +107,8 @@
         [self chartviewSpecialChartChartType_HorizontalBar];
     }else if(type == SpecialChartChartType_Histogram_Gradient){
         [self chartviewSpecialChartChartType_Histogram_Gradient];
+    }else if(type == SpecialChartChartType_BrokenLine_Double_Highlight){
+        [self chartviewSpecialChartChartType_BrokenLine_Double_Highlight];
     }
     
     //添加一个按钮.用来更新数据.
@@ -1492,6 +1494,91 @@
     [curveView fq_drawCurveView];
 }
 
+/// 双折线.点击可让指定文本高亮
+-(void)chartviewSpecialChartChartType_BrokenLine_Double_Highlight{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    element.orginNumberDatas = @[@8,@7,@10,@30,@70,@17,@30,@52].mutableCopy;
+    element.mainColor = UIColor.orangeColor;
+    element.fillLayerHidden = YES;
+    element.modeType = FQModeType_RoundedCorners;
+    element.selectPointColor = UIColor.orangeColor;
+    
+    FQSeriesElement * element1 = [[FQSeriesElement alloc]init];
+    element1.chartType = FQChartType_Line;
+    element1.yAxisAligmentType = FQChartYAxisAligmentType_Right;
+    element1.orginNumberDatas = @[@8,@17,@20,@20,@50,@37,@18,@20].mutableCopy;
+    element1.chartType = FQChartType_Line;
+    element1.mainColor = UIColor.whiteColor;
+    element1.fillLayerHidden = YES;
+    element1.modeType = FQModeType_RoundedCorners;
+    element1.selectPointColor = UIColor.whiteColor;
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element,element1];
+    chartConfiguration.showXAxisStringDatas = @[@"Jon",@"Feb",@"Mar",@"Apr",@"May",@"Jun",@"Jul",@"Aug"];
+    chartConfiguration.showXAxisSelectColor = YES;
+    //设定最大值范围
+    chartConfiguration.yLeftAxisMaxNumber = @80;
+    chartConfiguration.yLeftAxisMinNumber = @0;
+    chartConfiguration.yRightAxisMaxNumber = @80;
+    chartConfiguration.yRightAxisMinNumber = @0;
+    chartConfiguration.xAxisLabelsTitleColor = UIColor.lightGrayColor;
+    chartConfiguration.yAxisLeftTitle = @"min";//@"步频(次/分钟)";
+    chartConfiguration.yAxisRightTitle = @"m/s";//@"海拔高度(米)";
+    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+    chartConfiguration.yAxisRightTitleColor = [UIColor blueColor];
+    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+    chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
+    
+    chartConfiguration.yAxisGridHidden = YES;
+    chartConfiguration.xAxisGridHidden = YES;
+    
+    chartConfiguration.popContentBackColor = UIColor.whiteColor;
+    chartConfiguration.popTextColor = UIColor.blackColor;
+    chartConfiguration.hiddenLeftYAxis = YES;
+    chartConfiguration.hiddenRightYAxis = YES;
+    chartConfiguration.isShowPopView = YES;
+    chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
+    chartConfiguration.currentLineColor = UIColor.whiteColor;
+    chartConfiguration.mainContainerBackColor = UIColor.blackColor;
+    chartConfiguration.isSelectPointBorder = YES;
+    chartConfiguration.pointBorderColor = UIColor.blackColor;
+    chartConfiguration.unitDescrType = ChartViewUnitDescrType_LeftRight;
+    chartConfiguration.yLeftAxisIsReverse = NO;
+    chartConfiguration.yRightAxisIsReverse = NO;
+    
+    chartConfiguration.kYAxisChartViewMargin = 0.0;
+    chartConfiguration.kYTitleLabelBot = 0.0;
+    chartConfiguration.kChartViewWidthMargin = 0.0;
+    chartConfiguration.kChartViewAndYAxisLabelMargin = 0.0;
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 100, self.view.bounds.size.width, 200)];
+    curveView.backgroundColor = [UIColor blackColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    curveView.changePopViewPositionBlock = ^(FQChartView * _Nonnull chartView, FQPopTipView * _Nonnull popTipView, NSArray<FQXAxisItem *> * _Nonnull dataItemArr) {
+        if (dataItemArr.count != 0) {
+            //获取选中的x轴值.
+            FQXAxisItem *xaixsItem = dataItemArr.firstObject;
+            NSString * selectTextStr = [chartView getCurrentXAxisTextLayer:xaixsItem.dataNumber.integerValue];
+            NSLog(@"--------------------->%@",selectTextStr);
+            NSString * muStr = @"";
+            if (dataItemArr.count == 2) {
+                FQXAxisItem * firtXaxisItem = dataItemArr.firstObject;
+                FQXAxisItem * lastXaxisItem = dataItemArr.lastObject;
+                muStr = [NSString stringWithFormat:@"%@km,%@km/h",firtXaxisItem.dataValue,lastXaxisItem.dataValue];
+            }else{
+                muStr = @"0km,0km/h";
+            }
+            popTipView.contentTextStr = muStr;
+        }
+    };
+    [self.view addSubview:curveView];
+    self.view.backgroundColor = UIColor.blackColor;
+    [curveView fq_drawCurveView];
+}
 
 
 #pragma mark - chartViewchartDelegate
