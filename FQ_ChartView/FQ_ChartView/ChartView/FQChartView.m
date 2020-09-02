@@ -608,6 +608,7 @@ typedef struct {
             [self.xAiaxTextLayers addObject:bigDot];
         }else{
             CATextLayer * textlayer = [[CATextLayer alloc]init];
+            textlayer.contentsScale = [[UIScreen mainScreen]scale];
             textlayer.drawsAsynchronously = YES;
             textlayer.foregroundColor = self.configuration.xAxisLabelsTitleColor.CGColor;
             textlayer.string = columnName;
@@ -644,6 +645,10 @@ typedef struct {
                 textlayer.frame = CGRectMake( textLayerX,  textLayerY, size.width, size.height);
             }
             [self.layer addSublayer:textlayer];
+            //当小于平均值时。就旋转-30度
+            if (size.width > average) {
+                textlayer.transform = CATransform3DRotate(textlayer.transform, -M_PI_2 * 0.5, 0, 0, 1);
+            }
             [self.xAiaxTextLayers addObject:textlayer];
         }
     }];
@@ -4075,7 +4080,7 @@ typedef struct {
         }else{
             _popTipView = [FQPopTipView initWithPopViewWithDirection:self.configuration.popArrowDirection maxX:self.bounds.size.width minX:0 edge:UIEdgeInsetsMake(5, 5, 5, 5) contentText:@"x:y:" textColor:self.configuration.popTextColor textFont:self.configuration.popTextFont];
             _popTipView.marginSpcingW = 10;
-            _popTipView.marginSpcingH = 5;
+            _popTipView.marginSpcingH =  5;
             _popTipView.cornerRadius = 5.0f;
             _popTipView.isShadow = self.configuration.isPopViewAddShadow;
             _popTipView.contentBackColor = self.configuration.popContentBackColor;

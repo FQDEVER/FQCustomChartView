@@ -1334,6 +1334,7 @@
     chartConfiguration.xyAxisCustomStrType = ChartViewXYAxisCustomStrType_LeftRight;
     chartConfiguration.leftDecimalCount = 4;
     
+    
     FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(20, 70, self.view.bounds.size.width - 40, 400)];
     curveView.backgroundColor = [UIColor whiteColor];
     _chartView = curveView;
@@ -1517,7 +1518,7 @@
     
     FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
     chartConfiguration.elements = @[element,element1];
-    chartConfiguration.showXAxisStringDatas = @[@"Jon",@"Feb",@"Mar",@"Apr",@"May",@"Jun",@"Jul",@"Aug"];
+    chartConfiguration.showXAxisStringDatas = @[@"201901",@"201902",@"201903",@"201904",@"201905",@"201906",@"201907",@"201908",@"201909",@"201910",@"201911",@"201912"];
     chartConfiguration.showXAxisSelectColor = YES;
     //设定最大值范围
     chartConfiguration.yLeftAxisMaxNumber = @80;

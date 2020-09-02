@@ -170,6 +170,7 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
         popViewX = _maxX - self.frame.size.width;
         self.positionType = FQPopViewPositionType_Right;
     }
+    NSLog(@"------------------x:%f------y:%f----minX:%f------maxX:%f-----popViewX:%f",origin.x,origin.y,minX,maxX,popViewX);
     
     CGFloat startX = 0;
     CGFloat startY = 0;
@@ -178,8 +179,9 @@ typedef NS_ENUM(NSInteger,FQPopViewPositionType) {
     }else if (self.positionType == FQPopViewPositionType_Left){
         startX = self.origin.x - _minX;
     }else{
-        startX = self.origin.x - self.frame.origin.x;
+        startX = self.origin.x - popViewX;// 计算之后最新的x值
     }
+    NSLog(@"------------------startX:%f-----originX:%f",startX,self.frame.origin.x);
     UIBezierPath *path = [[UIBezierPath alloc]init];
     if (_direction == FQArrowDirectionUP) {//箭头在上
         self.frame = CGRectMake(popViewX, origin.y, self.frame.size.width, self.frame.size.height);
