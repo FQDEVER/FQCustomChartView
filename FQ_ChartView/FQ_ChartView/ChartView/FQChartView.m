@@ -1319,6 +1319,9 @@ typedef struct {
 获取当前索引下的textLayer
 */
 -(NSString *)getCurrentXAxisTextLayer:(NSInteger)index{
+    if (index >= self.xAiaxTextLayers.count) {
+        return @"0";
+    }
     CATextLayer * textLayer = self.xAiaxTextLayers[index];
     return textLayer.string;
 }
