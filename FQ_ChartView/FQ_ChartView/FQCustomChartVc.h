@@ -35,6 +35,7 @@ typedef NS_ENUM(NSInteger,SpecialChartChartType) {
     SpecialChartChartType_AdvancedSportScheduleChart,    //进阶15 - 多段赛事展示
     SpecialChartChartType_Histogram_Gradient, //柱状渐变
     SpecialChartChartType_BrokenLine_Double_Highlight, //双折线可高亮
+    SpecialChartChartType_BrokenLine_Bottm_Sawtooth,//单条底部有锯齿标记
 };
 
 

@@ -56,6 +56,7 @@
                      @{@"进阶15 - 多段赛事展示":@"icon_sportEvent"},
                      @{@"柱状渐变图":@"icon_rubber"},
                      @{@"双折线.点击可让指定文本高亮":@"icon_rubber"},
+                     @{@"单条渲染.并且底下有锯齿标记":@"icon_rubber"},
                      ];
     }
     return _dataArr;

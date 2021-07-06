@@ -647,7 +647,9 @@ typedef struct {
             [self.layer addSublayer:textlayer];
             //当小于平均值时。就旋转-30度
             if (size.width > average) {
-                textlayer.transform = CATransform3DRotate(textlayer.transform, -M_PI_2 * 0.5, 0, 0, 1);
+                if (self.configuration.hasTransform) {
+                    textlayer.transform = CATransform3DRotate(textlayer.transform, -M_PI_2 * 0.5, 0, 0, 1);
+                }
             }
             [self.xAiaxTextLayers addObject:textlayer];
         }
@@ -1396,7 +1398,7 @@ typedef struct {
         if (self.configuration.isShowSelectPoint) {
             NSMutableArray * pointViewArr = [NSMutableArray array];
             for (NSValue * pointValue in pointArr) {
-                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:self.configuration.isSelectPointBorder ? 10.0 : 8.0 color:element.isShowSelectPoint ? element.selectPointColor : UIColor.clearColor center:[pointValue CGPointValue] borderColor:element.isShowSelectPoint ? self.configuration.pointBorderColor : UIColor.clearColor borderW:self.configuration.isSelectPointBorder ? 2.0 : 0.0];
+                CAShapeLayer * pointLayer = [self pointLayerWithDiameter:self.configuration.isSelectPointBorder ? 20.0 : 14.0 color:element.isShowSelectPoint ? element.selectPointColor : UIColor.clearColor center:[pointValue CGPointValue] borderColor:element.isShowSelectPoint ? self.configuration.pointBorderColor : UIColor.clearColor borderW:self.configuration.isSelectPointBorder ? 6.0 : 0.0];
                 pointLayer.opacity = self.configuration.isShowAllPoint ? 1.0f : 0.0f;
                 [pointViewArr addObject:pointLayer];
                 [_mainContainer.layer addSublayer:pointLayer];

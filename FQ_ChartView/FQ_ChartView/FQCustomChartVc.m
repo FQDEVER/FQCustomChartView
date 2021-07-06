@@ -109,6 +109,8 @@
         [self chartviewSpecialChartChartType_Histogram_Gradient];
     }else if(type == SpecialChartChartType_BrokenLine_Double_Highlight){
         [self chartviewSpecialChartChartType_BrokenLine_Double_Highlight];
+    }else if(type == SpecialChartChartType_BrokenLine_Bottm_Sawtooth){
+        [self chartviewSpecialChartChartType_BrokenLine_Bottm_Sawtooth];
     }
     
     //添加一个按钮.用来更新数据.
@@ -1581,6 +1583,95 @@
     [curveView fq_drawCurveView];
 }
 
+-(void)chartviewSpecialChartChartType_BrokenLine_Bottm_Sawtooth{
+    FQSeriesElement * element = [[FQSeriesElement alloc]init];
+    element.chartType = FQChartType_Line;
+    element.yAxisAligmentType = FQChartYAxisAligmentType_Left;
+    
+    NSMutableArray * muArr = [NSMutableArray array];
+    NSArray * dataValues = @[@8,@7,@10,@30,@70,@17,@8,@7,@10,@30,@70,@17,@3,@10,@8,@7,@10,@30,@70,@17,@8,@7,@10,@30,@30,@70,@17,@8,@7,@10];
+    NSInteger count = 1;
+    for (NSNumber * dataNum in dataValues) {
+        FQXAxisItem * xAxisItem = [[FQXAxisItem alloc]initWithDataNumber:@(count) dataValue:dataNum];
+        count ++;
+        [muArr addObject:xAxisItem];
+    }
+    
+    element.orginDatas = muArr.copy;
+    element.gradientColors = @[(id)rgba(246,140,107,1).CGColor,(id)rgba(252,109,64,1).CGColor];
+    element.fillLayerHidden = NO;
+    element.modeType = FQModeType_RoundedCorners;
+    element.isGradientFillLayer = YES;
+    element.fillLayerBackgroundColor = [[UIColor orangeColor]colorWithAlphaComponent:1.0];
+//    element.averageNum = @30;
+//    element.averageLineColor = [UIColor redColor];
+//    element.averageLineType = ChartSelectLineType_DottedLine;
+    element.selectPointColor = rgba(252,108,63,1);
+    
+    
+    FQChartConfiguration * chartConfiguration = [[FQChartConfiguration alloc]init];
+    chartConfiguration.elements = @[element];
+    //设定最大值范围
+//    chartConfiguration.yLeftAxisMaxNumber = @80;
+//    chartConfiguration.yLeftAxisMinNumber = @0;
+//    chartConfiguration.yRightAxisMaxNumber = @80;
+//    chartConfiguration.yRightAxisMinNumber = @0;
+//    chartConfiguration.sportSchedulesprogress = @[@0.2,@0.4,@0.9];
+    
+//    chartConfiguration.yAxisLeftTitle = @"min";//@"步频(次/分钟)";
+//    chartConfiguration.yAxisRightTitle = @"m/s";//@"海拔高度(米)";
+//    chartConfiguration.yAxisLeftTitleColor = [UIColor redColor];
+//    chartConfiguration.yAxisRightTitleColor = [UIColor blueColor];
+//    chartConfiguration.yAxisLeftTitleFont = [UIFont systemFontOfSize:15];
+//    chartConfiguration.yAxisRightTitleFont = [UIFont systemFontOfSize:15];
+    chartConfiguration.xAxisLabelsTitleFont = [UIFont systemFontOfSize:10];
+    chartConfiguration.xAxisLabelsTitleColor = rgba(121,121,121,1);
+    chartConfiguration.xAxisSelectTitleColor = UIColor.blackColor;
+    
+    chartConfiguration.yAxisGridHidden = YES;
+    chartConfiguration.xAxisGridHidden = YES;
+//    chartConfiguration.gridRowCount = 5;
+//    chartConfiguration.gridColumnCount = 2;
+    
+    chartConfiguration.hiddenLeftYAxis = YES;
+    chartConfiguration.hiddenRightYAxis = YES;
+    chartConfiguration.isShowPopView = YES;
+    chartConfiguration.selectLineType = ChartSelectLineType_DottedLine;
+    chartConfiguration.currentLineColor = UIColor.whiteColor;
+    chartConfiguration.mainContainerBackColor = rgba(250.0, 250.0, 250.0, 1.0f);
+    chartConfiguration.isSelectPointBorder = YES;
+    chartConfiguration.pointBorderColor = UIColor.blackColor;
+//    chartConfiguration.unitDescrType = ChartViewUnitDescrType_LeftRight;
+//    chartConfiguration.yLeftAxisIsReverse = NO;
+//    chartConfiguration.yRightAxisIsReverse = NO;
+    chartConfiguration.kYAxisChartViewMargin = 0.0;
+    chartConfiguration.kYTitleLabelBot = 0.0;
+    chartConfiguration.kChartViewWidthMargin = 0.0;
+    chartConfiguration.kChartViewAndYAxisLabelMargin = 0.0;
+    
+    chartConfiguration.popTextColor = rgba(87,87,87,1);
+    chartConfiguration.popContentBackColor = UIColor.whiteColor;
+    chartConfiguration.popTextFont = [UIFont boldSystemFontOfSize:12];
+//    chartConfiguration.showXAxisStringDatas = @[@"1",@"4",@"7",@"10",@"13",@"16",@"19",@"22",@"25",@"28"];
+    chartConfiguration.showXAxisStringNumberDatas = @[@1,@4,@7,@10,@13,@16,@19,@22,@25,@28];
+    
+    FQChartView *curveView = [FQChartView getChartViewWithConfiguration:chartConfiguration withFrame:CGRectMake(0, 108, self.view.bounds.size.width, 200)];
+    curveView.backgroundColor = [UIColor whiteColor];
+    _chartView = curveView;
+    curveView.chartDelegate = self;
+    curveView.changePopViewPositionBlock = ^(FQChartView * _Nonnull chartView, FQPopTipView * _Nonnull popTipView, NSArray<FQXAxisItem *> * _Nonnull dataItemArr) {
+        if (dataItemArr.count != 0) {
+            //获取选中的x轴值.
+            FQXAxisItem *xaixsItem = dataItemArr.firstObject;
+            NSString * selectTextStr = [chartView getCurrentXAxisTextLayer:xaixsItem.dataNumber.integerValue];
+            NSLog(@"--------------------->%@",selectTextStr);
+            NSString * muStr = [NSString stringWithFormat:@"%@kWh",xaixsItem.dataValue];
+            popTipView.contentTextStr = muStr;
+        }
+    };
+    [self.view addSubview:curveView];
+    [curveView fq_drawCurveView];
+}
 
 #pragma mark - chartViewchartDelegate
 /**

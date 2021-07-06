@@ -86,6 +86,11 @@ typedef NS_ENUM(NSInteger,ChartViewXYAxisCustomStrType) {//自定义串的布局
  */
 @property (nonatomic, assign) BOOL isShowXAxisFlag;
 
+/**
+ 是否旋转.默认为NO
+ */
+@property (nonatomic, assign) BOOL hasTransform;
+
 /*---------------------------------------------y轴----------------------------------------*/
 #pragma mark - y轴
 
